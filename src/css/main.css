@@ -1,0 +1,149 @@
+.item-finder-setup {
+    position: fixed;
+    width: 600px;
+    margin-left: -300px;
+    top: 50%;
+    left: 50%;
+    margin-top: -200px;
+    background: #f5fff5;
+    display: none;
+    border: 1px #003300 solid;
+    z-index: 1000;
+}
+
+.item-finder__search-results {
+    position: fixed;
+    width: 800px;
+    margin-left: -400px;
+    top: 220px;;
+    left: 50%;
+    margin-top: -200px;
+    background: #f5fff5;
+    display: none;
+    max-height: 700px;
+    border: 1px #003300 solid;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 1000;
+}
+
+.item-finder__alert {
+    margin: 20px;
+}
+
+.item-finder__itemid {
+    width: 170px;
+}
+
+.item-finder__mods {
+    width: 120px;
+}
+
+.item-finder__durability,
+.item-finder__cost {
+    width: 60px;
+}
+
+.item-finder__items-list {
+    width: 100%;
+    height: 600px;
+    border: none;
+}
+
+.item-finder__items-title {
+    padding: 3px;
+    border-bottom: 1px solid #339933;
+    color: #990000;
+    font-weight: bold;
+    text-align: center;
+    background: #d0eed0;
+}
+
+.item-finder__items-holder {
+    padding: 10px;
+}
+
+.item-finder-add-item {
+
+}
+
+.item-finder__table {
+    border-collapse: collapse;
+    width: 100%;
+    overflow: auto;
+}
+
+.item-finder__table th {
+    background: #d0eed0;
+    border-bottom: 1px solid #003300;
+    color: #990000;
+    font-size: 12px;
+    padding: 3px;
+    text-align: center;
+}
+
+.item-finder__table td {
+    text-align: center;
+}
+
+.item-finder__table tr.colspan th {
+    font-weight: normal;
+    border-right: 1px solid #003300;
+}
+
+.item-finder__table th.item {
+    width: 150px;
+}
+
+.blacker {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    opacity: 0.8;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    background: #000;
+    display: none;
+}
+
+.item-finder__search-results-close {
+    float: right;
+    font-weight: normal;
+    text-decoration: none;
+}
+
+.item-finder__table th.mods {
+    width: 100px;
+}
+
+.item-finder__table th.dur {
+    width: 100px;
+}
+
+.item-finder__table th.cost {
+    width: 100px;
+}
+
+.item-finder__table th.smallBox {
+    width: 20px;
+}
+
+.goodPrice {
+    color: green;
+}
+
+.green {
+    color: green;
+    font-weight: bold;
+}
+
+.red {
+    color: red;
+    font-weight: bold;
+}
+
+.floatdiv {
+    font-size: 14px;
+    opacity: 1;
+}

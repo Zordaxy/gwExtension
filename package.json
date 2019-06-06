@@ -1,0 +1,29 @@
+{
+  "name": "gwextension",
+  "version": "1.0.0",
+  "description": "GW helpers in different interaction aspects",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node vendors/optimizer/r.js -o vendors/optimizer/build.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/Zordaxy/GwExtension.git"
+  },
+  "author": "Alex",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/Zordaxy/GwExtension/issues"
+  },
+  "homepage": "https://gitlab.com/Zordaxy/GwExtension#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "grunt": "^1.0.4",
+    "grunt-babel": "^8.0.0",
+    "grunt-contrib-uglify": "^4.0.1",
+    "grunt-exec": "^3.0.0"
+  }
+}

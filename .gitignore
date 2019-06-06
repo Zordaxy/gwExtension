@@ -1,0 +1,14 @@
+.idea/*
+*.log
+*/classes/*
+*.pyc
+*.iml
+*.class
+/.project
+*~
+node_modules
+build
+npm-debug.log
+.env
+.DS_Store
+
