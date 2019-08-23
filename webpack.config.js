@@ -12,6 +12,7 @@ module.exports = {
             title: "Webpack Output",
         })
     ],
+    devtool: 'inline-source-map',
     module: {
         rules: [
             {
