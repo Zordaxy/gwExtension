@@ -1,25 +1,25 @@
-define(['http', '../data/highTeck'], function (http, highTeck) {
-    var schet = 0;
-    var apSellPrice;
-    try {
-        apSellPrice = localStorage.apSellPrice;
-    } catch (e) {
-        apSellPrice = '62';
-        localStorage.apSellPrice = '62';
-    } //цена продажи
-    var apBuyPrice;
-    try {
-        apBuyPrice = localStorage.apBuyPrice;
-    } catch (e) {
-        apBuyPrice = '60';
-        localStorage.apBuyPrice = '60';
-    } //цена покупки
-    var apMode = typeof localStorage.apMode !== 'undefined' ? localStorage.apMode : '0'; //режим размещения
-    var apIsland = typeof localStorage.apIsland !== 'undefined' ? localStorage.apIsland : '0'; //остров размещения
-    if (apIsland === '0') localStorage.apIsland = '0';
-    var apRentGun = highTeck.list;
+import { ajaxQuery } from './http';
+import { HighTeck } from '../data/highTeck';
 
-    function showAdvertisement() {
+export class AutoPublic {
+    constructor() {
+        this.apSellPrice = localStorage.apSellPrice || '62';
+        if (!localStorage.apSellPrice) {
+            localStorage.apSellPrice = apSellPrice;
+        }
+        this.apBuyPrice = localStorage.apBuyPrice || '60';
+        if (!localStorage.apBuyPrice) { //цена продажи
+            localStorage.apBuyPrice = apBuyPrice;
+        }
+
+        schet = 0;
+        this.apMode = typeof localStorage.apMode !== 'undefined' ? localStorage.apMode : '0'; //режим размещения
+        this.apIsland = typeof localStorage.apIsland !== 'undefined' ? localStorage.apIsland : '0'; //остров размещения
+        if (this.apIsland === '0') localStorage.apIsland = '0';
+        this.apRentGun = HighTeck.list;
+    }
+
+    showAdvertisement() {
         var shadow = document.createElement('div');
         shadow.innerHTML = ' ';
         shadow.setAttribute('id', 'shadow');
@@ -35,22 +35,22 @@ define(['http', '../data/highTeck'], function (http, highTeck) {
         document.getElementById('allBtn').addEventListener('click', allBtn, false);
     }
 
-    function buyBtn() {
+    buyBtn() {
         localStorage.apMode = '1';
         mainStart()
     }
 
-    function sellBtn() {
+    sellBtn() {
         localStorage.apMode = '2';
         mainStart()
     }
 
-    function allBtn() {
+    allBtn() {
         localStorage.apMode = '0';
         mainStart()
     }
 
-    function mainStart() {
+    mainStart() {
         try {
             document.getElementById('menu').innerHTML = '<center><p>Размещение объявлений:<p><p>Обработано: <span id="schet">' + schet + '</span> предметов. Текущий: <span id="namer">n/a</span></p><br><input onclick="window.location.reload()" type="submit" value="Стоп!"><center>';
         } catch (e) {
@@ -66,7 +66,7 @@ define(['http', '../data/highTeck'], function (http, highTeck) {
                     case '0':
                         // продажа целого 50/50
                         url = 'http://www.ganjawars.ru/market-p.php?item_id=' + name + '&action_id=1&stage=3&island=' + localStorage.apIsland + '&price=' + String(Number(localStorage.apSellPrice) * Number(/(.*?)\:/.exec(apRentGun[apArt])[1]) * 1000) + '&modificator=0&durability1=' + apRentGun[apArt].substring(3, apRentGun[apArt].length) + '&durability2=' + apRentGun[apArt].substring(3, apRentGun[apArt].length) + '&date_len=3';
-                        http.ajaxQuery(url, 'POST');
+                        ajaxQuery(url, 'POST');
 
                         // купля ломаного 0/0
                         url = 'http://www.ganjawars.ru/market-p.php?item_id=' + name + '&action_id=2&stage=3&island=' + localStorage.apIsland + '&price=' + String(Number(localStorage.apBuyPrice) * Math.floor((Number(/(.*?)\:/.exec(apRentGun[apArt])[1]) * 0.9)) * 1000) + '&modificator=0&durability1=0&durability2=0&date_len=3';
@@ -79,7 +79,7 @@ define(['http', '../data/highTeck'], function (http, highTeck) {
                         break;
                 }
 
-                http.ajaxQuery(url, 'POST', '', function () {
+                ajaxQuery(url, 'POST', '', function () {
                     if (name === 'saperka3') {
                         stop();
                     }
@@ -98,18 +98,14 @@ define(['http', '../data/highTeck'], function (http, highTeck) {
         }
     }
 
-    function stop() {
+    stop() {
         document.getElementById('menu').innerHTML = '<center><p>Объявления успешно размещены!</p><br><br><br><input type="submit" value="Закрыть" id="close"></center>';
         document.getElementById('menu').setAttribute('id', 'lastmenu');
         document.getElementById('close').addEventListener('click', close, false);
     }
 
-    function close() {
+    close() {
         document.getElementById('lastmenu').parentNode.removeChild(document.getElementById('lastmenu'));
         document.getElementById('shadow').parentNode.removeChild(document.getElementById('shadow'));
     }
-
-    return {
-        showAdvertisement: showAdvertisement
-    }
-});
+}

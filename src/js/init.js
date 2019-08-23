@@ -1,3 +1,5 @@
+import { Initializer } from "./app";
+
 // ==UserScript==
 // @name            Price Checker
 // @namespace       http://www.ukr.net
@@ -9,13 +11,10 @@
 // @author          Michegan
 // ==/UserScript==
 
-require.config({
-    paths: {
-        templates: "../templates"
-    }
-});
 
-require(["app"], function (app) {
+
+new Initializer();
     console.log("Initialize GW Checker");
-    app.init();
-});
+    appFunc();
+    //app.init();
+

@@ -1,13 +1,16 @@
-define(['settings', '../data/ordinal', '../data/highTeck'], function (settings, ordinal, highTeck) {
-    let _itemKey = 'item-price';
-    let _itemInfoKey = 'item-info';
-    let _priceToSet = 'item-priceToSet';
-    let _storage = window.localStorage;
-    let _items = [];
-    let _itemsInfo;
+import { Settings } from "./settings";
+import { Ordinal } from "../data/ordinal";
 
-    function getCost (name) {
-        var supply = ordinal.list.filter(function (element) {
+export class Storage {
+    _itemKey = 'item-price';
+    _itemInfoKey = 'item-info';
+    _priceToSet = 'item-priceToSet';
+    _storage = window.localStorage;
+    _items = [];
+    _itemsInfo;
+
+    getCost(name) {
+        var supply = Ordinal.list.filter(function (element) {
             return element.name === name;
         })[0];
 
@@ -15,7 +18,7 @@ define(['settings', '../data/ordinal', '../data/highTeck'], function (settings, 
             return null;
         }
 
-        var resources = settings.resources;
+        var resources = Settings.resources;
         var price = 0;
         for (var key in supply) {
             if (resources.hasOwnProperty(key)) {
@@ -26,33 +29,33 @@ define(['settings', '../data/ordinal', '../data/highTeck'], function (settings, 
         return price;
     }
 
-    function getItems () {
+    getItems() {
         var items = _storage.getItem(_itemKey);
         _items = items ? JSON.parse(items) : [];
         return _items;
     }
 
-    function getItemsInfo () {
+    getItemsInfo() {
         var items = _storage.getItem(_itemInfoKey);
         _itemsInfo = items ? JSON.parse(items) : [];
         return _items;
     }
 
-    function saveItem (item) {
+    saveItem(item) {
         if (item) {
             _items.push(item);
         }
         _storage.setItem(_itemKey, JSON.stringify(_items));
     }
 
-    function saveItemInfo (item) {
+    saveItemInfo(item) {
         if (item) {
             _itemsInfo.push(item);
         }
         _storage.setItem(_itemInfoKey, JSON.stringify(_items));
     }
 
-    function removeItem (el) {
+    removeItem(el) {
         let items = getItems();
         items.forEach(function (item, i) {
             if (item === el) {
@@ -63,24 +66,11 @@ define(['settings', '../data/ordinal', '../data/highTeck'], function (settings, 
         saveItem();
     }
 
-    function setPrice (price) {
+    setPrice(price) {
         _storage.setItem(_priceToSet, price);
     }
 
-    function getPrice () {
+    getPrice() {
         _storage.getItem(_priceToSet);
     }
-
-    return {
-        getCost: getCost,
-        getItems: getItems,
-        saveItem: saveItem,
-        removeItem: removeItem,
-        setPrice: setPrice,
-        getPrice: getPrice,
-        hasItem: function (id) {
-            return _items.includes(id)
-        }
-    }
-});
-
+}

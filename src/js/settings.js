@@ -1,13 +1,13 @@
-define([], function () {
-    let friends = [
+export class Settings {
+    static friends = [
         "Michegan",
         "Kalyunya",
         "A-g",
         "KISTOCHKA"
     ];
-    let island = "Z";
-    let funnyDigit = "";
-    let resources = {
+    static island = "Z";
+    static funnyDigit = "";
+    static resources = {
         hours: 442,
         uranium: 99,
         ganjium: 160,
@@ -17,20 +17,9 @@ define([], function () {
         grass: 37,
         boxites: 32
     };
-    let rentOwners = {};
-    let eun = {
+    static rentOwners = {};
+    static eun = {
         maxPrice: 137000,
         minPrice: 10000
     };
-
-    return {
-        friends: friends,
-        island: island,
-        funnyDigit: funnyDigit,
-        resources: resources,
-        rentOwners: rentOwners,
-        eun: eun
-    };
-});
-
-
+}

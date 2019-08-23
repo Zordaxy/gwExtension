@@ -1,25 +1,25 @@
-define("search", function (require, exports, module) {
-    let storage = require("storage");
-    let http = require("http");
-    let settings = require("settings");
-    let parse = require("parse");
-    let addLine = require("addLine");
-    let widgets = require("widgets");
-    let ordinal = require("../data/ordinal");
-    let highTeck = require("../data/highTeck");
+import { Storage } from './storage';
+import { ajaxQuery } from './http';
+import { Settings } from './settings';
+import { Parse } from './parse';
+import { AddLine } from './addLine';
+import { Initializer } from './app';
+import { Ordinal } from '../data/ordinal';
+import { HighTeck } from '../data/highTeck';
 
+export class Search {
     //Buildings
-    function findBuildings(table) {
-        var owners = settings.rentOwners;
+    findBuildings(table) {
+        var owners = Settings.rentOwners;
         for (var owner in owners) {
             searchBuildings(table, owner, owners[owner]);
         }
     }
 
-    function searchBuildings(table, owner, buildings) {
+    searchBuildings(table, owner, buildings) {
         var url = '/info.realty.php?id=' + owner;
         var request = function (url) {
-            return http.ajaxQuery(url, 'GET', '', function (xhr) {
+            return ajaxQuery(url, 'GET', '', function (xhr) {
                 var div = document.createElement('div');
                 div.innerHTML = xhr.responseText;
 
@@ -37,7 +37,7 @@ define("search", function (require, exports, module) {
     }
 
     //Bug
-    function findBagList() {
+    findBagList() {
         var itemsList = [];
         var i = 0;
         var timerId = setInterval(function () {
@@ -60,16 +60,16 @@ define("search", function (require, exports, module) {
         }, 400);
     }
 
-    function searchBagList(itemId, lineId) {
+    searchBagList(itemId, lineId) {
         var url = '/market.php?stage=2&item_id=' + itemId + '&action_id=1&island=-1';
         var request = function (url) {
-            return http.ajaxQuery(url, 'GET', '', function (xhr) {
+            return ajaxQuery(url, 'GET', '', function (xhr) {
                 var div = document.createElement('div');
                 div.innerHTML = xhr.responseText;
-                var minItem = parse.parseMinAdvPrice(div, itemId);
-                var cost = storage.getCost(itemId);
+                var minItem = Parse.parseMinAdvPrice(div, itemId);
+                var cost = Storage.getCost(itemId);
                 if (minItem) {
-                    addLine.appendAdvertisementData(lineId, minItem.price, minItem.seller, cost);
+                    AddLine.appendAdvertisementData(lineId, minItem.price, minItem.seller, cost);
                 }
             });
         };
@@ -77,7 +77,7 @@ define("search", function (require, exports, module) {
     }
 
     //Shop
-    function findShopPrices() {
+    findShopPrices() {
         var rows = document.querySelector("form[action='/objectedit.php'] table[cellpadding='4']").rows;
         var filteredRows = Array.prototype.filter.call(rows, function (elem) {
             return elem.querySelectorAll("td")[1] && +elem.querySelectorAll("td")[1].innerText !== 0
@@ -96,38 +96,38 @@ define("search", function (require, exports, module) {
         }, 400);
     }
 
-    function searchShopPrices(itemId, row) {
+    searchShopPrices(itemId, row) {
         var url = '/market.php?stage=2&item_id=' + itemId + '&action_id=1&island=-1';
         var request = function (url) {
-            return http.ajaxQuery(url, 'GET', '', function (xhr) {
+            return ajaxQuery(url, 'GET', '', function (xhr) {
                 var div = document.createElement('div');
                 div.innerHTML = xhr.responseText;
 
-                var minShop = parse.parseMinShopPrice(div);
-                addLine.appendShopCount(row, minShop, itemId);
+                var minShop = Parse.parseMinShopPrice(div);
+                AddLine.appendShopCount(row, minShop, itemId);
             });
         };
         request(url);
     }
 
     //Statistic
-    function findStatistic(e) {
+    findStatistic(e) {
         e.preventDefault();
-        storage.getItems();
+        Storage.getItems();
 
-        widgets.result.open();
-        widgets.blacker.show();
+        Initializer.result.open();
+        Initializer.blacker.show();
 
-        let items = ordinal.getIDs();
+        let items = Ordinal.getIDs();
 
         var i = 0;
         var timerId = setInterval(function () {
             if (items[i].indexOf("category") !== -1) {
                 let text = '\
                                 <td class="wb smallBox"></td>\
-                                <td class="wb" colspan="7">' + ordinal.get(items[i]).category + '</td>\
+                                <td class="wb" colspan="7">' + Ordinal.get(items[i]).category + '</td>\
                 ';
-                addLine.addItemLine(text);
+                AddLine.addItemLine(text);
                 i++;
             }
             searchStatisticItem(items[i]);
@@ -139,15 +139,15 @@ define("search", function (require, exports, module) {
 
     }
 
-    function searchStatisticItem(itemId) {
+    searchStatisticItem(itemId) {
         var url = '/market.php?stage=2&item_id=' + itemId + '&action_id=1&island=-1';
         var request = function (url) {
-            return http.ajaxQuery(url, 'GET', '', function (xhr) {
+            return ajaxQuery(url, 'GET', '', function (xhr) {
                 var div = document.createElement('div');
                 div.innerHTML = xhr.responseText;
-                var cost = storage.getCost(itemId);
-                var minShop = parse.parseMinShopPrice(div, cost);
-                var minItem = parse.parseMinAdvPrice(div, itemId);
+                var cost = Storage.getCost(itemId);
+                var minShop = Parse.parseMinShopPrice(div, cost);
+                var minItem = Parse.parseMinAdvPrice(div, itemId);
                 var advDifference = (minItem && minItem.price) ? minItem.price - cost : "-";
 
                 var text = '\
@@ -164,34 +164,34 @@ define("search", function (require, exports, module) {
         request(url);
     }
 
-    function searchStatisticResource(itemId, text, minPrice) {
+    searchStatisticResource(itemId, text, minPrice) {
         var url = '/statlist.php?r=' + itemId;
         var request = function (url) {
-            return http.ajaxQuery(url, 'GET', '', function (xhr) {
+            return ajaxQuery(url, 'GET', '', function (xhr) {
                 var div = document.createElement('div');
                 div.innerHTML = xhr.responseText;
 
-                var resPrice = parse.parseResPrice(div, itemId);
+                var resPrice = Parse.parseResPrice(div, itemId);
                 var isPriceGood = (minPrice - resPrice) > 10000 && minPrice / resPrice > 2;
                 var textClass = isPriceGood ? " goodPrice" : "";
 
                 var text2 = '\
                         <td class="wb' + textClass + '"><a href="http://www.ganjawars.ru/statlist.php?r=' + itemId + '">' + resPrice + '</a></th>\
                         ';
-                addLine.addItemLine(text + text2, itemId);
+                AddLine.addItemLine(text + text2, itemId);
             });
         };
         request(url);
     }
 
     //EUN
-    function findEuns(e) {
+    findEuns(e) {
         e.preventDefault();
 
-        widgets.result.open();
-        widgets.blacker.show();
+        Initializer.result.open();
+        Initializer.blacker.show();
 
-        let items = highTeck.getIDs();
+        let items = HighTeck.getIDs();
 
         var i = 0;
         var timerId = setInterval(function () {
@@ -203,16 +203,16 @@ define("search", function (require, exports, module) {
                 var endLine = document.createElement('tr');
                 endLine.innerHTML = "<td colspan='7'>End of the list</td>";
                 endLine.className = 'wb';
-                widgets.result.content.appendChild(endLine);
+                Initializer.result.content.appendChild(endLine);
             }
         }, 1000);
     }
 
-    function searchEun(itemId) {
+    searchEun(itemId) {
         var page = 0;
         var url = '/market.php?stage=2&item_id=' + itemId + '&action_id=1&island=-1';
         var request = function (url) {
-            http.ajaxQuery(url, 'GET', '', function (xhr) {
+            ajaxQuery(url, 'GET', '', function (xhr) {
                 var div = document.createElement('div'),
                     elems, pages;
                 div.innerHTML = xhr.responseText;
@@ -243,7 +243,7 @@ define("search", function (require, exports, module) {
                     itemLink.innerHTML = getItemLink(itemId, title) + "(" + pricePerEun + ")";
                     itemLink.className = 'wb';
                     elems[i].insertBefore(itemLink, td[0]);
-                    widgets.result.content.appendChild(elems[i]);
+                    Initializer.result.content.appendChild(elems[i]);
 
                 }
             })
@@ -251,14 +251,7 @@ define("search", function (require, exports, module) {
         request(url)
     }
 
-    function getItemLink(itemId, title) {
+    getItemLink(itemId, title) {
         return '<b><a href="http://www.ganjawars.ru/item.php?item_id=' + itemId + '">' + title + '</a></b>';
     }
-
-    exports.findBuildings = findBuildings;
-    exports.findStatistic = findStatistic;
-    exports.findEuns = findEuns;
-    exports.findBagList = findBagList;
-    exports.findShopPrices = findShopPrices;
-    return exports;
-});
+}

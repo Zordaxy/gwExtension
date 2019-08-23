@@ -1,5 +1,5 @@
-define([], function () {
-    let list = {
+export class HighTeck {
+    list = {
         //пекали
         mp5: '12:50', berettam12: '18:50', scorpion: '20:50', stkinetics: '25:50', p90: '30:60', __90m1: '35:62', mp7: '40:60',
         kriss2: '40:50', mtar21: '35:50', pm06: '35:50', uzipro: '32:55',
@@ -45,12 +45,7 @@ define([], function () {
         armyknife: '25:30', tacticalgps: '67:40', gt_multitool: '27:30'
     };
 
-    function getIDs() {
+    getIDs() {
         return Object.keys(list);
     }
-
-    return {
-        list: list,
-        getIDs: getIDs
-    }
-});
+}

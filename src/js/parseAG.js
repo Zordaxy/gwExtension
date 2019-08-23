@@ -1,7 +1,10 @@
-define(['http', 'settings', 'app', 'widgets'], function (http, settings, app, widgets) {
-    function getPage() {
-        widgets.result.open();
-        widgets.blacker.show();
+import { ajaxQuery } from "./http";
+import { Initializer } from "./app";
+
+export class ParseAG {
+    getPage() {
+        Initializer.result.open();
+        Initializer.blacker.show();
         let person = 379129; //A-g
         let finishDate = "21.11.16 20:52";
 
@@ -9,7 +12,7 @@ define(['http', 'settings', 'app', 'widgets'], function (http, settings, app, wi
             finishFlag = false;
         var url = 'http://www.ganjawars.ru/usertransfers.php?id=' + person;
         var request = function (url) {
-            return http.ajaxQuery(url, 'GET', '', function (xhr) {
+            return ajaxQuery(url, 'GET', '', function (xhr) {
                 var div = document.createElement('div'),
                     elems, pages;
                 div.innerHTML = xhr.responseText;
@@ -38,7 +41,7 @@ define(['http', 'settings', 'app', 'widgets'], function (http, settings, app, wi
         request(url);
     }
 
-    function parseLine(element) {
+    parseLine(element) {
         var time = element.querySelector('font').innerText;
         if (time === finishDate) {
             addEndLine();
@@ -63,7 +66,7 @@ define(['http', 'settings', 'app', 'widgets'], function (http, settings, app, wi
         return false;
     }
 
-    function addLine(time, price, customer, description) {
+    addLine(time, price, customer, description) {
         var text = '\
                                 <td class="wb smallBox"><input type="checkbox"></td>\
                                 <td class="wb">' + time + '</td>\
@@ -75,10 +78,10 @@ define(['http', 'settings', 'app', 'widgets'], function (http, settings, app, wi
                 ';
         var itemLine = document.createElement('tr');
         itemLine.innerHTML = text;
-        widgets.result.content.appendChild(itemLine);
+        Initializer.result.content.appendChild(itemLine);
     }
 
-    function addEndLine() {
+    addEndLine() {
         var sum = 0;
         var prices = document.getElementsByName("sellPrice");
         prices.forEach(function (el) {
@@ -96,6 +99,7 @@ define(['http', 'settings', 'app', 'widgets'], function (http, settings, app, wi
                 ';
         var itemLine = document.createElement('tr');
         itemLine.innerHTML = text;
-        widgets.result.content.appendChild(itemLine);
+        Initializerer.result.content.appendChild(itemLine);
     }
-});
+
+}

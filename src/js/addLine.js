@@ -1,12 +1,17 @@
-define(['storage', 'http', 'settings', 'widgets'], function (storage, http, settings, widgets) {
-    function appendShopCount(row, minShop, itemId) {
-        var cost = storage.getCost(itemId);
+import { Storage } from './storage';
+import { ajaxQuery } from './http';
+import { Settings } from './settings';
+import { Initializer } from './app';
+
+export class AddLine {
+    appendShopCount(row, minShop, itemId) {
+        var cost = Storage.getCost(itemId);
 
         var countTd = document.createElement('td');
         var profit = minShop.minPrice - cost;
 
         var currentPrice = row.querySelectorAll('td input')[2].value;
-        var needChange = (!settings.friends.includes(minShop.shopOwner) || minShop.minPrice !== currentPrice)
+        var needChange = (!Settings.friends.includes(minShop.shopOwner) || minShop.minPrice !== currentPrice)
             && profit > 2500;
 
         profit = profit > 0 ? "<span class='green'>+" + profit + "</span>" : "<span class='red'>" + profit + "</span>";
@@ -22,18 +27,18 @@ define(['storage', 'http', 'settings', 'widgets'], function (storage, http, sett
         row.appendChild(countTd);
     }
 
-    function _changeShopPrice(event) {
-        var isSellerFriend = settings.friends.includes(event.target.closest('td').getAttribute("seller"));
+    _changeShopPrice(event) {
+        var isSellerFriend = Settings.friends.includes(event.target.closest('td').getAttribute("seller"));
         var price = event.target.closest('td').getAttribute("newPrice");
         price = isSellerFriend ? price : Math.floor((price - 1) / 10) * 10;
 
         event.target.closest('tr').querySelectorAll('td input')[2].value = price;
     }
 
-    function appendAdvertisementData(lineId, price, seller, cost) {
+    appendAdvertisementData(lineId, price, seller, cost) {
         var describtionText = document.getElementById(lineId).getElementsByTagName('td')[4].textContent;
         var startIndex = describtionText.indexOf("Предмет выставлен на продажу за $");
-        var isSellerFriend = settings.friends.includes(seller);
+        var isSellerFriend = Settings.friends.includes(seller);
 
         var lessPrice = Math.floor((price - 1) / 10) * 10;
         var nameTd = document.getElementById(lineId).getElementsByTagName('td')[2];
@@ -84,20 +89,20 @@ define(['storage', 'http', 'settings', 'widgets'], function (storage, http, sett
         nameTd.appendChild(nameSpan2);
     }
 
-    function _changePrice(event) {
+    _changePrice(event) {
         var price = event.target.getAttribute("set-price");
         var url = event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.getElementsByTagName('td')[4].getElementsByTagName('a')[0].href;
-        storage.setPrice(price);
+        Storage.setPrice(price);
 
         if (url.indexOf("market-i") > 0) {
             var callOut = function (url) {
-                return http.ajaxQuery(url, 'GET');
+                return ajaxQuery(url, 'GET');
             };
             callOut(url);
         }
 
         setTimeout(function () {
-            var middleClick = new MouseEvent("click", {"button": 1, "which": 1});
+            var middleClick = new MouseEvent("click", { "button": 1, "which": 1 });
             var link = [].filter.call(document.getElementsByTagName('a'), function (elem) {
                 return elem.innerHTML === "sell";
             })[0];
@@ -106,38 +111,32 @@ define(['storage', 'http', 'settings', 'widgets'], function (storage, http, sett
         }, 800);
     }
 
-    function addItemLine(text, itemId) {
+    addItemLine(text, itemId) {
         let itemLine = document.createElement('tr');
         itemLine.innerHTML = text;
 
-        widgets.result.content.appendChild(itemLine);
+        Initializer.result.content.appendChild(itemLine);
 
         if (itemId) {
             let checkBox = document.getElementById(itemId);
             checkBox.onclick = _selectItem;
 
-            if (storage.hasItem(itemId)) {
+            if (Storage.hasItem(itemId)) {
                 checkBox.parentNode.parentNode.style.backgroundColor = "lightGreen";
                 checkBox.checked = true;
             }
         }
     }
 
-    function _selectItem(e) {
+    _selectItem(e) {
         e = e || window.event;
         let checkBox = e.target || e.srcElement;
         if (checkBox.checked) {
             checkBox.parentNode.parentNode.style.backgroundColor = "lightGreen";
-            storage.saveItem(checkBox.id);
+            Storage.saveItem(checkBox.id);
         } else {
             checkBox.parentNode.parentNode.style.backgroundColor = "white";
-            storage.removeItem(checkBox.id);
+            Storage.removeItem(checkBox.id);
         }
     }
-
-    return {
-        appendAdvertisementData: appendAdvertisementData,
-        appendShopCount: appendShopCount,
-        addItemLine: addItemLine
-    }
-});
+}

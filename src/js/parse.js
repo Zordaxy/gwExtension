@@ -1,20 +1,24 @@
-define(['storage', 'settings', "../data/ordinal"], function (storage, settings, ordinal) {
-    function parseMinAdvPrice(div, itemId) {
+import { Storage } from './storage';
+import { Settings } from './settings';
+import { Ordinal } from '../data/ordinal';
+
+export class Parse {
+    parseMinAdvPrice(div, itemId) {
         let elems = div.querySelectorAll('table.wb tr');
-        let item = ordinal.get(itemId);
+        let item = Ordinal.get(itemId);
         if (item) {
             let result = null;
             let duration = item.duration;
             for (var i = 3, l = elems.length; i < l; i++) {
                 var td = elems[i].getElementsByTagName('td');
-                if(!td || !td[1]) {
+                if (!td || !td[1]) {
                     continue;
                 }
                 var dur = td[1].textContent;
                 var island = td[3].textContent.slice(1, 2);
 
 
-                if ((dur === (duration + "/" + duration)) && (island === settings.island) && (td[4].textContent.indexOf("написать") < 0)) {
+                if ((dur === (duration + "/" + duration)) && (island === Settings.island) && (td[4].textContent.indexOf("написать") < 0)) {
                     result = result || {};
                     result.price = td[0].textContent.replace(/[\$\,]/g, '') | 0;
                     result.seller = td[4].textContent.slice(0, td[4].textContent.indexOf(" ["));
@@ -26,8 +30,8 @@ define(['storage', 'settings', "../data/ordinal"], function (storage, settings, 
         return null;
     }
 
-    function parseMinShopPrice(div, cost) {
-        var result = {difference: '-'};
+    parseMinShopPrice(div, cost) {
+        var result = { difference: '-' };
         if (div.getElementsByTagName('li')[2]) {
             result.minPrice = +div.getElementsByTagName('li')[2].getElementsByTagName('b')[0].textContent.slice(0, -1).replace(',', '');
             result.shopOwner = div.getElementsByTagName('li')[2].getElementsByTagName('b')[1].textContent;
@@ -41,7 +45,7 @@ define(['storage', 'settings', "../data/ordinal"], function (storage, settings, 
         return result;
     }
 
-    function parseResPrice(div, itemId) {
+    parseResPrice(div, itemId) {
         var prices = [];
         var trs = div.querySelector("a[href='/stats.php']").parentNode.querySelector("table td").nextElementSibling.getElementsByTagName("tr");
         for (var i = 0; i < trs.length; i++) {
@@ -52,12 +56,6 @@ define(['storage', 'settings', "../data/ordinal"], function (storage, settings, 
                 }
             }
         }
-        return prices.length ? (Math.min.apply(Math, prices) - storage.getCost(itemId)) : "-";
+        return prices.length ? (Math.min.apply(Math, prices) - Storage.getCost(itemId)) : "-";
     }
-
-    return {
-        parseMinAdvPrice: parseMinAdvPrice,
-        parseMinShopPrice: parseMinShopPrice,
-        parseResPrice: parseResPrice
-    }
-});
+}
