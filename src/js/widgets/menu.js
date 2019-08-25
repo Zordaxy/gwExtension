@@ -4,16 +4,16 @@ export class Menu {
         if (chat) {
             chat.parentNode.appendChild(document.createTextNode(' | '));
 
-            this.el = document.createElement('a');
-            el.innerHTML = html;
-            el.href = '#';
-            el.style.textDecoration = 'none';
-            el.onclick = callback;
-            chat.parentNode.appendChild(el);
+            this._element = document.createElement('a');
+            this._element.innerHTML = html;
+            this._element.href = '#';
+            this._element.style.textDecoration = 'none';
+            this._element.onclick = callback;
+            chat.parentNode.appendChild(this._element);
         }
     }
 
     get element() {
-        return this.el;
+        return this.element;
     }
 };

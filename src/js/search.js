@@ -11,12 +11,12 @@ import { delay, flatMap } from 'rxjs/operators';
 export const Search = {
     findBuildings(table) {
         for ([owner, buildings] of Settings.rentOwners) {
-            Http.get('/info.realty.php?id=' + owner).subscribe(xhr => {
+            Http.get(`/info.realty.php?id=${owner}`).subscribe(xhr => {
                 let div = document.createElement('div');
                 div.innerHTML = xhr.response;
 
                 buildings.forEach(id => {
-                    let selector = "a[href='/object.php?id=" + id + "']";
+                    let selector = `a[href='/object.php?id=${id}']`;
                     let buildingTitle = div.querySelector(selector);
                     if (buildingTitle) {
                         let buildingLine = buildingTitle.closest('tr');
@@ -43,7 +43,7 @@ export const Search = {
                 let itemId = lastIndex ? itemLink.slice(firstIndex, lastIndex) : itemLink.slice(firstIndex);
                 itemsList.push(itemId);
 
-                Http.get('/market.php?stage=2&item_id=' + itemId + '&action_id=1&island=-1').subscribe(xhr => {
+                Http.get(`/market.php?stage=2&item_id=${itemId}&action_id=1&island=-1`).subscribe(xhr => {
                     let div = document.createElement('div');
                     div.innerHTML = xhr.response;
                     let minItem = Parse.parseMinAdvPrice(div, itemId);
@@ -70,7 +70,7 @@ export const Search = {
             let inputPriceLine = filteredRows[index].querySelectorAll("td input[name]");
             let resourceId = inputPriceLine[0].name.slice(7, -1);
 
-            Http.get('/market.php?stage=2&item_id=' + resourceId + '&action_id=1&island=-1').subscribe(xhr => {
+            Http.get(`/market.php?stage=2&item_id=${resourceId}&action_id=1&island=-1`).subscribe(xhr => {
                 let div = document.createElement('div');
                 div.innerHTML = xhr.response;
 
@@ -97,10 +97,9 @@ export const Search = {
             let item = items[index];
 
             if (item.indexOf("category") !== -1) {
-                let text = '\
-                                <td class="wb smallBox"></td>\
-                                <td class="wb" colspan="7">' + Ordinal.get(item).category + '</td>\
-                ';
+                let text = `
+                    <td class="wb smallBox"></td>
+                    <td class="wb" colspan="7">${Ordinal.get(item).category}</td>`;
                 AddLine.addItemLine(text);
                 index++;
             }
@@ -108,7 +107,7 @@ export const Search = {
             let minShop;
             let text;
 
-            Http.get('/market.php?stage=2&item_id=' + item + '&action_id=1&island=-1')
+            Http.get(`/market.php?stage=2&item_id=${item}&action_id=1&island=-1`)
                 .pipe(
                     delay(400),
                     flatMap(xhr => {
@@ -136,7 +135,10 @@ export const Search = {
                     let isPriceGood = (minShop.minPrice - resPrice) > 10000 && minShop.minPrice / resPrice > 2;
                     let textClass = isPriceGood ? " goodPrice" : "";
 
-                    text += '<td class="wb' + textClass + '"><a href="' + Settings.domain + '/statlist.php?r=' + item + '">' + resPrice + '</a></th>';
+                    text += `
+                        <td class="wb${textClass}">
+                            <a href="${Settings.domain}/statlist.php?r=${item}">${resPrice}</a>
+                        </th>`;
                     AddLine.addItemLine(text, item);
                 })
         }, 1000);
@@ -159,9 +161,9 @@ export const Search = {
                 App.result.content.appendChild(endLine);
             }
 
-            let itemId = items[i]
+            let itemId = items[index]
             let page = 0;
-            let url = '/market.php?stage=2&item_id=' + itemId + '&action_id=1&island=-1';
+            let url = `/market.php?stage=2&item_id=${itemId}&action_id=1&island=-1`;
             let request = url => Http.get(url).subscribe(xhr => {
                 let div = document.createElement('div'),
                     elems, pages;
@@ -199,6 +201,6 @@ export const Search = {
     },
 
     getItemLink(itemId, title) {
-        return '<b><a href="' + Settings.domain + '/item.php?item_id=' + itemId + '">' + title + '</a></b>';
+        return `<b><a href="${Settings.domain}/item.php?item_id=${itemId}">${title}</a></b>`;
     },
 }

@@ -44,8 +44,8 @@ export const App = {
         }
 
         if (Settings.showButtons.settings) {
-            new Menu('settings', this.settingsTab.show());
             this.settingsTab = new SettingsTab(this.blacker);
+            new Menu('settings', this.settingsTab.show());
         }
     },
 

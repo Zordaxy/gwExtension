@@ -147,7 +147,7 @@
     opacity: 1;
 }
 
-.publicationMenu {
+#publicationMenu {
     position: absolute;
     width: 220px;
     height: 160px;
@@ -156,4 +156,5 @@
     padding: 10px;
     background: black;
     color: white;
+    z-index: 110;
 }

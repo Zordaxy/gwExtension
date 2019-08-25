@@ -2,8 +2,6 @@ import { Settings } from "./settings";
 import { Ordinal } from "../data/ordinal";
 
 export const Storage = {
-    _items: [],
-
     getCost(name) {
         let supply = Ordinal.list.filter(element => {
             return element.name === name;
@@ -15,41 +13,31 @@ export const Storage = {
 
         let resources = Settings.resources;
         let price = 0;
-        for (let key in supply) {
-            if (resources.hasOwnProperty(key)) {
-                price += supply[key] * resources[key];
-            }
+        for (let key of Object.keys(supply)) {
+            price += supply[key] * resources[key];
         }
-        price = price / supply.power;
-        return price;
+        return price / supply.power;
     },
 
     getItems() {
-        let items = window.localStorage.getItem(Keys.itemKey);
-        this._items = items ? JSON.parse(items) : [];
-        return this._items;
+        return window.localStorage.getItem(Keys.itemKey) || [];
     },
 
     saveItem(item) {
-        if (item) {
-            this._items.push(item);
+        let items = this.getItems();
+        if (!items.includes(item)) {
+            items.push(item);
+            window.localStorage.setItem(Keys.itemKey, JSON.stringify(items));
         }
-        window.localStorage.setItem(Keys.itemKey, JSON.stringify(this._items));
     },
 
     hasItem(item) {
-        return this._items.includes(item);
+        this.getItems().includes(item);
     },
 
     removeItem(el) {
-        let items = this.getItems();
-        items.forEach((item, i) => {
-            if (item === el) {
-                items.splice(i, 1);
-            }
-        });
-        this._items = items;
-        this.saveItem();
+        let items = this.getItems().filter(entry => entry !== el)
+        window.localStorage.setItem(Keys.itemKey, JSON.stringify(items));
     },
 
     setPrice(price) {

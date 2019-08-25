@@ -4,7 +4,7 @@ import { Settings } from './settings';
 import { App } from './app';
 
 export const AutoPublic = {
-    count = 0,
+    count: 0,
 
     showAdvertisement() {
         App.blacker.show();
@@ -45,9 +45,9 @@ export const AutoPublic = {
                             </tr>
                         </table>`;
         document.getElementsByTagName('body')[0].appendChild(menu);
-        document.getElementById('buyBtn').addEventListener('click', this.mainStart.bind(null, 1), false);
-        document.getElementById('sellBtn').addEventListener('click', this.mainStart.bind(null, 2), false);
-        document.getElementById('allBtn').addEventListener('click', this.mainStart.bind(null, 0), false);
+        document.getElementById('buyBtn').addEventListener('click', this.mainStart.bind(this, 1), false);
+        document.getElementById('sellBtn').addEventListener('click', this.mainStart.bind(this, 2), false);
+        document.getElementById('allBtn').addEventListener('click', this.mainStart.bind(this, 0), false);
     },
 
     mainStart(apMode) {
@@ -73,14 +73,15 @@ export const AutoPublic = {
                 if (/\_\_/.test(name)) name = name.replace('__', '');
                 let url = "";
                 switch (apMode) {
-                    case '0':
+                    case 0:
                         // продажа целого 50/50
                         url = `${Settings.domain}/market-p.php?
                             item_id=${name}&action_id=1
                             &stage=3
                             &island=${localStorage.getItem('apIsland')}
                             &price=${String(+(localStorage.getItem('apSellPrice')) * Number(/(.*?)\:/.exec(HighTeck.list[apArt])[1]) * 1000)}
-                            &modificator=0&durability1=${ HighTeck.list[apArt].substring(3, HighTeck.list[apArt].length)}
+                            &modificator=0
+                            &durability1=${ HighTeck.list[apArt].substring(3, HighTeck.list[apArt].length)}
                             &durability2=${HighTeck.list[apArt].substring(3, HighTeck.list[apArt].length)}
                             &date_len=3`;
                         Http.post(url);
@@ -97,7 +98,7 @@ export const AutoPublic = {
                             &durability2=0
                             &date_len=3`;
                         break;
-                    case '1':
+                    case 1:
                         url = `${Settings.domain}/market-p.php?
                             item_id=${name}
                             &action_id=2
@@ -109,7 +110,7 @@ export const AutoPublic = {
                             &durability2=0
                             &date_len=3`;
                         break;
-                    case '2':
+                    case 2:
                         url = `${Settings.domain}/market-p.php?
                             item_id=${name}
                             &action_id=1
@@ -136,7 +137,7 @@ export const AutoPublic = {
                 if (document.getElementById('namer')) {
                     document.getElementById('namer').innerHTML = name;
                 }
-                setTimeout(mainStart.bind(null, apMode), 1000);
+                setTimeout(this.mainStart.bind(this, apMode), 1000);
                 break;
             }
             lschet++;

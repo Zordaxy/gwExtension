@@ -4,23 +4,24 @@ import { Settings } from './settings';
 import { Menu } from "./widgets/menu";
 
 export const ParseTransactions = {
+    name: "A-g",
+    id: 379129,
+    finishDate: "21.11.16 20:52",
+
     init() {
         let nickTag = document.querySelector("[id=namespan] b");
-        if (nickTag) {
-            if (nickTag.innerText === "A-g") {
-                new Menu('count AG Sells', parseAG.getPage);
-            }
+        if (nickTag && nickTag.innerText === name) {
+            new Menu(`count ${name} Sells`, parseAG.getPage);
         }
     },
 
     getPage() {
         App.result.open();
         App.blacker.show();
-        let finishDate = "21.11.16 20:52";
 
         let page = 0;
         let finishFlag = false;
-        let url = Settings.domain + '/usertransfers.php?id=' + Settings.friend;
+        let url = `${Settings.domain}/usertransfers.php?id=${id}`;
 
         let request = url => Http.get(url).subscribe(xhr => {
             let div = document.createElement('div');
@@ -31,8 +32,8 @@ export const ParseTransactions = {
 
             for (let element of elements) {
                 let time = element.querySelector('font').innerText;
-                if (time === finishDate) {
-                    addEndLine();
+                if (time === this.finishDate) {
+                    this.addEndLine();
                     finishFlag = true;
                     break;
                 }
@@ -50,7 +51,7 @@ export const ParseTransactions = {
                     continue;
                 }
 
-                addLine(time, price, customer, description);
+                this.addLine(time, price, customer, description);
             }
 
 
@@ -87,7 +88,7 @@ export const ParseTransactions = {
         });
 
         let text = `<td class="wb"></td>
-            <td class="wb">Продано на:</td>
+            <td class="wb">Sold:</td>
             <td class="wb">${sum}</td>
             <td class="wb"></td>
             <td class="wb"></td>
