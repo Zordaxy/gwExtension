@@ -10,7 +10,7 @@ export const ParseAG = {
 
         var page = 0;
         var finishFlag = false;
-        Http.get('http://www.ganjawars.ru/usertransfers.php?id=' + person).subscribe(xhr => {
+        Http.get(Settings.domain + '/usertransfers.php?id=' + person).subscribe(xhr => {
             var div = document.createElement('div'),
                 elems, pages;
             div.innerHTML = xhr.response;

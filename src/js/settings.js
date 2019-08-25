@@ -17,9 +17,10 @@ export const Settings = {
         grass: 37,
         boxites: 32
     },
-    rentOwners: {},
+    rentOwners: new Map([]),
     eun: {
         maxPrice: 137000,
         minPrice: 10000
     },
+    domain: 'http://www.gwars.ru',
 }

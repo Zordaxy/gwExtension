@@ -6,70 +6,55 @@ import { AddLine } from './addLine';
 import { App } from './app';
 import { Ordinal } from '../data/ordinal';
 import { HighTeck } from '../data/highTeck';
+import { delay, flatMap } from 'rxjs/operators';
 
 export const Search = {
-    //Buildings
     findBuildings(table) {
-        var owners = Settings.rentOwners;
-        for (var owner in owners) {
-            this.searchBuildings(table, owner, owners[owner]);
+        for ([owner, buildings] of Settings.rentOwners) {
+            Http.get('/info.realty.php?id=' + owner).subscribe(xhr => {
+                var div = document.createElement('div');
+                div.innerHTML = xhr.response;
+
+                buildings.forEach(id => {
+                    var selector = "a[href='/object.php?id=" + id + "']";
+                    var buildingTitle = div.querySelector(selector);
+                    if (buildingTitle) {
+                        var buildingLine = buildingTitle.closest('tr');
+                        table.appendChild(buildingLine);
+                    }
+                });
+            });
         }
     },
 
-    searchBuildings(table, owner, buildings) {
-        var url = '/info.realty.php?id=' + owner;
-        Http.get('/info.realty.php?id=' + owner).subscribe(xhr => {
-            var div = document.createElement('div');
-            div.innerHTML = xhr.response;
-
-            buildings.forEach(id => {
-                var selector = "a[href='/object.php?id=" + id + "']";
-                var buildingTitle = div.querySelector(selector);
-                if (buildingTitle) {
-                    var buildingLine = buildingTitle.closest('tr');
-                    table.appendChild(buildingLine);
-                }
-            });
-        });
-    },
-
-    //Bug
     findBagList() {
         var itemsList = [];
-        var i = 0;
+        var index = 0;
         var timerId = setInterval(() => {
-            var curentId = 'item_tr1_' + i;
+            if (index++ === 110) {
+                clearInterval(timerId);
+            }
+            var curentId = `item_tr1_${index}`;
             if (document.getElementById(curentId)) {
-                var selector = "#item_tr1_" + i + " a";
-                var itemLink = document.querySelector(selector).href;
+                var itemLink = document.querySelector(`${curentId} a`).href;
 
                 var firstIndex = itemLink.indexOf("=") + 1;
                 var lastIndex = (itemLink.indexOf("&") > 0) ? itemLink.indexOf("&") : null;
                 var itemId = lastIndex ? itemLink.slice(firstIndex, lastIndex) : itemLink.slice(firstIndex);
                 itemsList.push(itemId);
 
-                this.searchBagList(itemId, curentId);
-            }
-            i++;
-            if (i === 110) {
-                clearInterval(timerId);
+                Http.get('/market.php?stage=2&item_id=' + itemId + '&action_id=1&island=-1').subscribe(xhr => {
+                    var div = document.createElement('div');
+                    div.innerHTML = xhr.response;
+                    var minItem = Parse.parseMinAdvPrice(div, itemId);
+                    if (minItem) {
+                        AddLine.appendAdvertisementData(curentId, minItem.price, minItem.seller, Storage.getCost(itemId));
+                    }
+                });
             }
         }, 400);
     },
 
-    searchBagList(itemId, lineId) {
-        Http.get('/market.php?stage=2&item_id=' + itemId + '&action_id=1&island=-1').subscribe(xhr => {
-            var div = document.createElement('div');
-            div.innerHTML = xhr.response;
-            var minItem = Parse.parseMinAdvPrice(div, itemId);
-            var cost = Storage.getCost(itemId);
-            if (minItem) {
-                AddLine.appendAdvertisementData(lineId, minItem.price, minItem.seller, cost);
-            }
-        });
-    },
-
-    //Shop
     findShopPrices() {
         var rows = document.querySelector("form[action='/objectedit.php'] table[cellpadding='4']").rows;
         var filteredRows = Array.prototype.filter.call(rows, elem => {
@@ -77,31 +62,26 @@ export const Search = {
                 && !isNaN(+elem.querySelectorAll("td")[1].innerText);
         });
 
-        var i = 0;
+        var index = 0;
         var timerId = setInterval(() => {
-            var inputPriceLine = filteredRows[i].querySelectorAll("td input[name]");
-            var resourceId = inputPriceLine[0].name.slice(7, -1);
-            this.searchShopPrices(resourceId, filteredRows[i]);
-            i++;
-            if (i == filteredRows.length) {
+            if (index++ == filteredRows.length) {
                 clearInterval(timerId);
             }
+            var inputPriceLine = filteredRows[index].querySelectorAll("td input[name]");
+            var resourceId = inputPriceLine[0].name.slice(7, -1);
+
+            Http.get('/market.php?stage=2&item_id=' + resourceId + '&action_id=1&island=-1').subscribe(xhr => {
+                var div = document.createElement('div');
+                div.innerHTML = xhr.response;
+
+                var minShop = Parse.parseMinShopPrice(div);
+                AddLine.appendShopCount(filteredRows[i], minShop, resourceId);
+            });
         }, 400);
     },
 
-    searchShopPrices(itemId, row) {
-        Http.get('/market.php?stage=2&item_id=' + itemId + '&action_id=1&island=-1').subscribe(xhr => {
-            var div = document.createElement('div');
-            div.innerHTML = xhr.response;
-
-            var minShop = Parse.parseMinShopPrice(div);
-            AddLine.appendShopCount(row, minShop, itemId);
-        });
-    },
-
-    //Statistic
-    findStatistic(e) {
-        e.preventDefault();
+    findStatistic(event) {
+        event.preventDefault();
         Storage.getItems();
 
         App.result.open();
@@ -109,76 +89,69 @@ export const Search = {
 
         let items = Ordinal.getIDs();
 
-        var i = 0;
+        var index = 0;
         var timerId = setInterval(() => {
-            if (items[i].indexOf("category") !== -1) {
-                let text = '\
-                                <td class="wb smallBox"></td>\
-                                <td class="wb" colspan="7">' + Ordinal.get(items[i]).category + '</td>\
-                ';
-                AddLine.addItemLine(text);
-                i++;
-            }
-            this.searchStatisticItem(items[i]);
-            i++;
-            if (i == items.length) {
+            if (index++ == items.length) {
                 clearInterval(timerId);
             }
+            let item = items[index];
+
+            if (item.indexOf("category") !== -1) {
+                let text = '\
+                                <td class="wb smallBox"></td>\
+                                <td class="wb" colspan="7">' + Ordinal.get(item).category + '</td>\
+                ';
+                AddLine.addItemLine(text);
+                index++;
+            }
+
+            let minShop;
+            let text;
+
+            Http.get('/market.php?stage=2&item_id=' + item + '&action_id=1&island=-1')
+                .pipe(
+                    delay(400),
+                    flatMap(xhr => {
+                        var div = document.createElement('div');
+                        div.innerHTML = xhr.response;
+                        var cost = Storage.getCost(item);
+                        minShop = Parse.parseMinShopPrice(div, cost);
+                        var minItem = Parse.parseMinAdvPrice(div, item);
+
+                        text = `
+                            <td class="wb smallBox"><input type="checkbox" id="${item}"></td>
+                            <td class="wb">${this.getItemLink(item, minShop.title)}</td>
+                            <td class="wb">${minShop.minPrice}</td>
+                            <td class="wb">${cost}</td>
+                            <td class="wb">${(minItem && minItem.price) ? minItem.price - cost : "-"}</td>
+                            <td class="wb" id="${item}Difference">${minShop.difference}</td>`;
+                        return Http.get('/statlist.php?r=' + item)
+                    })
+                )
+                .subscribe(xhr => {
+                    var div = document.createElement('div');
+                    div.innerHTML = xhr.response;
+
+                    var resPrice = Parse.parseResPrice(div, item);
+                    var isPriceGood = (minShop.minPrice - resPrice) > 10000 && minShop.minPrice / resPrice > 2;
+                    var textClass = isPriceGood ? " goodPrice" : "";
+
+                    text += '<td class="wb' + textClass + '"><a href="' + Settings.domain + '/statlist.php?r=' + item + '">' + resPrice + '</a></th>';
+                    AddLine.addItemLine(text, item);
+                })
         }, 1000);
 
     },
 
-    searchStatisticItem(itemId) {
-        Http.get('/market.php?stage=2&item_id=' + itemId + '&action_id=1&island=-1').subscribe(xhr => {
-            var div = document.createElement('div');
-            div.innerHTML = xhr.response;
-            var cost = Storage.getCost(itemId);
-            var minShop = Parse.parseMinShopPrice(div, cost);
-            var minItem = Parse.parseMinAdvPrice(div, itemId);
-            var advDifference = (minItem && minItem.price) ? minItem.price - cost : "-";
-
-            var text = '\
-                            <td class="wb smallBox"><input type="checkbox" id="' + itemId + '"></td>\
-                            <td class="wb">' + this.getItemLink(itemId, minShop.title) + '</td>\
-                            <td class="wb">' + minShop.minPrice + '</td>\
-                            <td class="wb">' + cost + '</td>\
-                            <td class="wb">' + advDifference + '</td>\
-                            <td class="wb" id="' + itemId + 'Difference">' + minShop.difference + '</td>\
-            ';
-            setTimeout(this.searchStatisticResource(itemId, text, minShop.minPrice), 400);
-        })
-    },
-
-    searchStatisticResource(itemId, text, minPrice) {
-        Http.get('/statlist.php?r=' + itemId).subscribe(xhr => {
-            var div = document.createElement('div');
-            div.innerHTML = xhr.response;
-
-            var resPrice = Parse.parseResPrice(div, itemId);
-            var isPriceGood = (minPrice - resPrice) > 10000 && minPrice / resPrice > 2;
-            var textClass = isPriceGood ? " goodPrice" : "";
-
-            var text2 = '\
-                    <td class="wb' + textClass + '"><a href="http://www.ganjawars.ru/statlist.php?r=' + itemId + '">' + resPrice + '</a></th>\
-                    ';
-            AddLine.addItemLine(text + text2, itemId);
-        });
-    },
-
-    //EUN
     findEuns(e) {
         e.preventDefault();
-
         App.result.open();
         App.blacker.show();
 
         let items = HighTeck.getIDs();
-
-        var i = 0;
+        var index = 0;
         var timerId = setInterval(() => {
-            Search.searchEun(items[i]);
-            i++;
-            if (i === items.length) {
+            if (index++ === items.length) {
                 clearInterval(timerId);
 
                 var endLine = document.createElement('tr');
@@ -186,48 +159,47 @@ export const Search = {
                 endLine.className = 'wb';
                 App.result.content.appendChild(endLine);
             }
+
+            let itemId = items[i]
+            let page = 0;
+            Http.get('/market.php?stage=2&item_id=' + itemId + '&action_id=1&island=-1').subscribe(xhr => {
+                var div = document.createElement('div'),
+                    elems, pages;
+                div.innerHTML = xhr.response;
+                if (div.getElementsByTagName('li').length === 0) {
+                    return
+                }
+                var title = div.getElementsByTagName('li')[0].parentNode.getElementsByTagName('a')[0].textContent;
+                elems = div.querySelectorAll('table.wb tr');
+                pages = div.querySelectorAll('br ~ center b a');
+                var sellEunPrice = Math.floor(+div.querySelector("li b").textContent.slice(0, -4) * 0.9);
+                var maxPrice = sellEunPrice * localStorage.maxPrice;
+                var minPrice = sellEunPrice * Settings.eun.minPrice;
+                if (pages.length > 1 && page < pages.length - 1) {
+                    for (var i = 1, l = pages.length; i < l; i++) {
+                        request(pages[i].href);
+                        ++page;
+                    }
+                }
+
+                for (var i = 3, l = elems.length; i < l; i++) {
+                    var td = elems[i].getElementsByTagName('td'),
+                        cost = td[0].textContent.replace(/[\$\,]/g, '') | 0;
+                    //dur = /(\d+)\/(\d+)/.exec(td[1].textContent)[2] | 0;
+                    if ((maxPrice > 0 && maxPrice < cost) || (minPrice > cost)) continue;
+                    //if (item.dur > 0 && item.dur > dur) continue;
+                    var itemLink = document.createElement('td');
+                    var pricePerEun = (cost / (sellEunPrice * 1000)).toFixed(1);
+                    itemLink.innerHTML = this.getItemLink(itemId, title) + "(" + pricePerEun + ")";
+                    itemLink.className = 'wb';
+                    elems[i].insertBefore(itemLink, td[0]);
+                    App.result.content.appendChild(elems[i]);
+                }
+            })
         }, 1000);
     },
 
-    searchEun(itemId) {
-        var page = 0;
-        Http.get('/market.php?stage=2&item_id=' + itemId + '&action_id=1&island=-1').subscribe(xhr => {
-            var div = document.createElement('div'),
-                elems, pages;
-            div.innerHTML = xhr.response;
-            if (div.getElementsByTagName('li').length === 0) {
-                return
-            }
-            var title = div.getElementsByTagName('li')[0].parentNode.getElementsByTagName('a')[0].textContent;
-            elems = div.querySelectorAll('table.wb tr');
-            pages = div.querySelectorAll('br ~ center b a');
-            var sellEunPrice = Math.floor(+div.querySelector("li b").textContent.slice(0, -4) * 0.9);
-            var maxPrice = sellEunPrice * localStorage.maxPrice;
-            var minPrice = sellEunPrice * Settings.eun.minPrice;
-            if (pages.length > 1 && page < pages.length - 1) {
-                for (var i = 1, l = pages.length; i < l; i++) {
-                    request(pages[i].href);
-                    ++page;
-                }
-            }
-
-            for (var i = 3, l = elems.length; i < l; i++) {
-                var td = elems[i].getElementsByTagName('td'),
-                    cost = td[0].textContent.replace(/[\$\,]/g, '') | 0;
-                //dur = /(\d+)\/(\d+)/.exec(td[1].textContent)[2] | 0;
-                if ((maxPrice > 0 && maxPrice < cost) || (minPrice > cost)) continue;
-                //if (item.dur > 0 && item.dur > dur) continue;
-                var itemLink = document.createElement('td');
-                var pricePerEun = (cost / (sellEunPrice * 1000)).toFixed(1);
-                itemLink.innerHTML = this.getItemLink(itemId, title) + "(" + pricePerEun + ")";
-                itemLink.className = 'wb';
-                elems[i].insertBefore(itemLink, td[0]);
-                App.result.content.appendChild(elems[i]);
-            }
-        })
-    },
-
     getItemLink(itemId, title) {
-        return '<b><a href="http://www.ganjawars.ru/item.php?item_id=' + itemId + '">' + title + '</a></b>';
+        return '<b><a href="' + Settings.domain + '/item.php?item_id=' + itemId + '">' + title + '</a></b>';
     },
 }
