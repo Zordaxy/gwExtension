@@ -1,5 +1,5 @@
-export class Ordinal {
-    list = [
+export const Ordinal = {
+    list: [
         //{name: "category0", category: "Первичные ресурсы"},
         //Первичные ресурсы
         //{name: "aluminium", hours: 1, power: 1, uranium: 15, boxites: 30, solomka: 25},
@@ -248,17 +248,17 @@ export class Ordinal {
         { name: "bandage", hours: 1, duration: 2 },
         { name: "coffee", hours: 1, duration: 2 },
         { name: "stimpack_spd", hours: 1, duration: 1 }
-    ];
+    ],
 
     get(id) {
-        return list.find(function (elem) {
+        return this.list.find(elem => {
             return elem.name === id
         });
-    }
+    },
 
     getIDs() {
-        return list.map(item => {
+        return this.list.map(item => {
             return item.name;
         })
-    }
+    },
 }

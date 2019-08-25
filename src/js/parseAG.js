@@ -1,22 +1,22 @@
 import { ajaxQuery } from "./http";
-import { Initializer } from "./app";
+import { App } from "./app";
 
-export class ParseAG {
+export const ParseAG = {
     getPage() {
-        Initializer.result.open();
-        Initializer.blacker.show();
+        App.result.open();
+        App.blacker.show();
         let person = 379129; //A-g
         let finishDate = "21.11.16 20:52";
 
         var page = 0,
             finishFlag = false;
         var url = 'http://www.ganjawars.ru/usertransfers.php?id=' + person;
-        var request = function (url) {
-            return ajaxQuery(url, 'GET', '', function (xhr) {
+        var request = url => {
+            return ajaxQuery(url, 'GET', '', xhr => {
                 var div = document.createElement('div'),
                     elems, pages;
                 div.innerHTML = xhr.responseText;
-                elems = [].filter.call(div.children, function (el) {
+                elems = [].filter.call(div.children, el => {
                     return el.nodeName === "NOBR"
                 });
                 pages = div.querySelectorAll('br ~ center b a');
@@ -39,7 +39,7 @@ export class ParseAG {
             });
         };
         request(url);
-    }
+    },
 
     parseLine(element) {
         var time = element.querySelector('font').innerText;
@@ -64,7 +64,7 @@ export class ParseAG {
 
         addLine(time, price, customer, description);
         return false;
-    }
+    },
 
     addLine(time, price, customer, description) {
         var text = '\
@@ -78,13 +78,13 @@ export class ParseAG {
                 ';
         var itemLine = document.createElement('tr');
         itemLine.innerHTML = text;
-        Initializer.result.content.appendChild(itemLine);
-    }
+        App.result.content.appendChild(itemLine);
+    },
 
     addEndLine() {
         var sum = 0;
         var prices = document.getElementsByName("sellPrice");
-        prices.forEach(function (el) {
+        prices.forEach(el => {
             sum += +el.innerText;
         });
 
@@ -100,6 +100,6 @@ export class ParseAG {
         var itemLine = document.createElement('tr');
         itemLine.innerHTML = text;
         Initializerer.result.content.appendChild(itemLine);
-    }
+    },
 
 }

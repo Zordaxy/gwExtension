@@ -1,23 +1,23 @@
 import { ajaxQuery } from './http';
 import { HighTeck } from '../data/highTeck';
 
-export class AutoPublic {
-    constructor() {
-        this.apSellPrice = localStorage.apSellPrice || '62';
-        if (!localStorage.apSellPrice) {
-            localStorage.apSellPrice = apSellPrice;
-        }
-        this.apBuyPrice = localStorage.apBuyPrice || '60';
-        if (!localStorage.apBuyPrice) { //цена продажи
-            localStorage.apBuyPrice = apBuyPrice;
+export const AutoPublic = {
+    init() {
+        if(!localStorage.getItem('apSellPrice')) {
+            localStorage.setItem('apSellPrice', 62)
         }
 
-        schet = 0;
+        if(!localStorage.getItem('apBuyPrice')) {
+            localStorage.setItem('apBuyPrice', 60)
+        }
+
+
+        this.schet = 0;
         this.apMode = typeof localStorage.apMode !== 'undefined' ? localStorage.apMode : '0'; //режим размещения
         this.apIsland = typeof localStorage.apIsland !== 'undefined' ? localStorage.apIsland : '0'; //остров размещения
         if (this.apIsland === '0') localStorage.apIsland = '0';
         this.apRentGun = HighTeck.list;
-    }
+    },
 
     showAdvertisement() {
         var shadow = document.createElement('div');
@@ -28,27 +28,59 @@ export class AutoPublic {
         var menu = document.createElement('div');
         menu.setAttribute('id', 'menu');
         menu.setAttribute('style', 'position:absolute;width:220px;height:160px;left:35%;top:35%;padding:10px;background:black;color:white;');
-        menu.innerHTML = '<p>Укажите цены:</p><table><tr><td style="color:#fff">Цена продажи за EUN:</td><td width=55><input onchange="localStorage.apSellPrice = this.value;" id="sellPrice" size="3" value="' + apSellPrice + '"></td></tr><tr><td style="color:#fff">Цена покупки за EUN:</td><td><input type="text" id="buyPrice" onchange="localStorage.apBuyPrice = this.value;" size="3" value="' + apBuyPrice + '"></td></tr><tr><td colspan="2" align="center"><p style="color:white;"><input onclick="localStorage.apIsland = -1" name="browser" type="radio" ' + (apIsland == '-1' ? 'checked' : '') + '>[Все] <input onclick="localStorage.apIsland = 0" name="browser" type="radio" ' + (apIsland == '0' ? 'checked' : '') + '>[G] <input onclick="localStorage.apIsland = 1" name="browser" type="radio" ' + (apIsland == '1' ? 'checked' : '') + '>[Z] <input onclick="localStorage.apIsland = 4" name="browser" type="radio" ' + (apIsland == '4' ? 'checked' : '') + '>[P]</p><input id="buyBtn" value="Куплю" type="submit"> <input id="sellBtn" value="Продам" type="submit"> <input id="allBtn" value="Все" type="submit"></td></tr></table>';
+        menu.innerHTML = `
+                        <p>
+                            Укажите цены:
+                        </p>
+                        <table>
+                            <tr>
+                                <td style="color:#fff">Цена продажи за EUN:</td>
+                                <td width=55><input onchange="localStorage.apSellPrice = this.value;" id="sellPrice" size="3" value="${this.apSellPrice}"></td>
+                            </tr>
+                            <tr>
+                                <td style="color:#fff">Цена покупки за EUN:</td>
+                                <td>
+                                    <input type="text" id="buyPrice" onchange="localStorage.apBuyPrice = this.value;" size="3" value="${this.apBuyPrice}">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" align="center">
+                                    <p style="color:white;">
+                                        <input onclick="localStorage.apIsland = -1" name="browser" type="radio" ${(this.apIsland == '-1' ? 'checked' : '')}>
+                                        [Все] 
+                                        <input onclick="localStorage.apIsland = 0" name="browser" type="radio" ${(this.apIsland == '0' ? 'checked' : '')}>
+                                        [G] 
+                                        <input onclick="localStorage.apIsland = 1" name="browser" type="radio" ${(this.apIsland == '1' ? 'checked' : '')}>
+                                        [Z] 
+                                        <input onclick="localStorage.apIsland = 4" name="browser" type="radio" ${(this.apIsland == '4' ? 'checked' : '')}>
+                                        [P]
+                                    </p>
+                                    <input id="buyBtn" value="Куплю" type="submit"> 
+                                    <input id="sellBtn" value="Продам" type="submit"> 
+                                    <input id="allBtn" value="Все" type="submit">
+                                </td>
+                            </tr>
+                        </table>`;
         document.getElementsByTagName('body')[0].appendChild(menu);
         document.getElementById('buyBtn').addEventListener('click', buyBtn, false);
         document.getElementById('sellBtn').addEventListener('click', sellBtn, false);
         document.getElementById('allBtn').addEventListener('click', allBtn, false);
-    }
+    },
 
     buyBtn() {
         localStorage.apMode = '1';
         mainStart()
-    }
+    },
 
     sellBtn() {
         localStorage.apMode = '2';
         mainStart()
-    }
+    },
 
     allBtn() {
         localStorage.apMode = '0';
         mainStart()
-    }
+    },
 
     mainStart() {
         try {
@@ -58,7 +90,7 @@ export class AutoPublic {
         }
         var lschet = 0;
         for (var apArt in apRentGun) {
-            if (lschet === schet) {
+            if (lschet === this.schet) {
                 var name = apArt;
                 if (/\_\_/.test(name)) name = name.replace('__', '');
                 let url = "";
@@ -79,14 +111,14 @@ export class AutoPublic {
                         break;
                 }
 
-                ajaxQuery(url, 'POST', '', function () {
+                ajaxQuery(url, 'POST', '', () => {
                     if (name === 'saperka3') {
                         stop();
                     }
                 });
-                schet++;
+                this.schet++;
                 try {
-                    document.getElementById('schet').innerHTML = schet;
+                    document.getElementById('schet').innerHTML = this.schet;
                     document.getElementById('namer').innerHTML = name;
                 } catch (e) {
                     ;
@@ -96,16 +128,16 @@ export class AutoPublic {
             }
             lschet++;
         }
-    }
+    },
 
     stop() {
         document.getElementById('menu').innerHTML = '<center><p>Объявления успешно размещены!</p><br><br><br><input type="submit" value="Закрыть" id="close"></center>';
         document.getElementById('menu').setAttribute('id', 'lastmenu');
         document.getElementById('close').addEventListener('click', close, false);
-    }
+    },
 
     close() {
         document.getElementById('lastmenu').parentNode.removeChild(document.getElementById('lastmenu'));
         document.getElementById('shadow').parentNode.removeChild(document.getElementById('shadow'));
-    }
+    },
 }

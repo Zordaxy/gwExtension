@@ -1,5 +1,5 @@
-export class HighTeck {
-    list = {
+export const HighTeck = {
+    list: {
         //пекали
         mp5: '12:50', berettam12: '18:50', scorpion: '20:50', stkinetics: '25:50', p90: '30:60', __90m1: '35:62', mp7: '40:60',
         kriss2: '40:50', mtar21: '35:50', pm06: '35:50', uzipro: '32:55',
@@ -43,9 +43,9 @@ export class HighTeck {
         saperka3: '20:50', gift_wallet: '20:50', gift_watch: '21:55', fieldcomp: '20:40', attackbelt: '20:40', ammobelt: '20:40',
         mealpack: '24:40', cbelt: '24:40', bomberbelt: '20:20', commandobelt: '25:40', watch_ganjarmani: '30:25', armygps: '46:40',
         armyknife: '25:30', tacticalgps: '67:40', gt_multitool: '27:30'
-    };
+    },
 
     getIDs() {
-        return Object.keys(list);
-    }
+        return Object.keys(this.list);
+    },
 }

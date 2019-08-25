@@ -1,4 +1,4 @@
-import { Initializer } from "./app";
+import { App } from "./js/app";
 
 // ==UserScript==
 // @name            Price Checker
@@ -11,10 +11,6 @@ import { Initializer } from "./app";
 // @author          Michegan
 // ==/UserScript==
 
-
-
-new Initializer();
-    console.log("Initialize GW Checker");
-    appFunc();
-    //app.init();
+console.log("Initialize GW Checker");
+App.init();
 

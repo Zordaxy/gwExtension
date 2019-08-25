@@ -1,9 +1,9 @@
 import { Storage } from './storage';
 import { ajaxQuery } from './http';
 import { Settings } from './settings';
-import { Initializer } from './app';
+import { App } from './app';
 
-export class AddLine {
+export const AddLine = {
     appendShopCount(row, minShop, itemId) {
         var cost = Storage.getCost(itemId);
 
@@ -25,7 +25,7 @@ export class AddLine {
 
         countTd.innerHTML = minShop.minPrice + "(" + profit + ") " + minShop.shopOwner;
         row.appendChild(countTd);
-    }
+    },
 
     _changeShopPrice(event) {
         var isSellerFriend = Settings.friends.includes(event.target.closest('td').getAttribute("seller"));
@@ -33,7 +33,7 @@ export class AddLine {
         price = isSellerFriend ? price : Math.floor((price - 1) / 10) * 10;
 
         event.target.closest('tr').querySelectorAll('td input')[2].value = price;
-    }
+    },
 
     appendAdvertisementData(lineId, price, seller, cost) {
         var describtionText = document.getElementById(lineId).getElementsByTagName('td')[4].textContent;
@@ -87,7 +87,7 @@ export class AddLine {
         describtionTd.insertBefore(describtionSpan, describtionTd.firstChild);
         nameTd.appendChild(nameSpan1);
         nameTd.appendChild(nameSpan2);
-    }
+    },
 
     _changePrice(event) {
         var price = event.target.getAttribute("set-price");
@@ -95,38 +95,38 @@ export class AddLine {
         Storage.setPrice(price);
 
         if (url.indexOf("market-i") > 0) {
-            var callOut = function (url) {
+            var callOut = url => {
                 return ajaxQuery(url, 'GET');
             };
             callOut(url);
         }
 
-        setTimeout(function () {
+        setTimeout(() => {
             var middleClick = new MouseEvent("click", { "button": 1, "which": 1 });
-            var link = [].filter.call(document.getElementsByTagName('a'), function (elem) {
+            var link = [].filter.call(document.getElementsByTagName('a'), elem => {
                 return elem.innerHTML === "sell";
             })[0];
 
             link.dispatchEvent(middleClick);
         }, 800);
-    }
+    },
 
     addItemLine(text, itemId) {
         let itemLine = document.createElement('tr');
         itemLine.innerHTML = text;
 
-        Initializer.result.content.appendChild(itemLine);
+        App.result.content.appendChild(itemLine);
 
         if (itemId) {
             let checkBox = document.getElementById(itemId);
-            checkBox.onclick = _selectItem;
+            checkBox.onclick = this._selectItem;
 
             if (Storage.hasItem(itemId)) {
                 checkBox.parentNode.parentNode.style.backgroundColor = "lightGreen";
                 checkBox.checked = true;
             }
         }
-    }
+    },
 
     _selectItem(e) {
         e = e || window.event;
@@ -138,5 +138,5 @@ export class AddLine {
             checkBox.parentNode.parentNode.style.backgroundColor = "white";
             Storage.removeItem(checkBox.id);
         }
-    }
+    },
 }

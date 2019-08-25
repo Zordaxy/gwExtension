@@ -1,13 +1,13 @@
-export class Settings {
-    static friends = [
+export const Settings = {
+    friends: [
         "Michegan",
         "Kalyunya",
         "A-g",
         "KISTOCHKA"
-    ];
-    static island = "Z";
-    static funnyDigit = "";
-    static resources = {
+    ],
+    island: "Z",
+    funnyDigit: "",
+    resources: {
         hours: 442,
         uranium: 99,
         ganjium: 160,
@@ -16,10 +16,10 @@ export class Settings {
         solomka: 41,
         grass: 37,
         boxites: 32
-    };
-    static rentOwners = {};
-    static eun = {
+    },
+    rentOwners: {},
+    eun: {
         maxPrice: 137000,
         minPrice: 10000
-    };
+    },
 }

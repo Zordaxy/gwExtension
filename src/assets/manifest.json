@@ -1,6 +1,5 @@
 {
   "manifest_version": 2,
-
   "name": "GW Checker",
   "description": "GwChecker description",
   "version": "3.0",
@@ -8,10 +7,9 @@
   "content_scripts": [
     {
       "matches": ["http://*.ganjawars.ru/*", "http://ganjawars.ru/*", "http://www.gwars.ru/*", "http://*.gwars.ru/*"],
-      "css": ["src/css/main.css"],
+      "css": ["main.css"],
       "js": [
-        "vendors/require.js",
-        "build/main.min.js"
+        "bundle.js"
       ]
     }
   ],

@@ -4,30 +4,25 @@ import { Menu, Result, Blacker, SettingsTab } from "./widgets";
 import { Search } from './search';
 import { AutoPublic } from './autoPublic';
 
-export class Initializer {
-    result;
-    blacker;
-    settingsTab;
-
-    constructor() {
+export const App = {
+    init() {
+        this.initWidgets();
         this.initMenu();
         this.initEunMenu();
         this.initBagMenu();
         this.initAdvertisementMenu();
-        this.initSettingsMenu();
-        this.initWidgets();
+        // this.initSettingsMenu();
         this.initSellForm();
         this.initBuildingsPage();
         this.initShopPriceMenu();
         this.initFightButtons();
         this.initParseAG();
-    }
+    },
 
     initWidgets() {
-        result = new Result();
-        blacker = new Blacker();
-        settingsTab = new SettingsTab();
-    }
+        this.blacker = new Blacker();
+        this.result = new Result(this.blacker);
+    },
 
     initSellForm() {
         var priceField = document.getElementsByName("submitprice");
@@ -39,7 +34,7 @@ export class Initializer {
         if (funnyField.length) {
             funnyField[0].value = Settings.funnyDigit;
         }
-    }
+    },
 
     initBuildingsPage() {
         var selector = "a[href='/object.php?id=" + 120158 + "']";
@@ -50,34 +45,36 @@ export class Initializer {
             var buildingTable = firstMyBuilding.closest('table');
             Search.findBuildings(buildingTable)
         }
-    }
+    },
 
     initMenu() {
         this.menu = new Menu();
         this.menu.add('check prices', Search.findStatistic.bind(Search));
-    }
+    },
 
     initEunMenu() {
         this.menu = new Menu();
         this.menu.add('EUN', Search.findEuns);
-    }
+    },
 
     initBagMenu() {
         if (document.getElementById("setswitch")) {
             this.menu = new Menu();
             this.menu.add('count bag', Search.findBagList.bind(Search));
         }
-    }
+    },
 
     initAdvertisementMenu() {
+        AutoPublic.init();
         this.menu = new Menu();
         this.menu.add('advertisements', AutoPublic.showAdvertisement.bind(AutoPublic));
-    }
+    },
 
     initSettingsMenu() {
         this.menu = new Menu();
-        this.menu.add('settings', settingsTab.show.bind(settingsTab));
-    }
+        this.settingsTab = new SettingsTab(this.blacker);
+        this.menu.add('settings', this.settingsTab.show());
+    },
 
     initShopPriceMenu() {
         let isShop = document.querySelector("form[action='/objectedit.php']");
@@ -85,11 +82,12 @@ export class Initializer {
             this.menu = new Menu();
             this.menu.add('countShop', Search.findShopPrices.bind(Search));
         }
-    }
+    },
 
     initFightButtons() {
-        document.onkeydown = function (evt) {
-            evt = evt || window.event; ret = true;
+        document.onkeydown = evt => {
+            evt = evt || window.event; 
+            let ret = true;
             if ((evt.keyCode === 100) || ((evt.keyCode === 32) && (typeof chatactive === 'undefined' || chatactive === 0))) {
                 var turn = document.querySelector("form[name=battleform] a");
                 var update = document.querySelector("a[href='javascript:void(updatedata())']");
@@ -110,7 +108,7 @@ export class Initializer {
                 }
             }
         }
-    }
+    },
 
     initParseAG() {
         let nickTag = document.querySelector("[id=namespan] b");
@@ -121,5 +119,5 @@ export class Initializer {
             }
 
         }
-    }
+    },
 }

@@ -2,7 +2,7 @@ import { Storage } from './storage';
 import { Settings } from './settings';
 import { Ordinal } from '../data/ordinal';
 
-export class Parse {
+export const Parse = {
     parseMinAdvPrice(div, itemId) {
         let elems = div.querySelectorAll('table.wb tr');
         let item = Ordinal.get(itemId);
@@ -28,7 +28,7 @@ export class Parse {
             return result
         }
         return null;
-    }
+    },
 
     parseMinShopPrice(div, cost) {
         var result = { difference: '-' };
@@ -43,7 +43,7 @@ export class Parse {
             result.title = div.querySelector(".wb b a[href]").textContent;
         }
         return result;
-    }
+    },
 
     parseResPrice(div, itemId) {
         var prices = [];
@@ -57,5 +57,5 @@ export class Parse {
             }
         }
         return prices.length ? (Math.min.apply(Math, prices) - Storage.getCost(itemId)) : "-";
-    }
+    },
 }

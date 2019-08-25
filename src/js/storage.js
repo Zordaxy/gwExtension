@@ -1,16 +1,11 @@
 import { Settings } from "./settings";
 import { Ordinal } from "../data/ordinal";
 
-export class Storage {
-    _itemKey = 'item-price';
-    _itemInfoKey = 'item-info';
-    _priceToSet = 'item-priceToSet';
-    _storage = window.localStorage;
-    _items = [];
-    _itemsInfo;
+export const Storage = {
+    _items: [],
 
     getCost(name) {
-        var supply = Ordinal.list.filter(function (element) {
+        var supply = Ordinal.list.filter(element => {
             return element.name === name;
         })[0];
 
@@ -27,50 +22,46 @@ export class Storage {
         }
         price = price / supply.power;
         return price;
-    }
+    },
 
     getItems() {
-        var items = _storage.getItem(_itemKey);
-        _items = items ? JSON.parse(items) : [];
-        return _items;
-    }
-
-    getItemsInfo() {
-        var items = _storage.getItem(_itemInfoKey);
-        _itemsInfo = items ? JSON.parse(items) : [];
-        return _items;
-    }
+        var items = window.localStorage.getItem(Keys.itemKey);
+        this._items = items ? JSON.parse(items) : [];
+        return this._items;
+    },
 
     saveItem(item) {
         if (item) {
-            _items.push(item);
+            this._items.push(item);
         }
-        _storage.setItem(_itemKey, JSON.stringify(_items));
-    }
+        window.localStorage.setItem(Keys.itemKey, JSON.stringify(this._items));
+    },
 
-    saveItemInfo(item) {
-        if (item) {
-            _itemsInfo.push(item);
-        }
-        _storage.setItem(_itemInfoKey, JSON.stringify(_items));
-    }
+    hasItem(item) {
+        return this._items.includes(item);
+    },
 
     removeItem(el) {
-        let items = getItems();
-        items.forEach(function (item, i) {
+        let items = this.getItems();
+        items.forEach((item, i) => {
             if (item === el) {
                 items.splice(i, 1);
             }
-        }.bind(this));
-        _items = items;
-        saveItem();
-    }
+        });
+        this._items = items;
+        this.saveItem();
+    },
 
     setPrice(price) {
-        _storage.setItem(_priceToSet, price);
-    }
+        window.localStorage.setItem(Keys.priceToSet, price);
+    },
 
     getPrice() {
-        _storage.getItem(_priceToSet);
+        window.localStorage.getItem(Keys.priceToSet);
     }
+}
+
+class Keys {
+    static itemKey = 'item-price';
+    static priceToSet = 'item-priceToSet';
 }

@@ -27,7 +27,8 @@ export class Blacker {
 
 
 export class Result {
-    constructor() {
+    constructor(blacker) {
+        this.blacker = blacker;
         let html = '\
                     <table class="item-finder__table">\
                         <thead>\
@@ -60,7 +61,7 @@ export class Result {
     close(e) {
         if (e) e.preventDefault();
         this._result.style.display = 'none';
-        blacker.hide();
+        this.blacker.hide();
     }
 
     open() {
@@ -70,8 +71,11 @@ export class Result {
 };
 
 export class SettingsTab {
+    constructor(blacker) {
+        this.blacker = blacker;
+    }
     show() {
-        blacker.show();
+        this.blacker.show();
         this._settings = document.createElement('div');
         this._settings.setAttribute('id', 'settingsTab');
         this._settings.setAttribute('style', 'position:absolute;width:220px;left:35%;top:35%;padding:10px;background:#d0eed0;color:black;z-index:1000;');
@@ -95,7 +99,7 @@ export class SettingsTab {
 
         // let _settings = document.getElementById("settingsTab");
         // _settings.innerHTML = '';
-        blacker.hide();
+        this.blacker.hide();
     }
 };
 
