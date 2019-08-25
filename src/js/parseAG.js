@@ -1,4 +1,4 @@
-import { ajaxQuery } from "./http";
+import { Http } from "./http";
 import { App } from "./app";
 
 export const ParseAG = {
@@ -8,37 +8,33 @@ export const ParseAG = {
         let person = 379129; //A-g
         let finishDate = "21.11.16 20:52";
 
-        var page = 0,
-            finishFlag = false;
-        var url = 'http://www.ganjawars.ru/usertransfers.php?id=' + person;
-        var request = url => {
-            return ajaxQuery(url, 'GET', '', xhr => {
-                var div = document.createElement('div'),
-                    elems, pages;
-                div.innerHTML = xhr.responseText;
-                elems = [].filter.call(div.children, el => {
-                    return el.nodeName === "NOBR"
-                });
-                pages = div.querySelectorAll('br ~ center b a');
-
-                for (var i = 0, l = elems.length; i < l; i++) {
-                    finishFlag = parseLine(elems[i]);
-                    if (finishFlag) {
-                        break;
-                    }
-                }
-
-                if (!finishFlag) {
-                    if (page >= 3) {
-                        //TODO Add string with too many pages deep
-                        return;
-                    }
-                    ++page;
-                    request(pages[page].href);
-                }
+        var page = 0;
+        var finishFlag = false;
+        Http.get('http://www.ganjawars.ru/usertransfers.php?id=' + person).subscribe(xhr => {
+            var div = document.createElement('div'),
+                elems, pages;
+            div.innerHTML = xhr.response;
+            elems = [].filter.call(div.children, el => {
+                return el.nodeName === "NOBR"
             });
-        };
-        request(url);
+            pages = div.querySelectorAll('br ~ center b a');
+
+            for (var i = 0, l = elems.length; i < l; i++) {
+                finishFlag = parseLine(elems[i]);
+                if (finishFlag) {
+                    break;
+                }
+            }
+
+            if (!finishFlag) {
+                if (page >= 3) {
+                    //TODO Add string with too many pages deep
+                    return;
+                }
+                ++page;
+                request(pages[page].href);
+            }
+        });
     },
 
     parseLine(element) {

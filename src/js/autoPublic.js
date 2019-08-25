@@ -1,4 +1,4 @@
-import { ajaxQuery } from './http';
+import { Http } from './http';
 import { HighTeck } from '../data/highTeck';
 
 export const AutoPublic = {
@@ -98,7 +98,7 @@ export const AutoPublic = {
                     case '0':
                         // продажа целого 50/50
                         url = 'http://www.ganjawars.ru/market-p.php?item_id=' + name + '&action_id=1&stage=3&island=' + localStorage.apIsland + '&price=' + String(Number(localStorage.apSellPrice) * Number(/(.*?)\:/.exec(apRentGun[apArt])[1]) * 1000) + '&modificator=0&durability1=' + apRentGun[apArt].substring(3, apRentGun[apArt].length) + '&durability2=' + apRentGun[apArt].substring(3, apRentGun[apArt].length) + '&date_len=3';
-                        ajaxQuery(url, 'POST');
+                        Http.post(url);
 
                         // купля ломаного 0/0
                         url = 'http://www.ganjawars.ru/market-p.php?item_id=' + name + '&action_id=2&stage=3&island=' + localStorage.apIsland + '&price=' + String(Number(localStorage.apBuyPrice) * Math.floor((Number(/(.*?)\:/.exec(apRentGun[apArt])[1]) * 0.9)) * 1000) + '&modificator=0&durability1=0&durability2=0&date_len=3';
@@ -111,11 +111,12 @@ export const AutoPublic = {
                         break;
                 }
 
-                ajaxQuery(url, 'POST', '', () => {
+                Http.post(url).subscribe(() => {
                     if (name === 'saperka3') {
                         stop();
                     }
                 });
+
                 this.schet++;
                 try {
                     document.getElementById('schet').innerHTML = this.schet;

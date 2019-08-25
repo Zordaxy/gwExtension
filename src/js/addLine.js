@@ -1,5 +1,5 @@
 import { Storage } from './storage';
-import { ajaxQuery } from './http';
+import { Http } from './http';
 import { Settings } from './settings';
 import { App } from './app';
 
@@ -95,10 +95,7 @@ export const AddLine = {
         Storage.setPrice(price);
 
         if (url.indexOf("market-i") > 0) {
-            var callOut = url => {
-                return ajaxQuery(url, 'GET');
-            };
-            callOut(url);
+            Http.get(url);
         }
 
         setTimeout(() => {

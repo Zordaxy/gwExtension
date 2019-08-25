@@ -1,5 +1,5 @@
 import { Storage } from './storage';
-import { ajaxQuery } from './http';
+import { Http } from './http';
 import { Settings } from './settings';
 import { Parse } from './parse';
 import { AddLine } from './addLine';
@@ -18,22 +18,19 @@ export const Search = {
 
     searchBuildings(table, owner, buildings) {
         var url = '/info.realty.php?id=' + owner;
-        var request = url => {
-            return ajaxQuery(url, 'GET', '', xhr => {
-                var div = document.createElement('div');
-                div.innerHTML = xhr.responseText;
+        Http.get('/info.realty.php?id=' + owner).subscribe(xhr => {
+            var div = document.createElement('div');
+            div.innerHTML = xhr.response;
 
-                buildings.forEach(id => {
-                    var selector = "a[href='/object.php?id=" + id + "']";
-                    var buildingTitle = div.querySelector(selector);
-                    if (buildingTitle) {
-                        var buildingLine = buildingTitle.closest('tr');
-                        table.appendChild(buildingLine);
-                    }
-                });
+            buildings.forEach(id => {
+                var selector = "a[href='/object.php?id=" + id + "']";
+                var buildingTitle = div.querySelector(selector);
+                if (buildingTitle) {
+                    var buildingLine = buildingTitle.closest('tr');
+                    table.appendChild(buildingLine);
+                }
             });
-        };
-        request(url);
+        });
     },
 
     //Bug
@@ -61,19 +58,15 @@ export const Search = {
     },
 
     searchBagList(itemId, lineId) {
-        var url = '/market.php?stage=2&item_id=' + itemId + '&action_id=1&island=-1';
-        var request = url => {
-            return ajaxQuery(url, 'GET', '', xhr => {
-                var div = document.createElement('div');
-                div.innerHTML = xhr.responseText;
-                var minItem = Parse.parseMinAdvPrice(div, itemId);
-                var cost = Storage.getCost(itemId);
-                if (minItem) {
-                    AddLine.appendAdvertisementData(lineId, minItem.price, minItem.seller, cost);
-                }
-            });
-        };
-        request(url);
+        Http.get('/market.php?stage=2&item_id=' + itemId + '&action_id=1&island=-1').subscribe(xhr => {
+            var div = document.createElement('div');
+            div.innerHTML = xhr.response;
+            var minItem = Parse.parseMinAdvPrice(div, itemId);
+            var cost = Storage.getCost(itemId);
+            if (minItem) {
+                AddLine.appendAdvertisementData(lineId, minItem.price, minItem.seller, cost);
+            }
+        });
     },
 
     //Shop
@@ -97,17 +90,13 @@ export const Search = {
     },
 
     searchShopPrices(itemId, row) {
-        var url = '/market.php?stage=2&item_id=' + itemId + '&action_id=1&island=-1';
-        var request = url => {
-            return ajaxQuery(url, 'GET', '', xhr => {
-                var div = document.createElement('div');
-                div.innerHTML = xhr.responseText;
+        Http.get('/market.php?stage=2&item_id=' + itemId + '&action_id=1&island=-1').subscribe(xhr => {
+            var div = document.createElement('div');
+            div.innerHTML = xhr.response;
 
-                var minShop = Parse.parseMinShopPrice(div);
-                AddLine.appendShopCount(row, minShop, itemId);
-            });
-        };
-        request(url);
+            var minShop = Parse.parseMinShopPrice(div);
+            AddLine.appendShopCount(row, minShop, itemId);
+        });
     },
 
     //Statistic
@@ -140,48 +129,40 @@ export const Search = {
     },
 
     searchStatisticItem(itemId) {
-        var url = '/market.php?stage=2&item_id=' + itemId + '&action_id=1&island=-1';
-        var request = url => {
-            return ajaxQuery(url, 'GET', '', xhr => {
-                var div = document.createElement('div');
-                div.innerHTML = xhr.responseText;
-                var cost = Storage.getCost(itemId);
-                var minShop = Parse.parseMinShopPrice(div, cost);
-                var minItem = Parse.parseMinAdvPrice(div, itemId);
-                var advDifference = (minItem && minItem.price) ? minItem.price - cost : "-";
+        Http.get('/market.php?stage=2&item_id=' + itemId + '&action_id=1&island=-1').subscribe(xhr => {
+            var div = document.createElement('div');
+            div.innerHTML = xhr.response;
+            var cost = Storage.getCost(itemId);
+            var minShop = Parse.parseMinShopPrice(div, cost);
+            var minItem = Parse.parseMinAdvPrice(div, itemId);
+            var advDifference = (minItem && minItem.price) ? minItem.price - cost : "-";
 
-                var text = '\
-                                <td class="wb smallBox"><input type="checkbox" id="' + itemId + '"></td>\
-                                <td class="wb">' + this.getItemLink(itemId, minShop.title) + '</td>\
-                                <td class="wb">' + minShop.minPrice + '</td>\
-                                <td class="wb">' + cost + '</td>\
-                                <td class="wb">' + advDifference + '</td>\
-                                <td class="wb" id="' + itemId + 'Difference">' + minShop.difference + '</td>\
-                ';
-                setTimeout(this.searchStatisticResource(itemId, text, minShop.minPrice), 400);
-            });
-        };
-        request(url);
+            var text = '\
+                            <td class="wb smallBox"><input type="checkbox" id="' + itemId + '"></td>\
+                            <td class="wb">' + this.getItemLink(itemId, minShop.title) + '</td>\
+                            <td class="wb">' + minShop.minPrice + '</td>\
+                            <td class="wb">' + cost + '</td>\
+                            <td class="wb">' + advDifference + '</td>\
+                            <td class="wb" id="' + itemId + 'Difference">' + minShop.difference + '</td>\
+            ';
+            setTimeout(this.searchStatisticResource(itemId, text, minShop.minPrice), 400);
+        })
     },
 
     searchStatisticResource(itemId, text, minPrice) {
-        var url = '/statlist.php?r=' + itemId;
-        var request = url => {
-            return ajaxQuery(url, 'GET', '', xhr => {
-                var div = document.createElement('div');
-                div.innerHTML = xhr.responseText;
+        Http.get('/statlist.php?r=' + itemId).subscribe(xhr => {
+            var div = document.createElement('div');
+            div.innerHTML = xhr.response;
 
-                var resPrice = Parse.parseResPrice(div, itemId);
-                var isPriceGood = (minPrice - resPrice) > 10000 && minPrice / resPrice > 2;
-                var textClass = isPriceGood ? " goodPrice" : "";
+            var resPrice = Parse.parseResPrice(div, itemId);
+            var isPriceGood = (minPrice - resPrice) > 10000 && minPrice / resPrice > 2;
+            var textClass = isPriceGood ? " goodPrice" : "";
 
-                var text2 = '\
-                        <td class="wb' + textClass + '"><a href="http://www.ganjawars.ru/statlist.php?r=' + itemId + '">' + resPrice + '</a></th>\
-                        ';
-                AddLine.addItemLine(text + text2, itemId);
-            });
-        };
-        request(url);
+            var text2 = '\
+                    <td class="wb' + textClass + '"><a href="http://www.ganjawars.ru/statlist.php?r=' + itemId + '">' + resPrice + '</a></th>\
+                    ';
+            AddLine.addItemLine(text + text2, itemId);
+        });
     },
 
     //EUN
@@ -210,45 +191,40 @@ export const Search = {
 
     searchEun(itemId) {
         var page = 0;
-        var url = '/market.php?stage=2&item_id=' + itemId + '&action_id=1&island=-1';
-        var request = url => {
-            ajaxQuery(url, 'GET', '', xhr => {
-                var div = document.createElement('div'),
-                    elems, pages;
-                div.innerHTML = xhr.responseText;
-                if (div.getElementsByTagName('li').length === 0) {
-                    return
+        Http.get('/market.php?stage=2&item_id=' + itemId + '&action_id=1&island=-1').subscribe(xhr => {
+            var div = document.createElement('div'),
+                elems, pages;
+            div.innerHTML = xhr.response;
+            if (div.getElementsByTagName('li').length === 0) {
+                return
+            }
+            var title = div.getElementsByTagName('li')[0].parentNode.getElementsByTagName('a')[0].textContent;
+            elems = div.querySelectorAll('table.wb tr');
+            pages = div.querySelectorAll('br ~ center b a');
+            var sellEunPrice = Math.floor(+div.querySelector("li b").textContent.slice(0, -4) * 0.9);
+            var maxPrice = sellEunPrice * localStorage.maxPrice;
+            var minPrice = sellEunPrice * Settings.eun.minPrice;
+            if (pages.length > 1 && page < pages.length - 1) {
+                for (var i = 1, l = pages.length; i < l; i++) {
+                    request(pages[i].href);
+                    ++page;
                 }
-                var title = div.getElementsByTagName('li')[0].parentNode.getElementsByTagName('a')[0].textContent;
-                elems = div.querySelectorAll('table.wb tr');
-                pages = div.querySelectorAll('br ~ center b a');
-                var sellEunPrice = Math.floor(+div.querySelector("li b").textContent.slice(0, -4) * 0.9);
-                var maxPrice = sellEunPrice * localStorage.maxPrice;
-                var minPrice = sellEunPrice * Settings.eun.minPrice;
-                if (pages.length > 1 && page < pages.length - 1) {
-                    for (var i = 1, l = pages.length; i < l; i++) {
-                        request(pages[i].href);
-                        ++page;
-                    }
-                }
+            }
 
-                for (var i = 3, l = elems.length; i < l; i++) {
-                    var td = elems[i].getElementsByTagName('td'),
-                        cost = td[0].textContent.replace(/[\$\,]/g, '') | 0;
-                    //dur = /(\d+)\/(\d+)/.exec(td[1].textContent)[2] | 0;
-                    if ((maxPrice > 0 && maxPrice < cost) || (minPrice > cost)) continue;
-                    //if (item.dur > 0 && item.dur > dur) continue;
-                    var itemLink = document.createElement('td');
-                    var pricePerEun = (cost / (sellEunPrice * 1000)).toFixed(1);
-                    itemLink.innerHTML = this.getItemLink(itemId, title) + "(" + pricePerEun + ")";
-                    itemLink.className = 'wb';
-                    elems[i].insertBefore(itemLink, td[0]);
-                    App.result.content.appendChild(elems[i]);
-
-                }
-            })
-        };
-        request(url)
+            for (var i = 3, l = elems.length; i < l; i++) {
+                var td = elems[i].getElementsByTagName('td'),
+                    cost = td[0].textContent.replace(/[\$\,]/g, '') | 0;
+                //dur = /(\d+)\/(\d+)/.exec(td[1].textContent)[2] | 0;
+                if ((maxPrice > 0 && maxPrice < cost) || (minPrice > cost)) continue;
+                //if (item.dur > 0 && item.dur > dur) continue;
+                var itemLink = document.createElement('td');
+                var pricePerEun = (cost / (sellEunPrice * 1000)).toFixed(1);
+                itemLink.innerHTML = this.getItemLink(itemId, title) + "(" + pricePerEun + ")";
+                itemLink.className = 'wb';
+                elems[i].insertBefore(itemLink, td[0]);
+                App.result.content.appendChild(elems[i]);
+            }
+        })
     },
 
     getItemLink(itemId, title) {
