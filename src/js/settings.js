@@ -23,4 +23,13 @@ export const Settings = {
         minPrice: 10000
     },
     domain: 'http://www.gwars.ru',
+    friend: 379129, //A-g
+    showButtons: {
+        prices: true,
+        eun: true,
+        bag: true,
+        advertisement: true,
+        countShop: true,
+        settings: true,
+    }
 }

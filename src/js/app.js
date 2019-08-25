@@ -1,123 +1,71 @@
 ﻿import { Settings } from "./settings";
 import { Storage } from "./storage";
-import { Menu, Result, Blacker, SettingsTab } from "./widgets";
 import { Search } from './search';
 import { AutoPublic } from './autoPublic';
+import { ActionButtons } from './actionButtons'
+import { ParseTransactions } from "./parseTransactions";
+import { Menu } from "./widgets/menu";
+import { Blacker } from "./widgets/blacker";
+import { Result } from "./widgets/result";
+import { SettingsTab } from "./widgets/settingsTab";
 
 export const App = {
     init() {
         this.initWidgets();
-        this.initMenu();
-        this.initEunMenu();
-        this.initBagMenu();
-        this.initAdvertisementMenu();
         // this.initSettingsMenu();
         this.initSellForm();
         this.initBuildingsPage();
-        this.initShopPriceMenu();
-        this.initFightButtons();
-        this.initParseAG();
+        ActionButtons.init();
+        ParseTransactions.init();
     },
 
     initWidgets() {
         this.blacker = new Blacker();
         this.result = new Result(this.blacker);
+
+        if (Settings.showButtons.prices) {
+            new Menu('check prices', Search.findStatistic.bind(Search));
+        }
+
+        if (Settings.showButtons.eun) {
+            new Menu('EUN', Search.findEuns);
+        }
+
+        if (Settings.showButtons.bag && document.getElementById("setswitch")) {
+            new Menu('count bag', Search.findBagList.bind(Search));
+        }
+
+        if (Settings.showButtons.advertisement) {
+            new Menu('advertisements', AutoPublic.showAdvertisement.bind(AutoPublic));
+        }
+
+        if (Settings.showButtons.Settings && document.querySelector("form[action='/objectedit.php']")) {
+            new Menu('countShop', Search.findShopPrices.bind(Search));
+        }
+
+        if (Settings.showButtons.settings) {
+            new Menu('settings', this.settingsTab.show());
+            this.settingsTab = new SettingsTab(this.blacker);
+        }
     },
 
     initSellForm() {
-        var priceField = document.getElementsByName("submitprice");
+        let priceField = document.getElementsByName("submitprice");
         if (priceField.length) {
             priceField[0].value = Storage.getPrice()
         }
 
-        var funnyField = document.getElementsByName("tr_pass");
+        let funnyField = document.getElementsByName("tr_pass");
         if (funnyField.length) {
             funnyField[0].value = Settings.funnyDigit;
         }
     },
 
     initBuildingsPage() {
-        var selector = "a[href='/object.php?id=" + 120158 + "']";
-        var firstMyBuilding = document.querySelector(selector);
-        var isBuildingsPage = firstMyBuilding && !document.getElementById("mapdiv");
-
-        if (isBuildingsPage) {
-            var buildingTable = firstMyBuilding.closest('table');
+        let firstMyBuilding = document.querySelector("a[href='/object.php?id=" + 120158 + "']");
+        if (firstMyBuilding && !document.getElementById("mapdiv")) {
+            let buildingTable = firstMyBuilding.closest('table');
             Search.findBuildings(buildingTable)
-        }
-    },
-
-    initMenu() {
-        this.menu = new Menu();
-        this.menu.add('check prices', Search.findStatistic.bind(Search));
-    },
-
-    initEunMenu() {
-        this.menu = new Menu();
-        this.menu.add('EUN', Search.findEuns);
-    },
-
-    initBagMenu() {
-        if (document.getElementById("setswitch")) {
-            this.menu = new Menu();
-            this.menu.add('count bag', Search.findBagList.bind(Search));
-        }
-    },
-
-    initAdvertisementMenu() {
-        AutoPublic.init();
-        this.menu = new Menu();
-        this.menu.add('advertisements', AutoPublic.showAdvertisement.bind(AutoPublic));
-    },
-
-    initSettingsMenu() {
-        this.menu = new Menu();
-        this.settingsTab = new SettingsTab(this.blacker);
-        this.menu.add('settings', this.settingsTab.show());
-    },
-
-    initShopPriceMenu() {
-        let isShop = document.querySelector("form[action='/objectedit.php']");
-        if (isShop) {
-            this.menu = new Menu();
-            this.menu.add('countShop', Search.findShopPrices.bind(Search));
-        }
-    },
-
-    initFightButtons() {
-        document.onkeydown = evt => {
-            evt = evt || window.event; 
-            let ret = true;
-            if ((evt.keyCode === 100) || ((evt.keyCode === 32) && (typeof chatactive === 'undefined' || chatactive === 0))) {
-                var turn = document.querySelector("form[name=battleform] a");
-                var update = document.querySelector("a[href='javascript:void(updatedata())']");
-                var fontName = document.querySelector('font[color=F7941D]');
-                var map = document.querySelector('a[href="/map.php"]');
-
-                if (turn) {
-                    turn.click();
-                    ret = false;
-                }
-                if (update) {
-                    update.click();
-                    ret = false;
-                }
-                if (fontName && map) {
-                    map.click();
-                    ret = false;
-                }
-            }
-        }
-    },
-
-    initParseAG() {
-        let nickTag = document.querySelector("[id=namespan] b");
-        if (nickTag) {
-            if (nickTag.innerText === "A-g") {
-                this.menu = new Menu();
-                this.menu.add('count AG Sells', parseAG.getPage);
-            }
-
         }
     },
 }

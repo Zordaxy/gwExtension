@@ -9,13 +9,13 @@ export const Parse = {
         if (item) {
             let result = null;
             let duration = item.duration;
-            for (var i = 3, l = elems.length; i < l; i++) {
-                var td = elems[i].getElementsByTagName('td');
+            for (let i = 3, l = elems.length; i < l; i++) {
+                let td = elems[i].getElementsByTagName('td');
                 if (!td || !td[1]) {
                     continue;
                 }
-                var dur = td[1].textContent;
-                var island = td[3].textContent.slice(1, 2);
+                let dur = td[1].textContent;
+                let island = td[3].textContent.slice(1, 2);
 
 
                 if ((dur === (duration + "/" + duration)) && (island === Settings.island) && (td[4].textContent.indexOf("написать") < 0)) {
@@ -31,7 +31,7 @@ export const Parse = {
     },
 
     parseMinShopPrice(div, cost) {
-        var result = { difference: '-' };
+        let result = { difference: '-' };
         if (div.getElementsByTagName('li')[2]) {
             result.minPrice = +div.getElementsByTagName('li')[2].getElementsByTagName('b')[0].textContent.slice(0, -1).replace(',', '');
             result.shopOwner = div.getElementsByTagName('li')[2].getElementsByTagName('b')[1].textContent;
@@ -46,11 +46,11 @@ export const Parse = {
     },
 
     parseResPrice(div, itemId) {
-        var prices = [];
-        var trs = div.querySelector("a[href='/stats.php']").parentNode.querySelector("table td").nextElementSibling.getElementsByTagName("tr");
-        for (var i = 0; i < trs.length; i++) {
+        let prices = [];
+        let trs = div.querySelector("a[href='/stats.php']").parentNode.querySelector("table td").nextElementSibling.getElementsByTagName("tr");
+        for (let i = 0; i < trs.length; i++) {
             if (trs[i].children[2]) {
-                var price = +trs[i].children[2].textContent.slice(2, -1);
+                let price = +trs[i].children[2].textContent.slice(2, -1);
                 if (price) {
                     prices.push(price);
                 }

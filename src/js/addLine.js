@@ -5,14 +5,14 @@ import { App } from './app';
 
 export const AddLine = {
     appendShopCount(row, minShop, itemId) {
-        var cost = Storage.getCost(itemId);
+        let cost = Storage.getCost(itemId);
 
-        var countTd = document.createElement('td');
-        var profit = minShop.minPrice - cost;
+        let countTd = document.createElement('td');
+        let profit = minShop.minPrice - cost;
 
-        var currentPrice = row.querySelectorAll('td input')[2].value;
-        var needChange = (!Settings.friends.includes(minShop.shopOwner) || minShop.minPrice !== currentPrice)
-            && profit > 2500;
+        let currentPrice = row.querySelectorAll('td input')[2].value;
+        let needChange = (!Settings.friends.includes(minShop.shopOwner) || minShop.minPrice !== currentPrice) &&
+            profit > 2500;
 
         profit = profit > 0 ? "<span class='green'>+" + profit + "</span>" : "<span class='red'>" + profit + "</span>";
 
@@ -28,38 +28,35 @@ export const AddLine = {
     },
 
     _changeShopPrice(event) {
-        var isSellerFriend = Settings.friends.includes(event.target.closest('td').getAttribute("seller"));
-        var price = event.target.closest('td').getAttribute("newPrice");
+        let isSellerFriend = Settings.friends.includes(event.target.closest('td').getAttribute("seller"));
+        let price = event.target.closest('td').getAttribute("newPrice");
         price = isSellerFriend ? price : Math.floor((price - 1) / 10) * 10;
 
         event.target.closest('tr').querySelectorAll('td input')[2].value = price;
     },
 
     appendAdvertisementData(lineId, price, seller, cost) {
-        var describtionText = document.getElementById(lineId).getElementsByTagName('td')[4].textContent;
-        var startIndex = describtionText.indexOf("Предмет выставлен на продажу за $");
-        var isSellerFriend = Settings.friends.includes(seller);
+        let describtionText = document.getElementById(lineId).getElementsByTagName('td')[4].textContent;
+        let startIndex = describtionText.indexOf("Предмет выставлен на продажу за $");
+        let isSellerFriend = Settings.friends.includes(seller);
 
-        var lessPrice = Math.floor((price - 1) / 10) * 10;
-        var nameTd = document.getElementById(lineId).getElementsByTagName('td')[2];
-        var describtionTd = document.getElementById(lineId).getElementsByTagName('td')[4];
+        let lessPrice = Math.floor((price - 1) / 10) * 10;
+        let nameTd = document.getElementById(lineId).getElementsByTagName('td')[2];
+        let describtionTd = document.getElementById(lineId).getElementsByTagName('td')[4];
 
-        var describtionSpan = document.createElement('span');
-        var nameSpan1 = document.createElement('span');
-        var nameSpan2 = document.createElement('span');
-        //var url = describtionTd.getElementsByTagName('a')[0].href;
-        var setLess, setSame;
+        let describtionSpan = document.createElement('span');
+        let nameSpan1 = document.createElement('span');
+        let nameSpan2 = document.createElement('span');
+        let setLess, setSame;
 
         if (startIndex > 0) {
-            var myPrice = describtionText.substring((startIndex + 33), (describtionText.indexOf("\n")));
-            var more = "[" + cost + "] More than " + seller + " on " + (myPrice - price) + " (" + price + ")";
-            var same = "[" + cost + "] Same as " + seller + " (" + price + ")";
-            //var same = "Same as " + seller + " (" + price + ")" + "<br>";
+            let myPrice = describtionText.substring((startIndex + 33), (describtionText.indexOf("\n")));
+            let more = "[" + cost + "] More than " + seller + " on " + (myPrice - price) + " (" + price + ")";
+            let same = "[" + cost + "] Same as " + seller + " (" + price + ")";
             setLess = "Set less(" + (myPrice - lessPrice) + ") " + lessPrice + "<br>";
             setSame = "Set same(" + (myPrice - price) + ") " + price;
 
             if (!isSellerFriend) {
-                //nameSpan1.style.font = "bold";
                 describtionSpan.innerHTML = more;
                 nameSpan1.innerHTML = setLess;
                 nameSpan1.setAttribute("set-price", lessPrice);
@@ -90,8 +87,8 @@ export const AddLine = {
     },
 
     _changePrice(event) {
-        var price = event.target.getAttribute("set-price");
-        var url = event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.getElementsByTagName('td')[4].getElementsByTagName('a')[0].href;
+        let price = event.target.getAttribute("set-price");
+        let url = event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.getElementsByTagName('td')[4].getElementsByTagName('a')[0].href;
         Storage.setPrice(price);
 
         if (url.indexOf("market-i") > 0) {
@@ -99,8 +96,8 @@ export const AddLine = {
         }
 
         setTimeout(() => {
-            var middleClick = new MouseEvent("click", { "button": 1, "which": 1 });
-            var link = [].filter.call(document.getElementsByTagName('a'), elem => {
+            let middleClick = new MouseEvent("click", { "button": 1, "which": 1 });
+            let link = [].filter.call(document.getElementsByTagName('a'), elem => {
                 return elem.innerHTML === "sell";
             })[0];
 
@@ -125,15 +122,9 @@ export const AddLine = {
         }
     },
 
-    _selectItem(e) {
-        e = e || window.event;
-        let checkBox = e.target || e.srcElement;
-        if (checkBox.checked) {
-            checkBox.parentNode.parentNode.style.backgroundColor = "lightGreen";
-            Storage.saveItem(checkBox.id);
-        } else {
-            checkBox.parentNode.parentNode.style.backgroundColor = "white";
-            Storage.removeItem(checkBox.id);
-        }
+    _selectItem(event) {
+        let checkBox = event.target || event.srcElement;
+        checkBox.parentNode.parentNode.style.backgroundColor = checkBox.checked ? "lightGreen" : "white";
+        Storage.saveItem(checkBox.id);
     },
 }

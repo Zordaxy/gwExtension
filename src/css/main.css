@@ -15,7 +15,8 @@
     position: fixed;
     width: 800px;
     margin-left: -400px;
-    top: 220px;;
+    top: 220px;
+    ;
     left: 50%;
     margin-top: -200px;
     background: #f5fff5;
@@ -63,9 +64,7 @@
     padding: 10px;
 }
 
-.item-finder-add-item {
-
-}
+.item-finder-add-item {}
 
 .item-finder__table {
     border-collapse: collapse;
@@ -146,4 +145,15 @@
 .floatdiv {
     font-size: 14px;
     opacity: 1;
+}
+
+.publicationMenu {
+    position: absolute;
+    width: 220px;
+    height: 160px;
+    left: 35%;
+    top: 35%;
+    padding: 10px;
+    background: black;
+    color: white;
 }

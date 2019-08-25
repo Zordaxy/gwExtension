@@ -5,7 +5,7 @@ export const Storage = {
     _items: [],
 
     getCost(name) {
-        var supply = Ordinal.list.filter(element => {
+        let supply = Ordinal.list.filter(element => {
             return element.name === name;
         })[0];
 
@@ -13,9 +13,9 @@ export const Storage = {
             return null;
         }
 
-        var resources = Settings.resources;
-        var price = 0;
-        for (var key in supply) {
+        let resources = Settings.resources;
+        let price = 0;
+        for (let key in supply) {
             if (resources.hasOwnProperty(key)) {
                 price += supply[key] * resources[key];
             }
@@ -25,7 +25,7 @@ export const Storage = {
     },
 
     getItems() {
-        var items = window.localStorage.getItem(Keys.itemKey);
+        let items = window.localStorage.getItem(Keys.itemKey);
         this._items = items ? JSON.parse(items) : [];
         return this._items;
     },
