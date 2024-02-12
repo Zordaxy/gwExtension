@@ -172,11 +172,12 @@ export const Search = {
                     return
                 }
                 let title = div.getElementsByTagName('li')[0].parentNode.getElementsByTagName('a')[0].textContent;
-                elems = div.querySelectorAll('table.wb tr');
+                elems = [...div.querySelectorAll('table tr')].filter(x => x.querySelectorAll('a b')[1] && x.querySelectorAll('a b')[1].innerText === 'Купить');
                 pages = div.querySelectorAll('br ~ center b a');
                 let sellEunPrice = Math.floor(+div.querySelector("li b").textContent.slice(0, -4) * 0.9);
-                let maxPrice = sellEunPrice * localStorage.maxPrice;
+                let maxPrice = sellEunPrice * Settings.eun.maxPrice // localStorage.maxPrice;
                 let minPrice = sellEunPrice * Settings.eun.minPrice;
+                console.log(maxPrice, minPrice, sellEunPrice, elems);
                 if (pages.length > 1 && page < pages.length - 1) {
                     for (let i = 1, l = pages.length; i < l; i++) {
                         request(pages[i].href);
@@ -184,9 +185,10 @@ export const Search = {
                     }
                 }
 
-                for (let i = 3, l = elems.length; i < l; i++) {
+                for (let i = 0, l = elems.length; i < l; i++) {
                     let td = elems[i].getElementsByTagName('td'),
                         cost = td[0].textContent.replace(/[\$\,]/g, '') | 0;
+                    console.log('cost:', cost, 'maxPrice:', maxPrice);
                     if ((maxPrice > 0 && maxPrice < cost) || (minPrice > cost)) continue;
                     let itemLink = document.createElement('td');
                     let pricePerEun = (cost / (sellEunPrice * 1000)).toFixed(1);

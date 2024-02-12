@@ -19,10 +19,10 @@ export const Settings = {
     },
     rentOwners: new Map([]),
     eun: {
-        maxPrice: 137000,
+        maxPrice: 168000,
         minPrice: 10000
     },
-    domain: 'http://www.gwars.ru',
+    domain: 'https://www.gwars.io',
     showButtons: {
         prices: true,
         eun: true,

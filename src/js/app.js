@@ -11,6 +11,7 @@ import { SettingsTab } from "./widgets/settingsTab";
 
 export const App = {
     init() {
+        console.log("WORKS!!!!!!!!!!!!!!!");
         this.initWidgets();
         // this.initSettingsMenu();
         this.initSellForm();

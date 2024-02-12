@@ -1,6 +1,6 @@
 export const HighTeck = {
     list: {
-        //пекали
+        // ПП (updated)
         mp5: '12:50',
         berettam12: '18:50',
         scorpion: '20:50',
@@ -12,7 +12,10 @@ export const HighTeck = {
         mtar21: '35:50',
         pm06: '35:50',
         uzipro: '32:55',
-        //автики
+        apc9: '30:50',
+        mpx: '35:50',
+        m9: '34:50',
+        // Авто (updated)
         g11: '8:50',
         oicw: '9:60',
         an94: '25:70',
@@ -23,18 +26,23 @@ export const HighTeck = {
         ka90: '60:62',
         taiga: '64:63',
         xcr: '64:60',
+        sw_xgl40: '4:1',
         tkb517: '67:60',
+        steyr_a3: '65:60',
         ak103: '65:60',
         g36: '70:50',
         g41: '75:50',
         sig552: '75:50',
-        colt692: '75:55',
+        sw_gp34: '5:1',
         ace: '75:50',
-        steyr_a3: '65:60',
+        sc2010: '150:50',
+        sw_m6: '5:1',
+        colt692: '75:55',
         thales: '70:55',
         thales_grl: '70:55',
         rec7: '85:50',
-        ar10: '78:55',
+        sigmcx: '85:55',
+        bushmaster: '85:56',
         //пулики
         pkp: '18:60',
         ameli: '30:70',

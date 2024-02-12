@@ -6,7 +6,12 @@
 
   "content_scripts": [
     {
-      "matches": ["http://*.ganjawars.ru/*", "http://ganjawars.ru/*", "http://www.gwars.ru/*", "http://*.gwars.ru/*"],
+      "matches": [
+        "https://*.gwars.io/*",
+        "https://gwars.io/*",
+        "https://www.gwars.io/*",
+        "https://*.gwars.io/*"
+      ],
       "css": ["main.css"],
       "js": [
         "bundle.js"
