@@ -46,6 +46,15 @@ export const Storage = {
 
     getPrice() {
         window.localStorage.getItem(Keys.priceToSet);
+    },
+
+    setDurability(number, durability) {
+        // number 1 or 2
+        window.localStorage.setItem(`durability${number}`, durability);
+    },
+
+    getDurability(number) {
+        return window.localStorage.getItem(`durability${number}`);
     }
 }
 

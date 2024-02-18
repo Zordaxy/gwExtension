@@ -83,7 +83,7 @@ export const AutoPublic = {
                             &modificator=0
                             &durability1=${ HighTeck.list[apArt].substring(3, HighTeck.list[apArt].length)}
                             &durability2=${HighTeck.list[apArt].substring(3, HighTeck.list[apArt].length)}
-                            &date_len=3`;
+                            &date_len=7`;
                         Http.post(url);
 
                         // купля ломаного 0/0
@@ -96,7 +96,7 @@ export const AutoPublic = {
                             &modificator=0
                             &durability1=0
                             &durability2=0
-                            &date_len=3`;
+                            &date_len=7`;
                         break;
                     case 1:
                         url = `${Settings.domain}/market-p.php?
@@ -108,7 +108,7 @@ export const AutoPublic = {
                             &modificator=0
                             &durability1=0
                             &durability2=0
-                            &date_len=3`;
+                            &date_len=7`;
                         break;
                     case 2:
                         url = `${Settings.domain}/market-p.php?
@@ -120,7 +120,7 @@ export const AutoPublic = {
                             &modificator=0
                             &durability1=${HighTeck.list[apArt].substring(3, HighTeck.list[apArt].length)}'
                             &durability2=${HighTeck.list[apArt].substring(3, HighTeck.list[apArt].length)}
-                            &date_len=3`;
+                            &date_len=7`;
                         break;
                 }
 

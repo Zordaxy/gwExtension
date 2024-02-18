@@ -11,12 +11,11 @@ import { SettingsTab } from "./widgets/settingsTab";
 
 export const App = {
     init() {
-        console.log("WORKS!!!!!!!!!!!!!!!");
         this.initWidgets();
         // this.initSettingsMenu();
         this.initSellForm();
         this.initBuildingsPage();
-        ActionButtons.init();
+        // ActionButtons.init();
         ParseTransactions.init();
     },
 
@@ -48,6 +47,8 @@ export const App = {
             this.settingsTab = new SettingsTab(this.blacker);
             new Menu('settings', this.settingsTab.show());
         }
+
+        new Menu('render rent', Search.parseHouseList.bind(Search));
     },
 
     initSellForm() {
@@ -59,6 +60,18 @@ export const App = {
         let funnyField = document.getElementsByName("tr_pass");
         if (funnyField.length) {
             funnyField[0].value = Settings.funnyDigit;
+        }
+
+        const durability1Selector = document.querySelector('[name="durability1"]');
+        const durability2Selector = document.querySelector('[name="durability2"]');
+        if (durability1Selector
+            && durability2Selector
+            && Storage.getDurability(2)
+        ) {
+            durability1Selector.value = Storage.getDurability(1);
+            durability2Selector.value = Storage.getDurability(2);
+            Storage.setDurability(1, null);
+            Storage.setDurability(2, null);
         }
     },
 

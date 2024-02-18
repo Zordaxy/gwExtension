@@ -55,6 +55,23 @@ export const Search = {
         }, 400);
     },
 
+    parseHouseList() {
+        const itemsList = Array.from(document.querySelectorAll('[id="extract_items_div"] [itemtype="art"]'));
+        itemsList.forEach((item) => {
+            const itemId = item.href.substring(item.href.lastIndexOf("item_id=") + "item_id=".length); // 'chinook'
+            const [durability1, durability2] = item.parentNode.querySelector('font').innerText.split('/'); // 15/50
+
+
+            const url = `${Settings.domain}/market-p.php?
+                stage=2
+                &item_id=${itemId}
+                &action_id=3`;
+
+        console.log('before appendAddLink', url);
+            AddLine.appendAddLink(item.parentNode.parentNode, url, durability1, durability2);
+        });
+    },
+
     findShopPrices() {
         let rows = document.querySelector("form[action='/objectedit.php'] table[cellpadding='4']").rows;
         let filteredRows = Array.prototype.filter.call(rows, elem => {

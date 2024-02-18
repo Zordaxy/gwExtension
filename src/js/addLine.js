@@ -27,6 +27,23 @@ export const AddLine = {
         row.appendChild(countTd);
     },
 
+    appendAddLink(row, url, durability1, durability2) {
+        if (!url || !row) {
+            return;
+        }
+
+        let referenceContainer = document.createElement('a');
+        referenceContainer.href = url;
+        referenceContainer.style="text-decoration:none;font-weight:bold;color:#007700";
+        referenceContainer.innerText = 'rent'; 
+
+        referenceContainer.onclick = () => {
+            Storage.setDurability(1, durability1);
+            Storage.setDurability(2, durability2);
+        }
+        row.appendChild(referenceContainer);
+    },
+
     _changeShopPrice(event) {
         let isSellerFriend = Settings.friends.includes(event.target.closest('td').getAttribute("seller"));
         let price = event.target.closest('td').getAttribute("newPrice");
