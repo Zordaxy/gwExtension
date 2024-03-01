@@ -19,5 +19,22 @@ export const ActionButtons = {
                 }
             }
         }
+    },
+
+    highlightPokemons() {
+        const selection = document.querySelectorAll('.floatdiv');
+        const re = new RegExp("^.*(.), (1..)*%$");
+        
+        if (selection) {
+            selection.forEach(x => {
+                const text = x.innerText;
+                if (re.test(text)
+                    && re.exec(text)
+                    && Number(re.exec(text)[1]) > 1
+                    ) {
+                    x.style.backgroundColor = 'green';
+                }
+            });
+        }
     }
 }

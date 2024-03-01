@@ -121,7 +121,7 @@ export const HighTeck = {
         predatorhelmet: '55:60',
         mwshelmet: '52:50',
         df3helmet: '55:50',
-        reflector: '50:50',
+        reflector: '54:50',
         // Броня (updated)
         bronik3c: '11:60',
         bronik4c: '38:80',
