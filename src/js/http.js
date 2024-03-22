@@ -12,7 +12,6 @@ export const Http = {
             responseType: 'text'
         }).pipe(
             catchError(error => {
-                console.log('error: ', error);
                 return of(error);
             })
         );
@@ -28,7 +27,6 @@ export const Http = {
             responseType: 'text'
         }).pipe(
             catchError(error => {
-                console.log('error: ', error);
                 return of(error);
             })
         );

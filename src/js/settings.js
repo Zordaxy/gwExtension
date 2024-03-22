@@ -3,19 +3,25 @@ export const Settings = {
         "Michegan",
         "Kalyunya",
         "A-g",
-        "KISTOCHKA"
+        "KISTOCHKA",
+        "Шмекли"
     ],
     island: "Z",
     funnyDigit: "",
     resources: {
-        hours: 442,
-        uranium: 99,
-        ganjium: 160,
-        steel: 34,
-        aluminium: 201,
-        solomka: 41,
-        grass: 37,
-        boxites: 32
+        hours: 420,
+        uranium: 105,
+        ganjium: 150,
+        steel: 28,
+        aluminium: 230,
+        solomka: 37,
+        grass: 35,
+        boxites: 32,
+        oil:29,
+        seaweed: 33,
+        plastic: 382,
+        rubber: 240,
+        battery: 238
     },
     rentOwners: new Map([]),
     eun: {

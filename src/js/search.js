@@ -67,7 +67,6 @@ export const Search = {
                 &item_id=${itemId}
                 &action_id=3`;
 
-        console.log('before appendAddLink', url);
             AddLine.appendAddLink(item.parentNode.parentNode, url, durability1, durability2);
         });
     },
@@ -81,7 +80,7 @@ export const Search = {
 
         let index = 0;
         let timerId = setInterval(() => {
-            if (index++ === filteredRows.length) {
+            if (index + 1 === filteredRows.length) {
                 clearInterval(timerId);
             }
             let inputPriceLine = filteredRows[index].querySelectorAll("td input[name]");
@@ -92,7 +91,7 @@ export const Search = {
                 div.innerHTML = xhr.response;
 
                 let minShop = Parse.parseMinShopPrice(div);
-                AddLine.appendShopCount(filteredRows[i], minShop, resourceId);
+                AddLine.appendShopCount(filteredRows[index], minShop, resourceId);
             });
         }, 400);
     },
@@ -113,13 +112,13 @@ export const Search = {
             }
             let item = items[index];
 
-            if (item.indexOf("category") !== -1) {
-                let text = `
-                    <td class="wb smallBox"></td>
-                    <td class="wb" colspan="7">${Ordinal.get(item).category}</td>`;
-                AddLine.addItemLine(text);
-                index++;
-            }
+            // if (item.indexOf("category") !== -1) {
+            //     let text = `
+            //         <td class="wb smallBox"></td>
+            //         <td class="wb" colspan="7">${Ordinal.get(item).category}</td>`;
+            //     AddLine.addItemLine(text);
+            //     index++;
+            // }
 
             let minShop;
             let text;
@@ -194,7 +193,6 @@ export const Search = {
                 let sellEunPrice = Math.floor(+div.querySelector("li b").textContent.slice(0, -4) * 0.9);
                 let maxPrice = sellEunPrice * Settings.eun.maxPrice // localStorage.maxPrice;
                 let minPrice = sellEunPrice * Settings.eun.minPrice;
-                console.log(maxPrice, minPrice, sellEunPrice, elems);
                 if (pages.length > 1 && page < pages.length - 1) {
                     for (let i = 1, l = pages.length; i < l; i++) {
                         request(pages[i].href);
@@ -205,7 +203,6 @@ export const Search = {
                 for (let i = 0, l = elems.length; i < l; i++) {
                     let td = elems[i].getElementsByTagName('td'),
                         cost = td[0].textContent.replace(/[\$\,]/g, '') | 0;
-                    console.log('cost:', cost, 'maxPrice:', maxPrice);
                     if ((maxPrice > 0 && maxPrice < cost) || (minPrice > cost)) continue;
                     let itemLink = document.createElement('td');
                     let pricePerEun = (cost / (sellEunPrice * 1000)).toFixed(1);

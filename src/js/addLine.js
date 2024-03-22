@@ -20,7 +20,7 @@ export const AddLine = {
             countTd.setAttribute("seller", minShop.shopOwner);
             countTd.setAttribute("newPrice", minShop.minPrice);
             minShop.minPrice = "<span class='green'>" + minShop.minPrice + "</span>";
-            countTd.onclick = _changeShopPrice;
+            countTd.onclick = this._changeShopPrice;
         }
 
         countTd.innerHTML = minShop.minPrice + "(" + profit + ") " + minShop.shopOwner;
@@ -48,7 +48,6 @@ export const AddLine = {
         let isSellerFriend = Settings.friends.includes(event.target.closest('td').getAttribute("seller"));
         let price = event.target.closest('td').getAttribute("newPrice");
         price = isSellerFriend ? price : Math.floor((price - 1) / 10) * 10;
-
         event.target.closest('tr').querySelectorAll('td input')[2].value = price;
     },
 

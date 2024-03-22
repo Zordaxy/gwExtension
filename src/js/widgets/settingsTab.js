@@ -25,7 +25,6 @@ export class SettingsTab {
     hide(e) {
         if (e) e.preventDefault();
         this._settings.parentNode.removeChild(this._settings);
-        console.log("Triggered");
 
         // let _settings = document.getElementById("settingsTab");
         // _settings.innerHTML = '';

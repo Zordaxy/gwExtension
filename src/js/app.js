@@ -40,7 +40,7 @@ export const App = {
             new Menu('advertisements', AutoPublic.showAdvertisement.bind(AutoPublic));
         }
 
-        if (Settings.showButtons.Settings && document.querySelector("form[action='/objectedit.php']")) {
+        if (Settings.showButtons.countShop && document.querySelector("form[action='/objectedit.php']")) {
             new Menu('countShop', Search.findShopPrices.bind(Search));
         }
 

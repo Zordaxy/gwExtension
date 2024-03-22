@@ -1,3 +1,5 @@
+import { ProductionOnZ } from './production-on-z';
+
 export const Ordinal = {
     list: [
         //{name: "category0", category: "Первичные ресурсы"},
@@ -251,14 +253,57 @@ export const Ordinal = {
     ],
 
     get(id) {
-        return this.list.find(elem => {
-            return elem.name === id
+        return ProductionOnZ.find(elem => {
+            return elem.id === id
         });
     },
 
     getIDs() {
-        return this.list.map(item => {
-            return item.name;
+        return ProductionOnZ
+        .filter(item => item.id)
+        .map(item => {
+            return item.id;
         })
     },
+
+    parsingScripts() {
+        function parseEntry(entry) {
+            const island = entry.substring(1, 2);
+            const name = entry.substring(3, entry.length - 3).trim();
+            return {name, island};
+        }
+
+        let list = [...document.querySelector('[id="goods"]')
+            .querySelectorAll('option')]
+            .map(option => option.innerText)
+            .map(option => parseEntry(option))
+            .filter(option => option.island === 'Z')
+            .map(option => option.name)
+            .map(option => `{ name: '${option}' }`)
+            .join(', ')
+        list;
+
+        function parseResources(name) {
+            function getResName(node) {
+                return node.parentNode.parentNode.querySelector('td').innerText;
+            }
+    
+            const hours = document.querySelector('[id="whour"]').value;
+            const power = document.querySelector('[id="mosch"]').value;
+            const res1 = document.querySelector('[id="qty_item_1"]');
+            const res2 = document.querySelector('[id="qty_item_2"]');
+            const res3 = document.querySelector('[id="qty_item_3"]');
+            const res4 = document.querySelector('[id="qty_item_4"]');
+    
+            return `{ name: '${name}', id: '', hours: ${hours}, power: ${power}, ${getResName(res1)}: ${res1.value}, ${getResName(res2)}: ${res2.value}, ${getResName(res3)}: ${res3.value}, ${getResName(res4)}: ${res4.value} },`;
+        }
+        parseResources('Ботинки SWAT Tactical');
+
+        
+
+    }
 }
+
+
+
+// \n

@@ -1,10 +1,11 @@
 import { Settings } from "./settings";
 import { Ordinal } from "../data/ordinal";
+import { ProductionOnZ } from '../data/production-on-z';
 
 export const Storage = {
-    getCost(name) {
-        let supply = Ordinal.list.filter(element => {
-            return element.name === name;
+    getCost(id) {
+        let supply = ProductionOnZ.filter(element => {
+            return element.id === id;
         })[0];
 
         if (!supply) {
@@ -14,7 +15,9 @@ export const Storage = {
         let resources = Settings.resources;
         let price = 0;
         for (let key of Object.keys(supply)) {
-            price += supply[key] * resources[key];
+            if (resources[key]) {
+                price += supply[key] * resources[key];
+            }
         }
         return price / supply.power;
     },
