@@ -107,7 +107,7 @@ export const Search = {
 
         let index = 0;
         let timerId = setInterval(() => {
-            if (index++ === items.length) {
+            if (index++ >= items?.length) {
                 clearInterval(timerId);
             }
             let item = items[index];

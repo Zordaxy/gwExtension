@@ -15,10 +15,12 @@ module.exports = {
         new HtmlWebpackPlugin({
             title: "Webpack Output",
         }),
-        new CopyPlugin([
-            { from: './src/assets'},
-            { from: './src/css'},
-        ]),
+        new CopyPlugin({
+            patterns: [
+              { from: './src/assets' },
+              { from: './src/css' },
+            ],
+          })
     ],
     devtool: 'inline-source-map',
     module: {
@@ -30,7 +32,15 @@ module.exports = {
                     loader: "babel-loader",
                     options: {
                         "presets": [
-                            "@babel/preset-env"
+                            ["@babel/preset-env",
+                            {
+                                "useBuiltIns": "entry", 
+                                "corejs": "3.8", 
+                                  "targets": {
+                                      "browsers": "defaults, not ie 11, not ie_mob 11"
+                                  },
+                                "modules": false
+                            }]
                         ]
                     }
                 }

@@ -32,7 +32,7 @@ export const ProductionOnZ = [
     { name: 'M-76', id: 'm76', hours: 25, power: 1, steel: 67, plastic: 67, aluminium: 35, uranium: 151 },
     { name: 'M14', id: 'anm14', hours: 30, power: 1, steel: 80, plastic: 80, aluminium: 42, uranium: 180 },
     { name: 'M16A2 Heavy Gun', id: 'm16a2', hours: 19, power: 1, steel: 50, plastic: 50, aluminium: 26, uranium: 113 },
-    { name: 'M202 FLASH', id: 'm202', hours: 24, power: 1, steel: 350, rubber: 120, battery: 275, plastic: 160 },
+    { name: 'M202 FLASH', id: 'm202', hours: 24, power: 1, steel: 350, rubber: 120, battery: 275, plastic: 160, uranium: 144 },
     { name: 'MAS-38', id: 'mas38', hours: 11, power: 1, steel: 28, plastic: 28, aluminium: 15, uranium: 63 },
     { name: 'MICH Helmet', id: 'mich_helmet', hours: 36, power: 1, steel: 95, plastic: 95, aluminium: 50, uranium: 214 },
     { name: 'MM-1 40x46mm', id: 'mm1', hours: 76, power: 1, steel: 1000, plastic: 200, aluminium: 106, uranium: 450 },
@@ -111,7 +111,7 @@ export const ProductionOnZ = [
     { name: 'Фляга TF-141', id: 'flask_tf141', hours: 16, power: 1, steel: 305, plastic: 150, battery: 90, uranium: 96 },
     { name: 'Фляга с виски', id: 'flask', hours: 30, power: 1, steel: 280, battery: 130, seaweed: 280, uranium: 195 },
     { name: 'Фонарь WL-21', id: 'wl21', hours: 60, power: 1, steel: 175, plastic: 175, aluminium: 100, uranium: 450 },
-    { name: 'Шлем FAST-X', id: 'fastx', hours: 24, power: 1, steel: 350, rubber: 120, battery: 275, plastic: 160 },
+    { name: 'Шлем FAST-X', id: 'fastx', hours: 24, power: 1, steel: 350, rubber: 120, battery: 275, plastic: 160, uranium: 104 },
     { name: 'Шлем MICH 2000', id: 'mich2000', hours: 54, power: 1, steel: 150, plastic: 150, aluminium: 75, uranium: 330 },
     { name: 'Шлем МА-1', id: 'ma1_helmet', hours: 45, power: 1, steel: 120, plastic: 120, aluminium: 63, uranium: 270 },
 ];
