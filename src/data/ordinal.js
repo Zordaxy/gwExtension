@@ -289,15 +289,16 @@ export const Ordinal = {
             }
     
             const hours = document.querySelector('[id="whour"]').value;
-            const power = document.querySelector('[id="mosch"]').value;
+            const power = document.querySelector('[id="qty_pitem_1"]').value;
             const res1 = document.querySelector('[id="qty_item_1"]');
             const res2 = document.querySelector('[id="qty_item_2"]');
             const res3 = document.querySelector('[id="qty_item_3"]');
             const res4 = document.querySelector('[id="qty_item_4"]');
+            const res5 = document.querySelector('[id="qty_item_5"]');
     
-            return `{ name: '${name}', id: '', hours: ${hours}, power: ${power}, ${getResName(res1)}: ${res1.value}, ${getResName(res2)}: ${res2.value}, ${getResName(res3)}: ${res3.value}, ${getResName(res4)}: ${res4.value} },`;
+            return `{ name: '${name}', id: '', hours: ${hours}, power: ${power}, ${getResName(res1)}: ${res1.value}, ${getResName(res2)}: ${res2.value}, ${getResName(res3)}: ${res3.value}, ${getResName(res4)}: ${res4.value}${res5 ? ", " + getResName(res5) + ': ' + res4.value : ''} },`;
         }
-        parseResources('Ботинки SWAT Tactical');
+        parseResources('AAT m.52');
 
         
 
