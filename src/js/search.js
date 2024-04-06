@@ -71,30 +71,51 @@ export const Search = {
         });
     },
 
-    findShopPrices() {
+    async findShopPrices() {
+        const island = document.querySelectorAll('table table a b')?.[1]?.innerText?.substring(1, 2);
+        if (island !== "G" && island !== "Z") {
+            console.log("[Island parsing error] - island not found in shop page. Found: ", island);
+            return;
+        }
         let rows = document.querySelector("form[action='/objectedit.php'] table[cellpadding='4']").rows;
         let filteredRows = Array.prototype.filter.call(rows, elem => {
             return elem.querySelectorAll("td")[1] && +elem.querySelectorAll("td")[1].innerText !== 0 &&
                 !isNaN(+elem.querySelectorAll("td")[1].innerText);
         });
 
-        let index = 0;
-        let timerId = setInterval(() => {
-            if (index + 1 === filteredRows.length) {
-                clearInterval(timerId);
-            }
-            let inputPriceLine = filteredRows[index].querySelectorAll("td input[name]");
+        Http.processWithDelay(filteredRows, async (row) => {
+            let inputPriceLine = row.querySelectorAll("td input[name]");
             let resourceId = inputPriceLine[0].name.slice(7, -1);
 
-            Http.get(`/market.php?stage=2&item_id=${resourceId}&action_id=1&island=-1`).subscribe(xhr => {
-                let div = document.createElement('div');
-                div.innerHTML = xhr.response;
+            const minShop = await Parse.parseShopsPrice(resourceId, island)
 
-                let minShop = Parse.parseMinShopPrice(div);
-                AddLine.appendShopCount(filteredRows[index], minShop, resourceId);
-            });
-        }, 400);
+            if (minShop?.isMaxPrice) {
+                await new Promise(resolve => setTimeout(resolve, 200));
+                minShop.minPrice = await Parse.parseSellersPrice(resourceId, island);
+            }
+            AddLine.appendShopCount(row, minShop, resourceId);
+        })
     },
+
+    getIslandCode() {
+        const parsedIsland = document.querySelectorAll('table table a b')?.[1]?.innerText?.substring(1, 2);
+        let islandCode;
+
+        switch(parsedIsland) {
+            case "G":
+                islandCode = 0;
+                break;
+            case "Z":
+                islandCode = 1;
+                break;
+            default:
+                islandCode = -1;
+                console.log("[Selector error] - no island parsed from property config page");
+                break;
+        }
+        return islandCode;
+    },
+
 
     findStatistic(event) {
         event.preventDefault();
@@ -107,7 +128,7 @@ export const Search = {
 
         let index = 0;
         let timerId = setInterval(() => {
-            if (index++ >= items?.length) {
+            if (index++ >= items.length) {
                 clearInterval(timerId);
             }
             let item = items[index];

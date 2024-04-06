@@ -1,6 +1,7 @@
 import { Storage } from './storage';
 import { Settings } from './settings';
 import { Ordinal } from '../data/ordinal';
+import { Http } from './http';
 
 export const Parse = {
     parseMinAdvPrice(div, itemId) {
@@ -43,6 +44,55 @@ export const Parse = {
             result.title = div.querySelector(".wb b a[href]").textContent;
         }
         return result;
+    },
+
+    async parseShopsPrice(resourceId, island) {
+        const response = await Http.fetchGet(`/statlist.php?r=${resourceId}&type=i`)
+
+        const listSelector = response.querySelectorAll('center table table tr');
+        const list = [...listSelector];
+
+        if (list.length <=1) {
+            console.log("[Selector error] - shops list does not contain entries");
+            return { minPrice: null, isMaxPrice: true, shopOwner: 'Nobody'};
+        }
+
+        list.shift();
+        let shopOwner;
+
+        const minPriceElement = list.find((tr, index) => {
+            const shopIsland = tr.querySelector("a").innerText.substring(1,2);
+            const owner = tr.querySelector("b").innerText;
+            const price = tr.querySelectorAll("td")[2].innerText.trim().substring(1);
+            if (!shopIsland || !owner || !price) {
+                console.log("[Parsing error] - specific shop data is missing");
+                return false;
+            }
+
+            if (shopIsland !== island || owner === "Michegan") {
+                return false;
+            }
+
+            shopOwner = owner;
+            return true;
+        });
+        const minPrice = minPriceElement?.querySelectorAll("td")[2].innerText.trim().substring(1);
+        const title = response.querySelector('center table a b').innerText;
+
+        return { minPrice, title, shopOwner: shopOwner || "Michegan", isMaxPrice: !minPrice };
+    },
+
+    async parseSellersPrice(resourceId, island) {
+        const response = await Http.fetchGet(`/market.php?buy=1&item_id=${resourceId}`);
+
+        const gosShopRawPrice = response.querySelector('table [class="greengraybg"] div b')?.innerText;
+        if (!gosShopRawPrice) {
+            console.log('[Parsing errors] - cannot parse gos price');
+            return;
+        }
+
+        const gosShopPrice = gosShopRawPrice.substring(0, gosShopRawPrice.length - 1).split(',').join('');
+        return +gosShopPrice;
     },
 
     parseResPrice(div, itemId) {

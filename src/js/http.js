@@ -31,6 +31,28 @@ export const Http = {
             })
         );
     },
+
+    async fetchGet(url) {
+        const response = await fetch(url, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
+        const buffer = await response.arrayBuffer();
+        let decoder = new TextDecoder("windows-1251");
+        const text = decoder.decode(buffer);
+
+        const parser = new DOMParser();
+        const htmlDocument = parser.parseFromString(text, "text/html");
+        return htmlDocument;
+    },
+
+    async processWithDelay(array, callback, interval = 400) {
+        const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+        for (const element of array) {
+            await callback(element);
+            await delay(interval);
+        }
+
+        return Promise.resolve();
+    }
 }
 
 // function oldAjaxQuery(url, method, param, onSuccess, onFailure) {

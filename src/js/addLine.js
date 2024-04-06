@@ -10,18 +10,19 @@ export const AddLine = {
         let countTd = document.createElement('td');
         let profit = minShop.minPrice - cost;
 
-        let currentPrice = row.querySelectorAll('td input')[2].value;
-        let needChange = (!Settings.friends.includes(minShop.shopOwner) || minShop.minPrice !== currentPrice) &&
-            profit > 2500;
+        // let currentPrice = row.querySelectorAll('td input')[2].value;
+        // let needChange = (!Settings.friends.includes(minShop.shopOwner) || minShop.minPrice !== currentPrice) &&
+        //     profit > 2500;
 
         profit = profit > 0 ? "<span class='green'>+" + profit + "</span>" : "<span class='red'>" + profit + "</span>";
-
-        if (needChange) {
+        
+        // if (needChange) {
             countTd.setAttribute("seller", minShop.shopOwner);
             countTd.setAttribute("newPrice", minShop.minPrice);
-            minShop.minPrice = "<span class='green'>" + minShop.minPrice + "</span>";
+            countTd.setAttribute("isMaxPrice", minShop.isMaxPrice);
+            minShop.minPrice = !minShop.isMaxPrice ? "<span class='green'>" + minShop.minPrice + "</span>" : "<span class='brown'>" + minShop.minPrice + "</span>";
             countTd.onclick = this._changeShopPrice;
-        }
+        // }
 
         countTd.innerHTML = minShop.minPrice + "(" + profit + ") " + minShop.shopOwner;
         row.appendChild(countTd);
@@ -45,9 +46,18 @@ export const AddLine = {
     },
 
     _changeShopPrice(event) {
-        let isSellerFriend = Settings.friends.includes(event.target.closest('td').getAttribute("seller"));
-        let price = event.target.closest('td').getAttribute("newPrice");
-        price = isSellerFriend ? price : Math.floor((price - 1) / 10) * 10;
+        const eventElement = event.target.closest('td');
+        const isSellerFriend = Settings.friends.includes(eventElement.getAttribute("seller"));
+        const isMaxPrice = eventElement.getAttribute("isMaxPrice") === 'true' ? true : false;
+
+        let price = eventElement.getAttribute("newPrice");
+
+        if (isMaxPrice) {
+            price = price - 1001;
+        } else if (!isSellerFriend) {
+            price = Math.floor((price - 1) / 10) * 10;
+        }
+
         event.target.closest('tr').querySelectorAll('td input')[2].value = price;
     },
 
