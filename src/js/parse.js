@@ -49,14 +49,21 @@ export const Parse = {
     async parseShopsPrice(resourceId, island) {
         const response = await Http.fetchGet(`/statlist.php?r=${resourceId}&type=i`)
 
+        const title = response.querySelector('center table a b').innerText;
         const listSelector = response.querySelectorAll('center table table tr');
         const list = [...listSelector];
 
-        if (list.length <=1) {
+        if (list.length <= 1) {
             console.log("[Selector error] - shops list does not contain entries");
-            return { minPrice: null, isMaxPrice: true, shopOwner: 'Nobody'};
+            return {
+                title,
+                minPrice: null,
+                shopOwner: 'Nobody',
+                noShopOffers: true
+            };
         }
 
+        // Remove table header
         list.shift();
         let shopOwner;
 
@@ -77,9 +84,13 @@ export const Parse = {
             return true;
         });
         const minPrice = minPriceElement?.querySelectorAll("td")[2].innerText.trim().substring(1);
-        const title = response.querySelector('center table a b').innerText;
 
-        return { minPrice, title, shopOwner: shopOwner || "Michegan", isMaxPrice: !minPrice };
+        return {
+            title,
+            minPrice,
+            shopOwner: shopOwner || "Michegan",
+            noShopOffers: !minPrice
+        };
     },
 
     async parseSellersPrice(resourceId, island) {

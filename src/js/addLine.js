@@ -19,8 +19,8 @@ export const AddLine = {
         // if (needChange) {
             countTd.setAttribute("seller", minShop.shopOwner);
             countTd.setAttribute("newPrice", minShop.minPrice);
-            countTd.setAttribute("isMaxPrice", minShop.isMaxPrice);
-            minShop.minPrice = !minShop.isMaxPrice ? "<span class='green'>" + minShop.minPrice + "</span>" : "<span class='brown'>" + minShop.minPrice + "</span>";
+            countTd.setAttribute("noShopOffers", minShop.noShopOffers);
+            minShop.minPrice = !minShop.noShopOffers ? "<span class='green'>" + minShop.minPrice + "</span>" : "<span class='brown'>" + minShop.minPrice + "</span>";
             countTd.onclick = this._changeShopPrice;
         // }
 
@@ -48,11 +48,11 @@ export const AddLine = {
     _changeShopPrice(event) {
         const eventElement = event.target.closest('td');
         const isSellerFriend = Settings.friends.includes(eventElement.getAttribute("seller"));
-        const isMaxPrice = eventElement.getAttribute("isMaxPrice") === 'true' ? true : false;
+        const noShopOffers = eventElement.getAttribute("noShopOffers") === 'true' ? true : false;
 
         let price = eventElement.getAttribute("newPrice");
 
-        if (isMaxPrice) {
+        if (noShopOffers) {
             price = price - 1001;
         } else if (!isSellerFriend) {
             price = Math.floor((price - 1) / 10) * 10;

@@ -89,7 +89,7 @@ export const Search = {
 
             const minShop = await Parse.parseShopsPrice(resourceId, island)
 
-            if (minShop?.isMaxPrice) {
+            if (minShop?.noShopOffers) {
                 await new Promise(resolve => setTimeout(resolve, 200));
                 minShop.minPrice = await Parse.parseSellersPrice(resourceId, island);
             }
