@@ -16,7 +16,7 @@ export const App = {
         this.initSellForm();
         this.initBuildingsPage();
         // ActionButtons.init();
-        ActionButtons.highlightPokemons();
+        // ActionButtons.highlightPokemons();
         ParseTransactions.init();
     },
 

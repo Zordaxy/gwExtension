@@ -11,20 +11,20 @@ export const AddLine = {
         let profit = minShop.minPrice - cost;
 
         // let currentPrice = row.querySelectorAll('td input')[2].value;
-        // let needChange = (!Settings.friends.includes(minShop.shopOwner) || minShop.minPrice !== currentPrice) &&
+        // let needChange = (!Settings.friends.includes(minShop.seller) || minShop.minPrice !== currentPrice) &&
         //     profit > 2500;
 
         profit = profit > 0 ? "<span class='green'>+" + profit + "</span>" : "<span class='red'>" + profit + "</span>";
         
         // if (needChange) {
-            countTd.setAttribute("seller", minShop.shopOwner);
+            countTd.setAttribute("seller", minShop.seller);
             countTd.setAttribute("newPrice", minShop.minPrice);
-            countTd.setAttribute("noShopOffers", minShop.noShopOffers);
-            minShop.minPrice = !minShop.noShopOffers ? "<span class='green'>" + minShop.minPrice + "</span>" : "<span class='brown'>" + minShop.minPrice + "</span>";
+            countTd.setAttribute("isNoOffers", minShop.isNoOffers);
+            minShop.minPrice = !minShop.isNoOffers ? "<span class='green'>" + minShop.minPrice + "</span>" : "<span class='brown'>" + minShop.minPrice + "</span>";
             countTd.onclick = this._changeShopPrice;
         // }
 
-        countTd.innerHTML = minShop.minPrice + "(" + profit + ") " + minShop.shopOwner;
+        countTd.innerHTML = minShop.minPrice + "(" + profit + ") " + minShop.seller;
         row.appendChild(countTd);
     },
 
@@ -48,11 +48,11 @@ export const AddLine = {
     _changeShopPrice(event) {
         const eventElement = event.target.closest('td');
         const isSellerFriend = Settings.friends.includes(eventElement.getAttribute("seller"));
-        const noShopOffers = eventElement.getAttribute("noShopOffers") === 'true' ? true : false;
+        const isNoOffers = eventElement.getAttribute("isNoOffers") === 'true' ? true : false;
 
         let price = eventElement.getAttribute("newPrice");
 
-        if (noShopOffers) {
+        if (isNoOffers) {
             price = price - 1001;
         } else if (!isSellerFriend) {
             price = Math.floor((price - 1) / 10) * 10;

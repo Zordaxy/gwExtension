@@ -1,4 +1,5 @@
 import { ProductionOnZ } from './production-on-z';
+import { ProductionOnG } from './production-on-g';
 
 export const Ordinal = {
     list: [
@@ -253,17 +254,18 @@ export const Ordinal = {
     ],
 
     get(id) {
-        return ProductionOnZ.find(elem => {
+        return [ ...ProductionOnG, ...ProductionOnZ ].find(elem => {
             return elem.id === id
         });
     },
 
     getIDs() {
-        return ProductionOnZ
-        .filter(item => item.id)
-        .map(item => {
-            return item.id;
-        })
+        return ProductionOnG.filter(item => item.id).map(item => item.id);
+    },
+
+    getGroupedElements() {
+        const itemsWithGroup = ProductionOnG.filter(x => x.shopType);
+        return Object.groupBy(itemsWithGroup, (x) => x.shopType);
     },
 
     parsingScripts() {

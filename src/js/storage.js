@@ -1,10 +1,11 @@
 import { Settings } from "./settings";
 import { Ordinal } from "../data/ordinal";
 import { ProductionOnZ } from '../data/production-on-z';
+import { ProductionOnG } from '../data/production-on-g';
 
 export const Storage = {
     getCost(id) {
-        let supply = ProductionOnZ.filter(element => {
+        let supply = [...ProductionOnG, ...ProductionOnZ].filter(element => {
             return element.id === id;
         })[0];
 

@@ -79,21 +79,23 @@ export const Search = {
         }
         let rows = document.querySelector("form[action='/objectedit.php'] table[cellpadding='4']").rows;
         let filteredRows = Array.prototype.filter.call(rows, elem => {
-            return elem.querySelectorAll("td")[1] && +elem.querySelectorAll("td")[1].innerText !== 0 &&
-                !isNaN(+elem.querySelectorAll("td")[1].innerText);
-        });
+            const count = +elem.querySelectorAll("td")[1]?.innerText;
+            const resourceId = elem.querySelectorAll("td input[name]")?.[0]?.name?.slice(7, -1)
+            return count !== 0 && resourceId && !isNaN(count);
+        }); _
 
         Http.processWithDelay(filteredRows, async (row) => {
             let inputPriceLine = row.querySelectorAll("td input[name]");
             let resourceId = inputPriceLine[0].name.slice(7, -1);
 
-            const minShop = await Parse.parseShopsPrice(resourceId, island)
+            const parsedShops = await Parse.parseShopsPrice(resourceId);
+            const localData = parsedShops[island];
 
-            if (minShop?.noShopOffers) {
+            if (localData?.isNoOffers) {
                 await new Promise(resolve => setTimeout(resolve, 200));
-                minShop.minPrice = await Parse.parseSellersPrice(resourceId, island);
+                localData.minPrice = await Parse.parseSellersPrice(resourceId, island);
             }
-            AddLine.appendShopCount(row, minShop, resourceId);
+            AddLine.appendShopCount(row, localData, resourceId);
         })
     },
 
@@ -101,7 +103,7 @@ export const Search = {
         const parsedIsland = document.querySelectorAll('table table a b')?.[1]?.innerText?.substring(1, 2);
         let islandCode;
 
-        switch(parsedIsland) {
+        switch (parsedIsland) {
             case "G":
                 islandCode = 0;
                 break;
@@ -117,68 +119,62 @@ export const Search = {
     },
 
 
-    findStatistic(event) {
+    async findStatistic(event) {
         event.preventDefault();
         Storage.getItems();
 
         App.result.open();
         App.blacker.show();
 
-        let items = Ordinal.getIDs();
+        let groups = Ordinal.getGroupedElements();
+        const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-        let index = 0;
-        let timerId = setInterval(() => {
-            if (index++ >= items.length) {
-                clearInterval(timerId);
-            }
-            let item = items[index];
+        for (const [key, value] of Object.entries(groups)) {
+            const items = value.map(x => x.id);
+            await this.renderStatisticsSection(items, key);
+            await delay(400);
+          }
+    },
 
-            // if (item.indexOf("category") !== -1) {
-            //     let text = `
-            //         <td class="wb smallBox"></td>
-            //         <td class="wb" colspan="7">${Ordinal.get(item).category}</td>`;
-            //     AddLine.addItemLine(text);
-            //     index++;
-            // }
+    async renderStatisticsSection(items, key) {
+        const sectionText = `<th colspan="7">${key} <a href="#" id="closeResult" class="item-finder__search-results-close">закрити</span></th>\``
+            ;
+        AddLine.addItemLine(sectionText);
 
+
+
+        const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+        for (const itemId of items) {
             let minShop;
             let text;
+            let response = await Http.fetchGet(`/market.php?stage=2&item_id=${itemId}&action_id=1&island=-1`)
+            let cost = Storage.getCost(itemId);
+            minShop = Parse.parseMinShopPrice(response, cost);
+            let minItem = Parse.parseMinAdvPrice(response, itemId);
 
-            Http.get(`/market.php?stage=2&item_id=${item}&action_id=1&island=-1`)
-                .pipe(
-                    delay(400),
-                    flatMap(xhr => {
-                        let div = document.createElement('div');
-                        div.innerHTML = xhr.response;
-                        let cost = Storage.getCost(item);
-                        minShop = Parse.parseMinShopPrice(div, cost);
-                        let minItem = Parse.parseMinAdvPrice(div, item);
+            text = `
+                <td class="wb smallBox"><input type="checkbox" id="${itemId}"></td>
+                <td class="wb">${Search.getItemLink(itemId, minShop.title)}</td>
+                <td class="wb">${minShop.minPrice}</td>
+                <td class="wb">${cost}</td>
+                <td class="wb">${(minItem && minItem.price) ? minItem.price - cost : "-"}</td>
+                <td class="wb" id="${itemId}Difference">${minShop.difference}</td>`;
 
-                        text = `
-                            <td class="wb smallBox"><input type="checkbox" id="${item}"></td>
-                            <td class="wb">${Search.getItemLink(item, minShop.title)}</td>
-                            <td class="wb">${minShop.minPrice}</td>
-                            <td class="wb">${cost}</td>
-                            <td class="wb">${(minItem && minItem.price) ? minItem.price - cost : "-"}</td>
-                            <td class="wb" id="${item}Difference">${minShop.difference}</td>`;
-                        return Http.get('/statlist.php?r=' + item)
-                    })
-                )
-                .subscribe(xhr => {
-                    let div = document.createElement('div');
-                    div.innerHTML = xhr.response;
 
-                    let resPrice = Parse.parseResPrice(div, item);
-                    let isPriceGood = (minShop.minPrice - resPrice) > 10000 && minShop.minPrice / resPrice > 2;
-                    let textClass = isPriceGood ? " goodPrice" : "";
+            await delay(400);
+            response = await Http.fetchGet('/statlist.php?r=' + itemId)
 
-                    text += `
-                        <td class="wb${textClass}">
-                            <a href="${Settings.domain}/statlist.php?r=${item}">${resPrice}</a>
-                        </th>`;
-                    AddLine.addItemLine(text, item);
-                })
-        }, 1000);
+            let resPrice = Parse.parseResPrice(response, itemId);
+            let isPriceGood = (minShop.minPrice - resPrice) > 10000 && minShop.minPrice / resPrice > 2;
+            let textClass = isPriceGood ? " goodPrice" : "";
+
+            text += `
+                <td class="wb${textClass}">
+                    <a href="${Settings.domain}/statlist.php?r=${itemId}">${resPrice}</a>
+                </th>`;
+            AddLine.addItemLine(text, itemId);
+        }
     },
 
     findEuns(e) {

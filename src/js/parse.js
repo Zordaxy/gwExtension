@@ -35,7 +35,7 @@ export const Parse = {
         let result = { difference: '-' };
         if (div.getElementsByTagName('li')[2]) {
             result.minPrice = +div.getElementsByTagName('li')[2].getElementsByTagName('b')[0].textContent.slice(0, -1).replace(',', '');
-            result.shopOwner = div.getElementsByTagName('li')[2].getElementsByTagName('b')[1].textContent;
+            result.seller = div.getElementsByTagName('li')[2].getElementsByTagName('b')[1].textContent;
             if (cost) {
                 result.difference = +result.minPrice - cost;
             }
@@ -46,51 +46,76 @@ export const Parse = {
         return result;
     },
 
-    async parseShopsPrice(resourceId, island) {
+    /**
+     * 
+     * @param {*} resourceId 
+     * @param {*} island 
+     * @returns {
+     *      title,
+     *      Z: {
+     *          minPrice: string
+     *          seller: string,
+     *          isNoOffers: boolean
+     *      },
+     *      G: {
+     *          minPrice: string
+     *          seller: string,
+     *          isNoOffers: boolean
+     *      }
+     * 
+     * }
+     */
+    async parseShopsPrice(resourceId) {
+        const result = {
+            Z: {},
+            G: {}
+        }
         const response = await Http.fetchGet(`/statlist.php?r=${resourceId}&type=i`)
 
-        const title = response.querySelector('center table a b').innerText;
+        result.title = response.querySelector('center table a b').innerText;
         const listSelector = response.querySelectorAll('center table table tr');
         const list = [...listSelector];
-
-        if (list.length <= 1) {
-            console.log("[Selector error] - shops list does not contain entries");
-            return {
-                title,
-                minPrice: null,
-                shopOwner: 'Nobody',
-                noShopOffers: true
-            };
-        }
-
         // Remove table header
-        list.shift();
-        let shopOwner;
+        list?.shift();
 
-        const minPriceElement = list.find((tr, index) => {
+        const gList = list.filter((tr) => {
             const shopIsland = tr.querySelector("a").innerText.substring(1,2);
+            return shopIsland === "G";
+        });
+        result.G = this._aggregateShopRows(gList);
+
+        const zList = list.filter((tr) => {
+            const shopIsland = tr.querySelector("a").innerText.substring(1,2);
+            return shopIsland === "Z";
+        });
+        result.Z = this._aggregateShopRows(zList);
+
+
+        return result;
+    },
+
+    _aggregateShopRows(rows) {
+        const minPriceElement = rows.find((tr) => {
             const owner = tr.querySelector("b").innerText;
             const price = tr.querySelectorAll("td")[2].innerText.trim().substring(1);
-            if (!shopIsland || !owner || !price) {
+            if (!owner || !price) {
                 console.log("[Parsing error] - specific shop data is missing");
                 return false;
             }
 
-            if (shopIsland !== island || owner === "Michegan") {
+            if (owner === "Michegan") {
                 return false;
             }
-
-            shopOwner = owner;
             return true;
         });
         const minPrice = minPriceElement?.querySelectorAll("td")[2].innerText.trim().substring(1);
+        const seller = minPriceElement?.querySelector("b").innerText;
 
         return {
-            title,
             minPrice,
-            shopOwner: shopOwner || "Michegan",
-            noShopOffers: !minPrice
-        };
+            seller,
+            isNoOffers: !minPrice
+        }
     },
 
     async parseSellersPrice(resourceId, island) {
