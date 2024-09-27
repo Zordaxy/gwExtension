@@ -1,8 +1,8 @@
 import { Storage } from 'js/storage';
 import { Settings } from 'js/settings';
 
-export const Eco = {
-    ecoSale() {
+export class Eco {
+    ecoSale = () => {
         const items1List = Array.from({ length: 60 }, (_, index) => `item_tr1_${index}`);
         const items2List = Array.from({ length: 60 }, (_, index) => `item_tr2_${index}`);
 
@@ -25,37 +25,42 @@ export const Eco = {
             const expMatch = str.match(/\+([0-9]+)\.?\d*\s*exp/);
             const experience = expMatch ? parseInt(expMatch[1]) : null;  // 10767
 
-            const newCost = experience * Settings.eco + amount;
+            const newCost = Number(experience * Settings.eco + amount).toFixed();
 
-            const durability = this.parseDurability(parent);
+            const durability = this.#parseDurability(parent);
 
-            const title = this.parseTitle(parent);
+            const title = this.#parseTitle(parent);
             if (!title) return;
-
             const searchString = `${title} [${durability}]`;
 
-            let nameSpan1 = document.createElement('span');
-            nameSpan1.innerHTML = "sell for eco";
-
-            nameSpan1.onclick = () => {
-                Storage.setPrice(Number(newCost).toFixed());
-                Storage.setLabel(searchString);
-
-                setTimeout(() => {
-                    let middleClick = new MouseEvent("click", { "button": 1, "which": 1 });
-                    let link = [].filter.call(document.getElementsByTagName('a'), elem => {
-                        return elem.innerHTML === "sell";
-                    })[0];
-
-                    link.dispatchEvent(middleClick);
-                }, 800);
-            }
-
-            parent.appendChild(nameSpan1);
+            const linkNode = this.#generateLink(newCost, searchString)
+            parent.appendChild(linkNode);
         })
-    },
+    }
 
-    parseDurability(node) {
+    #generateLink(newCost, searchString) {
+        let linkNode = document.createElement('span');
+        linkNode.innerHTML = "sell eco";
+        linkNode.classList.add("sell-eco");
+
+        linkNode.onclick = () => {
+            Storage.setPrice(newCost);
+            Storage.setLabel(searchString);
+
+            setTimeout(() => {
+                let middleClick = new MouseEvent("click", { "button": 1, "which": 1 });
+                let link = [].filter.call(document.getElementsByTagName('a'), elem => {
+                    return elem.innerHTML === "sell";
+                })[0];
+
+                link.dispatchEvent(middleClick);
+            }, 400);
+        }
+
+        return linkNode;
+    }
+
+    #parseDurability(node) {
         const durabilityLabel = Array.from(node.querySelectorAll('div')).find(div => div.textContent.includes("Прочность предмета:"));
 
         if (durabilityLabel) {
@@ -78,17 +83,16 @@ export const Eco = {
             return durabilityText;
         }
         return null;
-    },
+    }
 
-    parseTitle(node) {
+    #parseTitle(node) {
         let labelNode = node.querySelector('[itemtype="simpleitem"]');
 
         if (!labelNode) {
             const idSuffix = node.id.split('_').pop();
-            debugger;
             labelNode = document.querySelector(`#item_tr1_${idSuffix}`).querySelector('[itemtype="simpleitem"]');
         }
 
         return labelNode?.innerHTML;
-    },
+    }
 }

@@ -1,5 +1,10 @@
 export const ActionButtons = {
     init() {
+        this.navigation();
+        this.highlightPokemons();
+    },
+
+    navigation() {
         document.onkeydown = evt => {
             evt = evt || window.event;
             if ((evt.keyCode === 100) || ((evt.keyCode === 32) && (typeof chatactive === 'undefined' || chatactive === 0))) {

@@ -163,3 +163,15 @@
     color: white;
     z-index: 110;
 }
+
+.sell-eco {
+    min-width: 60px;
+    display: inline-block;
+    background-color: #f0f0f0;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.sell-eco:hover {
+    background-color: lightgreen;
+}

@@ -37,12 +37,10 @@ export const SellForm = {
     },
 
     selectItemByString(searchString) {
-        debugger;
         const selectElement = document.querySelector('select[name="item_iid"]');
         console.log(selectElement);
-        // const searchString = "Ботинки Vanguard [EPG] [0/4]";
+        // searchString example: "Ботинки Vanguard [EPG] [0/4]";
 
-        // Loop through all options
         for (let option of selectElement.options) {
             console.log('text', option.text, searchString);
             if (option.text === searchString) {
