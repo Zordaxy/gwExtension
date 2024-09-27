@@ -6,12 +6,13 @@ import { Menu } from "js/widgets/menu";
 import { Result } from "js/widgets/result";
 import { SettingsTab } from "js/widgets/settingsTab";
 import { Eco } from "js/features/eco";
+import { Statistics } from "../features/statistics";
 
 const buttonConfig = [
     {
         condition: Settings.showButtons.prices,
         label: 'check prices',
-        action: Search.findStatistic
+        action: () => new Statistics().findStatistic()
     },
     {
         condition: Settings.showButtons.bag && document.getElementById("setswitch"),
@@ -49,9 +50,9 @@ const buttonConfig = [
 ];
 
 export const Widgets = {
-    init() {
-        this.blacker = new Blacker();
-        this.result = new Result(this.blacker);
+    init(app) {
+        app.blacker = new Blacker();
+        app.result = new Result(app.blacker);
 
         // Loop through the configuration and create menus
         buttonConfig.forEach(({ condition, label, action }) => {

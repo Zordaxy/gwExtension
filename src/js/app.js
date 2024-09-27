@@ -5,7 +5,7 @@ import { Widgets } from "./initialization/widgets";
 
 export const App = {
     init() {
-        Widgets.init();
+        Widgets.init(this);
         SellForm.init();
         ParseTransactions.init();
         // ActionButtons.init();

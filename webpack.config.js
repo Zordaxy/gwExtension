@@ -28,7 +28,8 @@ module.exports = {
     },
     resolve: {
         alias: {
-            js: path.resolve(__dirname, 'src/js')  // Maps the `js` alias to `src/js`
+            js: path.resolve(__dirname, 'src/js'),  // Maps the `js` alias to `src/js`
+            data: path.resolve(__dirname, 'src/data')  // Maps the `js` alias to `src/js`
         }
     },
     module: {
