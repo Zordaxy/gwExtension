@@ -1,4 +1,4 @@
-﻿import { ActionButtons } from './actionButtons'
+﻿import { ActionButtons } from './features/actionButtons'
 import { ParseTransactions } from "./parseTransactions";
 import { SellForm } from "./initialization/SellForm";
 import { Widgets } from "./initialization/widgets";

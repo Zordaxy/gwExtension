@@ -1,9 +1,8 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "GW Checker",
   "description": "GwChecker description",
-  "version": "3.0",
-
+  "version": "3.1",
   "content_scripts": [
     {
       "matches": [
@@ -12,16 +11,18 @@
         "https://www.gwars.io/*",
         "https://*.gwars.io/*"
       ],
-      "css": ["main.css"],
+      "css": [
+        "main.css"
+      ],
       "js": [
         "bundle.js"
       ]
     }
   ],
-
-  "browser_action": {
+  "action": {
     "default_icon": "icon.png",
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_title": "gwChecker"
   },
   "permissions": [
     "activeTab",
