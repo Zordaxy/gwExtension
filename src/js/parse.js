@@ -35,13 +35,17 @@ export const Parse = {
         let result = { difference: '-' };
         if (div.getElementsByTagName('li')[2]) {
             result.minPrice = +div.getElementsByTagName('li')[2].getElementsByTagName('b')[0].textContent.slice(0, -1).replace(',', '');
-            result.seller = div.getElementsByTagName('li')[2].getElementsByTagName('b')[1].textContent;
+            result.seller = div.getElementsByTagName('li')[2].getElementsByTagName('b')[1]?.textContent;
+
             if (cost) {
                 result.difference = +result.minPrice - cost;
             }
-            result.title = div.getElementsByTagName('li')[0].parentNode.getElementsByTagName('a')[0].textContent;
+            result.title = div.getElementsByTagName('li')[0].parentNode.getElementsByTagName('a')[0]?.textContent;
+
+            if (!result.seller) console.log(`Cannot parse seller for ${result.title}`);
         } else {
-            result.title = div.querySelector(".wb b a[href]").textContent;
+            result.title = div.querySelector(".wb b a[href]")?.textContent;
+            if (!result.title) console.log(`Cannot parse title for item`);
         }
         return result;
     },
@@ -79,13 +83,13 @@ export const Parse = {
         list?.shift();
 
         const gList = list.filter((tr) => {
-            const shopIsland = tr.querySelector("a").innerText.substring(1,2);
+            const shopIsland = tr.querySelector("a").innerText.substring(1, 2);
             return shopIsland === "G";
         });
         result.G = this._aggregateShopRows(gList);
 
         const zList = list.filter((tr) => {
-            const shopIsland = tr.querySelector("a").innerText.substring(1,2);
+            const shopIsland = tr.querySelector("a").innerText.substring(1, 2);
             return shopIsland === "Z";
         });
         result.Z = this._aggregateShopRows(zList);

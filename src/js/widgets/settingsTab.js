@@ -13,7 +13,6 @@ export class SettingsTab {
         document.getElementsByTagName('body')[0].appendChild(this._settings);
 
         localStorage.island = localStorage.island || Settings.island;
-        localStorage.maxPrice = localStorage.maxPrice || Settings.eun.maxPrice;
         document.getElementById("cIsland").value = localStorage.island;
         document.getElementById("cMaxPrice").value = localStorage.maxPrice;
 

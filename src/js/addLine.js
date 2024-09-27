@@ -15,13 +15,13 @@ export const AddLine = {
         //     profit > 2500;
 
         profit = profit > 0 ? "<span class='green'>+" + profit + "</span>" : "<span class='red'>" + profit + "</span>";
-        
+
         // if (needChange) {
-            countTd.setAttribute("seller", minShop.seller);
-            countTd.setAttribute("newPrice", minShop.minPrice);
-            countTd.setAttribute("isNoOffers", minShop.isNoOffers);
-            minShop.minPrice = !minShop.isNoOffers ? "<span class='green'>" + minShop.minPrice + "</span>" : "<span class='brown'>" + minShop.minPrice + "</span>";
-            countTd.onclick = this._changeShopPrice;
+        countTd.setAttribute("seller", minShop.seller);
+        countTd.setAttribute("newPrice", minShop.minPrice);
+        countTd.setAttribute("isNoOffers", minShop.isNoOffers);
+        minShop.minPrice = !minShop.isNoOffers ? "<span class='green'>" + minShop.minPrice + "</span>" : "<span class='brown'>" + minShop.minPrice + "</span>";
+        countTd.onclick = this._changeShopPrice;
         // }
 
         countTd.innerHTML = minShop.minPrice + "(" + profit + ") " + minShop.seller;
@@ -35,8 +35,8 @@ export const AddLine = {
 
         let referenceContainer = document.createElement('a');
         referenceContainer.href = url;
-        referenceContainer.style="text-decoration:none;font-weight:bold;color:#007700";
-        referenceContainer.innerText = 'rent'; 
+        referenceContainer.style = "text-decoration:none;font-weight:bold;color:#007700";
+        referenceContainer.innerText = 'rent';
 
         referenceContainer.onclick = () => {
             Storage.setDurability(1, durability1);

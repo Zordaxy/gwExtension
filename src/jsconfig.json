@@ -1,7 +1,13 @@
 {
     "compilerOptions": {
         "target": "ES2021",
-        "allowSyntheticDefaultImports": true
+        "allowSyntheticDefaultImports": true,
+        "baseUrl": "./src", // This sets `src` as the base directory
+        "paths": {
+            "js/*": [
+                "js/*"
+            ] // This tells the system to look in the `src/js` folder when using `import { ... } from 'js/...';`
+        }
     },
     "exclude": [
         "node_modules"

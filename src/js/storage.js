@@ -49,7 +49,7 @@ export const Storage = {
     },
 
     getPrice() {
-        window.localStorage.getItem(Keys.priceToSet);
+        return window.localStorage.getItem(Keys.priceToSet);
     },
 
     setDurability(number, durability) {
@@ -59,6 +59,14 @@ export const Storage = {
 
     getDurability(number) {
         return window.localStorage.getItem(`durability${number}`);
+    },
+
+    getLabel() {
+        return window.localStorage.getItem('label');
+    },
+
+    setLabel(value) {
+        window.localStorage.setItem('label', value);
     }
 }
 

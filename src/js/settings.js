@@ -22,32 +22,29 @@ export const Settings = {
         // plastic: 350,
         // rubber: 288,
         // battery: 238
-        hours: 350,
+        hours: 250,
         uranium: 103,
-        ganjium: 140,
-        steel: 26,
-        aluminium: 193,
-        solomka: 36,
-        grass: 32,
+        ganjium: 170,
+        steel: 40,
+        aluminium: 217,
+        solomka: 40,
+        grass: 40,
         boxites: 34,
-        oil:37,
+        oil: 37,
         seaweed: 33,
         plastic: 360,
         rubber: 288,
         battery: 238
     },
     rentOwners: new Map([]),
-    eun: {
-        maxPrice: 168000,
-        minPrice: 10000
-    },
     domain: 'https://www.gwars.io',
     showButtons: {
         prices: true,
-        eun: true,
         bag: true,
         advertisement: true,
         countShop: true,
         settings: false,
-    }
+        eco: true
+    },
+    eco: 3.7
 }

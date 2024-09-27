@@ -17,15 +17,20 @@ module.exports = {
         }),
         new CopyPlugin({
             patterns: [
-              { from: './src/assets' },
-              { from: './src/css' },
+                { from: './src/assets' },
+                { from: './src/css' },
             ],
-          })
+        })
     ],
     devtool: 'inline-source-map',
     optimization: {
         minimize: false
-      },
+    },
+    resolve: {
+        alias: {
+            js: path.resolve(__dirname, 'src/js')  // Maps the `js` alias to `src/js`
+        }
+    },
     module: {
         rules: [
             {
@@ -36,14 +41,14 @@ module.exports = {
                     options: {
                         "presets": [
                             ["@babel/preset-env",
-                            {
-                                "useBuiltIns": "entry", 
-                                "corejs": "3.8", 
-                                  "targets": {
-                                      "browsers": "defaults, not ie 11, not ie_mob 11"
-                                  },
-                                "modules": false
-                            }]
+                                {
+                                    "useBuiltIns": "entry",
+                                    "corejs": "3.8",
+                                    "targets": {
+                                        "browsers": "defaults, not ie 11, not ie_mob 11"
+                                    },
+                                    "modules": false
+                                }]
                         ]
                     }
                 }
