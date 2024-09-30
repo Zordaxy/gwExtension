@@ -4,12 +4,16 @@ import { Storage } from "js/storage.js";
 export const SellForm = {
 
     init() {
+        if (!document.querySelector('[action="/market-i.php"]')
+            && (!document.querySelector('[action="/market-p.php"]'))) {
+            // Not a sell form
+            return;
+        }
+
+
         let priceField = document.getElementsByName("submitprice");
         if (priceField.length) {
-            console.log(Storage.getPrice())
             priceField[0].value = Number(Storage.getPrice());
-        } else {
-            return;
         }
 
         let funnyField = document.getElementsByName("tr_pass");
@@ -30,7 +34,7 @@ export const SellForm = {
         }
 
         const label = Storage.getLabel();
-        if (label) {
+        if (label && document.querySelector('[action="/market-i.php"]')) {
             this.selectItemByString(label)
             Storage.setLabel(null);
         }

@@ -7,6 +7,7 @@ import { Result } from "js/widgets/result";
 import { SettingsTab } from "js/widgets/settingsTab";
 import { Eco } from "js/features/eco";
 import { Statistics } from "../features/statistics";
+import { Rent } from "../features/rent";
 
 const buttonConfig = [
     {
@@ -43,9 +44,9 @@ const buttonConfig = [
         }
     },
     {
-        condition: true, // Always execute for this menu
-        label: 'render rent',
-        action: Search.parseHouseList
+        condition: document.querySelector('[action="object-hdo.php"]'),
+        label: 'rent',
+        action: () => new Rent().init()
     }
 ];
 
