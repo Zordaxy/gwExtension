@@ -1,9 +1,12 @@
 export const Settings = {
+    // TODO: Make resources adjustable
+    // TODO: Add option to update resources in production
+    // TODO: integrate island
+    // TODO: Two sets of resources for G and Z
     friends: [
         "Michegan",
         "Kalyunya",
         "A-g",
-        "KISTOCHKA",
         "Шмекли"
     ],
     island: "Z",
@@ -22,13 +25,13 @@ export const Settings = {
         // plastic: 350,
         // rubber: 288,
         // battery: 238
-        hours: 250,
+        hours: 260,
         uranium: 103,
-        ganjium: 170,
-        steel: 40,
-        aluminium: 217,
-        solomka: 40,
-        grass: 40,
+        ganjium: 180,
+        steel: 30,
+        aluminium: 250,
+        solomka: 56,
+        grass: 55,
         boxites: 34,
         oil: 37,
         seaweed: 33,
@@ -46,5 +49,5 @@ export const Settings = {
         settings: false,
         eco: true
     },
-    eco: 3.7
+    eco: 3.4
 }

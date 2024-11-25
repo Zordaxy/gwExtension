@@ -6,6 +6,7 @@ import { Menu } from "js/widgets/menu";
 import { Result } from "js/widgets/result";
 import { SettingsTab } from "js/widgets/settingsTab";
 import { Eco } from "js/features/eco";
+import { BagSell } from "js/features/bagSell";
 import { Statistics } from "../features/statistics";
 import { Rent } from "../features/rent";
 
@@ -17,8 +18,8 @@ const buttonConfig = [
     },
     {
         condition: Settings.showButtons.bag && document.getElementById("setswitch"),
-        label: 'count bag',
-        action: Search.findBagList
+        label: 'bag sell',
+        action: () => new BagSell().findBagList()
     },
     {
         condition: Settings.showButtons.eco && document.getElementById("setswitch"),

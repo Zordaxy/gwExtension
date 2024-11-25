@@ -7,6 +7,8 @@ import { App } from 'js/app';
 import { Ordinal } from 'data/ordinal';
 
 export class Statistics {
+    // TODO: fix manual adverticements in statistics
+    // TODO: fix layout
     findStatistic = async (event) => {
         // event.preventDefault();
         Storage.getItems();

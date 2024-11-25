@@ -2,6 +2,7 @@ import { Storage } from 'js/storage';
 import { Settings } from 'js/settings';
 
 export class Eco {
+    // TODO: Make Eco adjustable and add to label
     ecoSale = () => {
         const items1List = Array.from({ length: 60 }, (_, index) => `item_tr1_${index}`);
         const items2List = Array.from({ length: 60 }, (_, index) => `item_tr2_${index}`);

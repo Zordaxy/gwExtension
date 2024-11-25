@@ -5,30 +5,37 @@ import { Http } from './http';
 
 export const Parse = {
     parseMinAdvPrice(div, itemId) {
-        let elems = div.querySelectorAll('table.wb tr');
+        let rawElems = div.querySelectorAll('table')[0].querySelectorAll('tr');
+
+        let elems = [].filter.call(rawElems, elem => {
+            const tds = elem.querySelectorAll('td')
+            return [].filter.call(tds, element => {
+                return element.textContent.trim() === "[G]";
+            })
+        });
+
         let item = Ordinal.get(itemId);
-        if (item) {
-            let result = null;
-            let duration = item.duration;
-            for (let i = 3, l = elems.length; i < l; i++) {
-                let td = elems[i].getElementsByTagName('td');
-                if (!td || !td[1]) {
-                    continue;
-                }
-                let dur = td[1].textContent;
-                let island = td[3].textContent.slice(1, 2);
+        let results = [];
 
+        if (!item) return null;
 
-                if ((dur === (duration + "/" + duration)) && (island === Settings.island) && (td[4].textContent.indexOf("написать") < 0)) {
-                    result = result || {};
-                    result.price = td[0].textContent.replace(/[\$\,]/g, '') | 0;
-                    result.seller = td[4].textContent.slice(0, td[4].textContent.indexOf(" ["));
-                    break;
-                }
+        let durability = item.durability;
+
+        elems.forEach((tr) => {
+            const td = [...tr.querySelectorAll('td')];
+            let dur = td[1]?.textContent;
+            let island = td[3]?.textContent?.slice(1, 2);
+            let price = td[0]?.textContent?.replace(/[\$\,]/g, '') | 0;
+            let seller = td[4]?.textContent?.slice(0, td[4]?.textContent?.indexOf(" ["));
+            const isIndirectSell = td[4]?.textContent?.indexOf("написать") > 0;
+
+            if (!isIndirectSell && dur === (durability + "/" + durability) && island === 'G' && price) {
+                results.push({ price, seller });
             }
-            return result
-        }
-        return null;
+        });
+        results?.sort((a, b) => a?.price < b?.price);
+
+        return results?.[0];
     },
 
     parseMinShopPrice(div, cost) {
