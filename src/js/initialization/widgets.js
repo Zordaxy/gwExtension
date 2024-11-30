@@ -29,7 +29,7 @@ const buttonConfig = [
     {
         condition: Settings.showButtons.advertisement,
         label: 'advertisements',
-        action: AutoPublic.showAdvertisement
+        action: () => AutoPublic.showAdvertisement()
     },
     {
         condition: Settings.showButtons.countShop && document.querySelector("form[action='/objectedit.php']"),
