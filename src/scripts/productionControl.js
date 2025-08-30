@@ -44,6 +44,7 @@ function parseNodes(nobrElements, startTime) {
 
 
     console.log("Running on:", lastDate);
+    if (!lastDate) isFinished = true;
     return { pageTotalGb, isFinished };
 }
 
@@ -58,6 +59,6 @@ async function fetchGet(url) {
     return htmlDocument;
 }
 
-const startTime = new Date('2024-09-24T07:00:00');
+const startTime = new Date('2024-09-01T07:00:00');
 const propertyId = 176532;
 execute(propertyId, startTime);

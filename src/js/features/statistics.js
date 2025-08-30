@@ -1,73 +1,71 @@
-import { Storage } from 'js/storage';
-import { Http } from 'js/http';
-import { Settings } from 'js/settings';
-import { Parse } from 'js/parse';
-import { AddLine } from 'js/addLine';
-import { App } from 'js/app';
-import { Ordinal } from 'data/ordinal';
+import { Storage } from "js/storage";
+import { Http } from "js/http";
+import { Settings } from "js/settings";
+import { Parse } from "js/parse";
+import { AddLine } from "js/addLine";
+import { App } from "js/app";
+import { Ordinal } from "data/ordinal";
 
 export class Statistics {
-    // TODO: fix manual adverticements in statistics
-    // TODO: fix layout
-    findStatistic = async (event) => {
-        // event.preventDefault();
-        Storage.getItems();
+  // TODO: fix manual adverticements in statistics
+  // TODO: fix layout
+  findStatistic = async (event) => {
+    // event.preventDefault();
+    Storage.getItems();
 
-        App.result.open();
-        App.blacker.show();
+    App.result.open();
+    App.blacker.show();
 
-        let groups = Ordinal.getGroupedElements();
-        const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+    let groups = Ordinal.getGroupedElements();
 
-        for (const [key, value] of Object.entries(groups)) {
-            const items = value.map(x => x.id);
-            await this.#renderStatisticsSection(items, key);
-            await delay(400);
-        }
+    for (const [key, value] of Object.entries(groups)) {
+      const items = value.map((x) => x.id);
+      await this.#renderStatisticsSection(items, key);
     }
+  };
 
-    async #renderStatisticsSection(items, key) {
-        const sectionText = `<th colspan="7">${key} <a href="#" id="closeResult" class="item-finder__search-results-close">закрити</span></th>\``
-            ;
-        AddLine.addItemLine(sectionText);
+  async #renderStatisticsSection(items, key) {
+    const island = Parse.parseIsland();
+    const sectionText = `<th colspan="7">${key} <a href="#" id="closeResult" class="item-finder__search-results-close">закрити</span></th>`;
+    AddLine.addItemLine(sectionText);
 
+    return Http.processWithDelay(
+      items,
+      async (itemId) => {
+        const parsedShops = await Parse.parseShopsPrice(itemId);
+        const { minPrice } = parsedShops[island];
 
+        await new Promise((resolve) => setTimeout(resolve, 200));
 
-        const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+        const minSellerPrice = await Parse.parseSellersPrice(itemId, island);
 
-        for (const itemId of items) {
-            let minShop;
-            let text;
-            let response = await Http.fetchGet(`/market.php?stage=2&item_id=${itemId}&action_id=1&island=-1`)
-            let cost = Storage.getCost(itemId);
-            minShop = Parse.parseMinShopPrice(response, cost);
-            let minItem = Parse.parseMinAdvPrice(response, itemId);
+        await new Promise((resolve) => setTimeout(resolve, 200));
 
-            text = `
-                <td class="wb smallBox"><input type="checkbox" id="${itemId}"></td>
-                <td class="wb">${this.#getItemLink(itemId, minShop.title)}</td>
-                <td class="wb">${minShop.minPrice}</td>
-                <td class="wb">${cost}</td>
-                <td class="wb">${(minItem && minItem.price) ? minItem.price - cost : "-"}</td>
-                <td class="wb" id="${itemId}Difference">${minShop.difference}</td>`;
+        let resourcePrice = await Parse.parseResPrice(itemId);
 
+        let cost = Storage.getCost(itemId);
+        const difference = +minPrice - cost;
 
-            await delay(400);
-            response = await Http.fetchGet('/statlist.php?r=' + itemId)
+        let text = `
+            <td class="wb smallBox"><input type="checkbox" id="${itemId}"></td>
+            <td class="wb">${this.#getItemLink(itemId, parsedShops.title)}</td>
+            <td class="wb">${minPrice}</td>
+            <td class="wb">${cost}</td>
+            <td class="wb">${minSellerPrice ? minSellerPrice - cost : "-"}</td>
+            <td class="wb" id="${itemId}Difference">${difference}</td>
+            <td>
+                <a href="${
+                  Settings.domain
+                }/statlist.php?r=${itemId}">${resourcePrice}</a>
+            </td>`;
 
-            let resPrice = Parse.parseResPrice(response, itemId);
-            let isPriceGood = (minShop.minPrice - resPrice) > 10000 && minShop.minPrice / resPrice > 2;
-            let textClass = isPriceGood ? " goodPrice" : "";
+        AddLine.addItemLine(text, itemId);
+      },
+      600
+    );
+  }
 
-            text += `
-                <td class="wb${textClass}">
-                    <a href="${Settings.domain}/statlist.php?r=${itemId}">${resPrice}</a>
-                </th>`;
-            AddLine.addItemLine(text, itemId);
-        }
-    }
-
-    #getItemLink(itemId, title) {
-        return `<b><a href="${Settings.domain}/item.php?item_id=${itemId}">${title}</a></b>`;
-    }
+  #getItemLink(itemId, title) {
+    return `<b><a href="${Settings.domain}/item.php?item_id=${itemId}">${title}</a></b>`;
+  }
 }
