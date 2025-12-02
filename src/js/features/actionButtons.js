@@ -99,3 +99,20 @@ export const ActionButtons = {
     }
   },
 };
+
+// const makeColorOutland = () => {
+//   document.querySelectorAll('.floatdiv').forEach(colorPokemon);
+
+//   if (window.gotourl) {
+//       window.gotourl = function(obj) {
+//           const url = obj.href + '&nohead=1';
+//           const lastUrl = url;
+
+//           $('body').load(url, function(_responseTxt, statusTxt, _xhr) {
+//               if (statusTxt === 'success') makeColorOutland();
+//               else window.location.href = lastUrl;
+//           });
+//           return false;
+//       };
+//   }
+// };

@@ -58,6 +58,15 @@ export class BagSell {
         const isDrop = Ordinal.isDrop(element.id);
 
         let minItem = Parse.parseMinAdvPrice(div, element.id, isDrop);
+
+        // Take into account min shop price and no such item in advertisement
+        let minShopPrice = Parse.getMinShopPrice(div);
+        if (minShopPrice < minItem?.price || !minItem) {
+          minItem = { price: minShopPrice, seller: "shop" };
+        }
+
+        // TODO: Check case with shop price over gos
+
         if (minItem) {
           const label = `Set to ${minItem.price}`;
 

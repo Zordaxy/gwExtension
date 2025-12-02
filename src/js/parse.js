@@ -47,6 +47,28 @@ export const Parse = {
     return results?.[0];
   },
 
+  getMinShopPrice(div) {
+    const td = [...div.querySelectorAll("td.greengreenbg")].find((el) =>
+      el.textContent.includes("Дешевле всего за")
+    );
+
+    const priceBold = [...td.querySelectorAll("b")].find((b) => {
+      const prev = b.previousSibling;
+      return (
+        prev &&
+        prev.nodeType === Node.TEXT_NODE &&
+        prev.textContent.includes("Дешевле всего за")
+      );
+    });
+
+    const priceText = priceBold?.textContent.trim(); // "257,710$"
+
+    // convert "113,994$" → 113994
+    const price = parseInt(priceText.replace(/[,$]/g, ""));
+
+    return price;
+  },
+
   /**
    *
    * @param {*} resourceId
@@ -75,7 +97,7 @@ export const Parse = {
       `/statlist.php?r=${resourceId}&type=i`
     );
 
-    result.title = response.querySelector("center table a b").innerText;
+    result.title = response.querySelector("center table a b")?.innerText;
     const listSelector = response.querySelectorAll("center table table tr");
     const list = [...listSelector];
     // Remove table header
@@ -149,10 +171,10 @@ export const Parse = {
     let prices = [];
     let trs = response
       .querySelector("a[href='/stats.php']")
-      .parentNode.querySelector("table td")
-      .nextElementSibling.getElementsByTagName("tr");
-    for (let i = 0; i < trs.length; i++) {
-      if (trs[i].children[2]) {
+      ?.parentNode.querySelector("table td")
+      ?.nextElementSibling?.getElementsByTagName("tr");
+    for (let i = 0; i < trs?.length; i++) {
+      if (trs?.[i].children[2]) {
         let price = +trs[i].children[2].textContent.slice(2, -1);
         if (price) {
           prices.push(price);
