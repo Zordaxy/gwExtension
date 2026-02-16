@@ -1,3 +1,3 @@
 Custom gWars plugin
 
-Run: npm run-script build
+Run command: npm run-script build
