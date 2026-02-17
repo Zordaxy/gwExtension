@@ -1,5 +1,6 @@
 import { Storage } from "./storage";
 import { Ordinal } from "../data/ordinal";
+import { ShopsPriceResult, aggregateShopRows } from "./parseUtils";
 
 export const Parse = {
   // Expects doc from: Fetcher.marketAdvert(itemId)
@@ -62,39 +63,15 @@ export const Parse = {
     });
 
     const priceText = priceBold?.textContent.trim(); // "257,710$"
-
     // convert "113,994$" → 113994
     const price = parseInt(priceText.replace(/[,$]/g, ""));
-
     return price;
   },
 
-  /**
-   *
-   * Expects doc from: Fetcher.statlistShops(itemId)
-   * @param {Document} doc
-   * @returns {
-   *      title,
-   *      Z: {
-   *          minPrice: string
-   *          seller: string,
-   *          isNoOffers: boolean
-   *      },
-   *      G: {
-   *          minPrice: string
-   *          seller: string,
-   *          isNoOffers: boolean
-   *      }
-   *
-   * }
-   */
+  // Expects doc from: Fetcher.statlistShops(itemId)
+  // Returns: ShopsPriceResult
   parseShopsPrice(doc) {
-    const result = {
-      Z: {},
-      G: {},
-    };
-
-    result.title = doc.querySelector("center table a b")?.innerText;
+    const title = doc.querySelector("center table a b")?.innerText;
     const listSelector = doc.querySelectorAll("center table table tr");
     const list = [...listSelector];
     // Remove table header
@@ -104,42 +81,15 @@ export const Parse = {
       const shopIsland = tr.querySelector("a")?.innerText?.substring(1, 2);
       return shopIsland === "G";
     });
-    result.G = this._aggregateShopRows(gList);
+    const G = aggregateShopRows(gList);
 
     const zList = list.filter((tr) => {
       const shopIsland = tr.querySelector("a")?.innerText?.substring(1, 2);
       return shopIsland === "Z";
     });
-    result.Z = this._aggregateShopRows(zList);
+    const Z = aggregateShopRows(zList);
 
-    return result;
-  },
-
-  _aggregateShopRows(rows) {
-    const minPriceElement = rows.find((tr) => {
-      const owner = tr.querySelector("b").innerText;
-      const price = tr.querySelectorAll("td")[2].innerText.trim().substring(1);
-      if (!owner || !price) {
-        console.log("[Parsing error] - specific shop data is missing");
-        return false;
-      }
-
-      if (owner === "Michegan") {
-        return false;
-      }
-      return true;
-    });
-    const minPrice = minPriceElement
-      ?.querySelectorAll("td")[2]
-      .innerText.trim()
-      .substring(1);
-    const seller = minPriceElement?.querySelector("b").innerText;
-
-    return {
-      minPrice,
-      seller,
-      isNoOffers: !minPrice,
-    };
+    return new ShopsPriceResult(title, G, Z);
   },
 
   // Expects doc from: Fetcher.marketBuy(itemId)
