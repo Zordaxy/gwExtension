@@ -1,8 +1,6 @@
 export const Settings = {
   // TODO: Make resources adjustable
   // TODO: Add option to update resources in production
-  // TODO: integrate island
-  // TODO: Two sets of resources for G and Z
   friends: ["Michegan"],
   funnyDigit: "",
   resources: {
