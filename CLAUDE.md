@@ -41,5 +41,6 @@ There are no tests or linting configured.
 - Modules export singleton objects (not classes to instantiate)
 - HTTP: RxJS observables (`Http.get`/`Http.post`) for reactive flows; `Http.fetchGet` for async/await with windows-1251 text decoding
 - `Http.processWithDelay` throttles sequential requests with a configurable interval (default 400ms)
+- **All HTTP requests to gwars.io must have at least a 200ms gap between them.** Never fire multiple requests in parallel (no `Promise.all` for fetches). Use sequential awaits with `await delay(200)` between calls.
 - Cost calculation in `Storage.getCost()` multiplies item resource requirements by prices from `Settings.resources`
 - All DOM manipulation targets the gwars.io page structure directly

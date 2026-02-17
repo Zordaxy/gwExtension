@@ -7,7 +7,7 @@ export const App = {
   init() {
     Widgets.init(this);
     SellForm.init();
-    ParseTransactions.init();
+    // ParseTransactions.init();
     ActionButtons.init();
     // this.initSettingsMenu();
   },

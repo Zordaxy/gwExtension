@@ -1,6 +1,7 @@
 import { Storage } from "js/storage";
 import { Parse } from "js/parse";
 import { Http } from "js/http";
+import { Fetcher } from "js/fetcher";
 import { Ordinal } from "../../data/ordinal";
 
 export class BagSell {
@@ -40,27 +41,22 @@ export class BagSell {
       })
       .filter((x) => x.element);
     console.log(itemsList);
-    let index = -1;
-    let timerId = setInterval(() => {
-      if (++index >= itemsList.length - 1) {
-        clearInterval(timerId);
-      }
-      const element = itemsList[index]?.element;
-      if (!element) {
-        console.log(itemsList[index], index);
-      }
 
-      Http.get(
-        `/market.php?stage=2&item_id=${element.id}&action_id=1&island=-1`
-      ).subscribe((xhr) => {
-        let div = document.createElement("div");
-        div.innerHTML = xhr.response;
+    Http.processWithDelay(
+      itemsList,
+      async ({ parent, element }) => {
+        if (!element) {
+          console.log("No element found");
+          return;
+        }
+
+        const doc = await Fetcher.marketAdvert(element.id);
         const isDrop = Ordinal.isDrop(element.id);
 
-        let minItem = Parse.parseMinAdvPrice(div, element.id, isDrop);
+        let minItem = Parse.parseMinAdvPrice(doc, element.id, isDrop);
 
         // Take into account min shop price and no such item in advertisement
-        let minShopPrice = Parse.getMinShopPrice(div);
+        let minShopPrice = Parse.getMinShopPrice(doc);
         if (minShopPrice < minItem?.price || !minItem) {
           minItem = { price: minShopPrice, seller: "shop" };
         }
@@ -70,7 +66,6 @@ export class BagSell {
         if (minItem) {
           const label = `Set to ${minItem.price}`;
 
-          const parent = itemsList[index].parent;
           const title = this.#parseTitle(parent);
           const item = Ordinal.get(element.id);
 
@@ -100,8 +95,9 @@ export class BagSell {
           parent.appendChild(linkNode);
           // AddLine.appendAdvertisementData(curentId, minItem.price, minItem.seller, Storage.getCost(itemId));
         }
-      });
-    }, 400);
+      },
+      400
+    );
   };
 
   #generateLink(newCost, searchString, label = "sell eco", isMine = false) {

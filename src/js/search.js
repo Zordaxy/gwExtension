@@ -1,11 +1,13 @@
 import { Http } from "./http";
 import { Parse } from "./parse";
+import { Fetcher } from "./fetcher";
 import { AddLine } from "./addLine";
 
 export const Search = {
   // TODO: move to widgets
   async findShopPrices() {
     const island = Parse.parseIsland();
+    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     let rows = document.querySelector(
       "form[action='/objectedit.php'] table[cellpadding='4']"
     ).rows;
@@ -21,12 +23,14 @@ export const Search = {
       let inputPriceLine = row.querySelectorAll("td input[name]");
       let resourceId = inputPriceLine[0].name.slice(7, -1);
 
-      const parsedShops = await Parse.parseShopsPrice(resourceId);
+      const shopsDoc = await Fetcher.statlistShops(resourceId);
+      const parsedShops = Parse.parseShopsPrice(shopsDoc);
       const localData = parsedShops[island];
 
       if (localData?.isNoOffers) {
-        await new Promise((resolve) => setTimeout(resolve, 200));
-        localData.minPrice = await Parse.parseSellersPrice(resourceId, island);
+        await delay(200);
+        const marketDoc = await Fetcher.marketBuy(resourceId);
+        localData.minPrice = Parse.parseSellersPrice(marketDoc);
       }
       AddLine.appendShopCount(row, localData, resourceId);
     });

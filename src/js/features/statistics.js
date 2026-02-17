@@ -2,6 +2,7 @@ import { Storage } from "js/storage";
 import { Http } from "js/http";
 import { Settings } from "js/settings";
 import { Parse } from "js/parse";
+import { Fetcher } from "js/fetcher";
 import { AddLine } from "js/addLine";
 import { App } from "js/app";
 import { Ordinal } from "data/ordinal";
@@ -29,19 +30,21 @@ export class Statistics {
     const sectionText = `<th colspan="7">${key} <a href="#" id="closeResult" class="item-finder__search-results-close">закрити</span></th>`;
     AddLine.addItemLine(sectionText);
 
+    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
     return Http.processWithDelay(
       items,
       async (itemId) => {
-        const parsedShops = await Parse.parseShopsPrice(itemId);
+        const shopsDoc = await Fetcher.statlistShops(itemId);
+        await delay(200);
+        const marketDoc = await Fetcher.marketBuy(itemId);
+        await delay(200);
+        const resDoc = await Fetcher.statlistResource(itemId);
+
+        const parsedShops = Parse.parseShopsPrice(shopsDoc);
         const { minPrice } = parsedShops[island];
-
-        await new Promise((resolve) => setTimeout(resolve, 200));
-
-        const minSellerPrice = await Parse.parseSellersPrice(itemId, island);
-
-        await new Promise((resolve) => setTimeout(resolve, 200));
-
-        let resourcePrice = await Parse.parseResPrice(itemId);
+        const minSellerPrice = Parse.parseSellersPrice(marketDoc);
+        let resourcePrice = Parse.parseResPrice(resDoc, itemId);
 
         let cost = Storage.getCost(itemId);
         const difference = +minPrice - cost;

@@ -1,9 +1,8 @@
 import { Storage } from "./storage";
-import { Settings } from "./settings";
 import { Ordinal } from "../data/ordinal";
-import { Http } from "./http";
 
 export const Parse = {
+  // Expects doc from: Fetcher.marketAdvert(itemId)
   parseMinAdvPrice(div, itemId, isDrop = false) {
     let rawElems = div.querySelectorAll("table")[0].querySelectorAll("tr");
 
@@ -47,6 +46,7 @@ export const Parse = {
     return results?.[0];
   },
 
+  // Expects doc from: Fetcher.marketAdvert(itemId)
   getMinShopPrice(div) {
     const td = [...div.querySelectorAll("td.greengreenbg")].find((el) =>
       el.textContent.includes("Дешевле всего за")
@@ -71,8 +71,8 @@ export const Parse = {
 
   /**
    *
-   * @param {*} resourceId
-   * @param {*} island
+   * Expects doc from: Fetcher.statlistShops(itemId)
+   * @param {Document} doc
    * @returns {
    *      title,
    *      Z: {
@@ -88,17 +88,14 @@ export const Parse = {
    *
    * }
    */
-  async parseShopsPrice(resourceId) {
+  parseShopsPrice(doc) {
     const result = {
       Z: {},
       G: {},
     };
-    const response = await Http.fetchGet(
-      `/statlist.php?r=${resourceId}&type=i`
-    );
 
-    result.title = response.querySelector("center table a b")?.innerText;
-    const listSelector = response.querySelectorAll("center table table tr");
+    result.title = doc.querySelector("center table a b")?.innerText;
+    const listSelector = doc.querySelectorAll("center table table tr");
     const list = [...listSelector];
     // Remove table header
     list?.shift();
@@ -145,12 +142,9 @@ export const Parse = {
     };
   },
 
-  async parseSellersPrice(resourceId, island) {
-    const response = await Http.fetchGet(
-      `/market.php?buy=1&item_id=${resourceId}`
-    );
-
-    const gosShopRawPrice = response.querySelector(
+  // Expects doc from: Fetcher.marketBuy(itemId)
+  parseSellersPrice(doc) {
+    const gosShopRawPrice = doc.querySelector(
       'table [class="greengraybg"] div b'
     )?.innerText;
     if (!gosShopRawPrice) {
@@ -165,11 +159,10 @@ export const Parse = {
     return +gosShopPrice;
   },
 
-  async parseResPrice(itemId) {
-    const response = await Http.fetchGet("/statlist.php?r=" + itemId);
-
+  // Expects doc from: Fetcher.statlistResource(itemId)
+  parseResPrice(doc, itemId) {
     let prices = [];
-    let trs = response
+    let trs = doc
       .querySelector("a[href='/stats.php']")
       ?.parentNode.querySelector("table td")
       ?.nextElementSibling?.getElementsByTagName("tr");
