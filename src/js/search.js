@@ -30,7 +30,7 @@ export const Search = {
       if (localData?.isNoOffers) {
         await delay(200);
         const marketDoc = await Fetcher.marketBuy(resourceId);
-        localData.minPrice = Parse.parseSellersPrice(marketDoc);
+        localData.minPrice = Parse.parseGosPrice(marketDoc);
       }
       AddLine.appendShopCount(row, localData, resourceId);
     });

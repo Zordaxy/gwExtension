@@ -143,7 +143,7 @@ export const Parse = {
   },
 
   // Expects doc from: Fetcher.marketBuy(itemId)
-  parseSellersPrice(doc) {
+  parseGosPrice(doc) {
     const gosShopRawPrice = doc.querySelector(
       'table [class="greengraybg"] div b'
     )?.innerText;

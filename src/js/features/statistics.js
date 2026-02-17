@@ -43,7 +43,7 @@ export class Statistics {
 
         const parsedShops = Parse.parseShopsPrice(shopsDoc);
         const { minPrice } = parsedShops[island];
-        const minSellerPrice = Parse.parseSellersPrice(marketDoc);
+        const minGosPrice = Parse.parseGosPrice(marketDoc);
         let resourcePrice = Parse.parseResPrice(resDoc, itemId);
 
         let cost = Storage.getCost(itemId);
@@ -54,7 +54,7 @@ export class Statistics {
             <td class="wb">${this.#getItemLink(itemId, parsedShops.title)}</td>
             <td class="wb">${minPrice}</td>
             <td class="wb">${cost}</td>
-            <td class="wb">${minSellerPrice ? minSellerPrice - cost : "-"}</td>
+            <td class="wb">${minGosPrice ? minGosPrice - cost : "-"}</td>
             <td class="wb" id="${itemId}Difference">${difference}</td>
             <td>
                 <a href="${
