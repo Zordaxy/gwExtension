@@ -41,10 +41,10 @@ export class Statistics {
         await delay(200);
         const resDoc = await Fetcher.resourceList(itemId);
 
-        const parsedShops = Parse.parseShopsPrice(shopsDoc);
+        const parsedShops = Parse.shopPriceFromShopsList(shopsDoc);
         const { minPrice } = parsedShops[island];
-        const minGosPrice = Parse.parseGosPrice(marketDoc);
-        let resourcePrice = Parse.parseResPrice(resDoc, itemId);
+        const minGosPrice = Parse.gosPrice(marketDoc);
+        let resourcePrice = Parse.resourcePrice(resDoc, itemId);
 
         let cost = Storage.getCost(itemId);
         const difference = +minPrice - cost;

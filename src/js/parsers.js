@@ -4,7 +4,7 @@ import { ShopsPriceResult, aggregateShopRows } from "./parseUtils";
 
 export const Parse = {
   // Expects doc from: Fetcher.adverticementsList(itemId)
-  parseMinAdvPrice(div, itemId, isDrop = false) {
+  advPrice(div, itemId, isDrop = false) {
     let rawElems = div.querySelectorAll("table")[0].querySelectorAll("tr");
 
     let elems = [].filter.call(rawElems, (elem) => {
@@ -48,7 +48,7 @@ export const Parse = {
   },
 
   // Expects doc from: Fetcher.adverticementsList(itemId)
-  getMinShopPrice(div) {
+  shopPriceFromAdvList(div) {
     const td = [...div.querySelectorAll("td.greengreenbg")].find((el) =>
       el.textContent.includes("Дешевле всего за")
     );
@@ -70,7 +70,7 @@ export const Parse = {
 
   // Expects doc from: Fetcher.shopsList(itemId)
   // Returns: ShopsPriceResult
-  parseShopsPrice(doc) {
+  shopPriceFromShopsList(doc) {
     const title = doc.querySelector("center table a b")?.innerText;
     const listSelector = doc.querySelectorAll("center table table tr");
     const list = [...listSelector];
@@ -93,7 +93,7 @@ export const Parse = {
   },
 
   // Expects doc from: Fetcher.adverticementsList(itemId)
-  parseGosPrice(doc) {
+  gosPrice(doc) {
     const gosShopRawPrice = doc.querySelector(
       'table [class="greengraybg"] div b'
     )?.innerText;
@@ -110,7 +110,7 @@ export const Parse = {
   },
 
   // Expects doc from: Fetcher.resourceList(itemId)
-  parseResPrice(doc, itemId) {
+  resourcePrice(doc, itemId) {
     let prices = [];
     let trs = doc
       .querySelector("a[href='/stats.php']")

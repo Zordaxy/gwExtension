@@ -53,10 +53,10 @@ export class BagSell {
         const doc = await Fetcher.adverticementsList(element.id);
         const isDrop = Ordinal.isDrop(element.id);
 
-        let minItem = Parse.parseMinAdvPrice(doc, element.id, isDrop);
+        let minItem = Parse.advPrice(doc, element.id, isDrop);
 
         // Take into account min shop price and no such item in advertisement
-        let minShopPrice = Parse.getMinShopPrice(doc);
+        let minShopPrice = Parse.shopPriceFromAdvList(doc);
         if (minShopPrice < minItem?.price || !minItem) {
           minItem = { price: minShopPrice, seller: "shop" };
         }

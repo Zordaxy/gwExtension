@@ -24,13 +24,13 @@ export const Search = {
       let resourceId = inputPriceLine[0].name.slice(7, -1);
 
       const shopsDoc = await Fetcher.shopsList(resourceId);
-      const parsedShops = Parse.parseShopsPrice(shopsDoc);
+      const parsedShops = Parse.shopPriceFromShopsList(shopsDoc);
       const localData = parsedShops[island];
 
       if (localData?.isNoOffers) {
         await delay(200);
         const marketDoc = await Fetcher.adverticementsList(resourceId);
-        localData.minPrice = Parse.parseGosPrice(marketDoc);
+        localData.minPrice = Parse.gosPrice(marketDoc);
       }
       AddLine.appendShopCount(row, localData, resourceId);
     });
