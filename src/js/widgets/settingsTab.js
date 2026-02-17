@@ -12,8 +12,6 @@ export class SettingsTab {
         this._settings.innerHTML = settingsTemplate;
         document.getElementsByTagName('body')[0].appendChild(this._settings);
 
-        localStorage.island = localStorage.island || Settings.island;
-        document.getElementById("cIsland").value = localStorage.island;
         document.getElementById("cMaxPrice").value = localStorage.maxPrice;
 
         Object.keys(Settings.resources).forEach(resource => {

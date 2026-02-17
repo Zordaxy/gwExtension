@@ -3,23 +3,9 @@ export const Settings = {
   // TODO: Add option to update resources in production
   // TODO: integrate island
   // TODO: Two sets of resources for G and Z
-  friends: ["Michegan", "Kalyunya", "A-g", "Шмекли"],
-  island: "Z",
+  friends: ["Michegan"],
   funnyDigit: "",
   resources: {
-    // hours: 515,
-    // uranium: 105,
-    // ganjium: 159,
-    // steel: 29,
-    // aluminium: 208,
-    // solomka: 38,
-    // grass: 40,
-    // boxites: 35,
-    // oil:39,
-    // seaweed: 33,
-    // plastic: 350,
-    // rubber: 288,
-    // battery: 238
     hours: 275,
     uranium: 201,
     ganjium: 219,
