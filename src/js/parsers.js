@@ -3,7 +3,7 @@ import { Ordinal } from "../data/ordinal";
 import { ShopsPriceResult, aggregateShopRows } from "./parseUtils";
 
 export const Parse = {
-  // Expects doc from: Fetcher.marketAdvert(itemId)
+  // Expects doc from: Fetcher.adverticementsList(itemId)
   parseMinAdvPrice(div, itemId, isDrop = false) {
     let rawElems = div.querySelectorAll("table")[0].querySelectorAll("tr");
 
@@ -47,7 +47,7 @@ export const Parse = {
     return results?.[0];
   },
 
-  // Expects doc from: Fetcher.marketAdvert(itemId)
+  // Expects doc from: Fetcher.adverticementsList(itemId)
   getMinShopPrice(div) {
     const td = [...div.querySelectorAll("td.greengreenbg")].find((el) =>
       el.textContent.includes("Дешевле всего за")
@@ -68,7 +68,7 @@ export const Parse = {
     return price;
   },
 
-  // Expects doc from: Fetcher.statlistShops(itemId)
+  // Expects doc from: Fetcher.shopsList(itemId)
   // Returns: ShopsPriceResult
   parseShopsPrice(doc) {
     const title = doc.querySelector("center table a b")?.innerText;
@@ -92,7 +92,7 @@ export const Parse = {
     return new ShopsPriceResult(title, G, Z);
   },
 
-  // Expects doc from: Fetcher.marketBuy(itemId)
+  // Expects doc from: Fetcher.adverticementsList(itemId)
   parseGosPrice(doc) {
     const gosShopRawPrice = doc.querySelector(
       'table [class="greengraybg"] div b'
@@ -109,7 +109,7 @@ export const Parse = {
     return +gosShopPrice;
   },
 
-  // Expects doc from: Fetcher.statlistResource(itemId)
+  // Expects doc from: Fetcher.resourceList(itemId)
   parseResPrice(doc, itemId) {
     let prices = [];
     let trs = doc

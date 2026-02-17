@@ -1,7 +1,7 @@
 import { Storage } from "js/storage";
-import { Parse } from "js/parse";
+import { Parse } from "js/parsers";
 import { Http } from "js/http";
-import { Fetcher } from "js/fetcher";
+import { Fetcher } from "js/fetchers";
 import { Ordinal } from "../../data/ordinal";
 
 export class BagSell {
@@ -50,7 +50,7 @@ export class BagSell {
           return;
         }
 
-        const doc = await Fetcher.marketAdvert(element.id);
+        const doc = await Fetcher.adverticementsList(element.id);
         const isDrop = Ordinal.isDrop(element.id);
 
         let minItem = Parse.parseMinAdvPrice(doc, element.id, isDrop);

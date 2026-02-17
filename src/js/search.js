@@ -1,6 +1,6 @@
 import { Http } from "./http";
-import { Parse } from "./parse";
-import { Fetcher } from "./fetcher";
+import { Parse } from "./parsers";
+import { Fetcher } from "./fetchers";
 import { AddLine } from "./addLine";
 
 export const Search = {
@@ -23,13 +23,13 @@ export const Search = {
       let inputPriceLine = row.querySelectorAll("td input[name]");
       let resourceId = inputPriceLine[0].name.slice(7, -1);
 
-      const shopsDoc = await Fetcher.statlistShops(resourceId);
+      const shopsDoc = await Fetcher.shopsList(resourceId);
       const parsedShops = Parse.parseShopsPrice(shopsDoc);
       const localData = parsedShops[island];
 
       if (localData?.isNoOffers) {
         await delay(200);
-        const marketDoc = await Fetcher.marketBuy(resourceId);
+        const marketDoc = await Fetcher.adverticementsList(resourceId);
         localData.minPrice = Parse.parseGosPrice(marketDoc);
       }
       AddLine.appendShopCount(row, localData, resourceId);

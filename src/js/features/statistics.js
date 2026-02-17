@@ -1,8 +1,8 @@
 import { Storage } from "js/storage";
 import { Http } from "js/http";
 import { Settings } from "js/settings";
-import { Parse } from "js/parse";
-import { Fetcher } from "js/fetcher";
+import { Parse } from "js/parsers";
+import { Fetcher } from "js/fetchers";
 import { AddLine } from "js/addLine";
 import { App } from "js/app";
 import { Ordinal } from "data/ordinal";
@@ -35,11 +35,11 @@ export class Statistics {
     return Http.processWithDelay(
       items,
       async (itemId) => {
-        const shopsDoc = await Fetcher.statlistShops(itemId);
+        const shopsDoc = await Fetcher.shopsList(itemId);
         await delay(200);
-        const marketDoc = await Fetcher.marketBuy(itemId);
+        const marketDoc = await Fetcher.adverticementsList(itemId);
         await delay(200);
-        const resDoc = await Fetcher.statlistResource(itemId);
+        const resDoc = await Fetcher.resourceList(itemId);
 
         const parsedShops = Parse.parseShopsPrice(shopsDoc);
         const { minPrice } = parsedShops[island];
