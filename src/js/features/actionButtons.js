@@ -3,6 +3,7 @@ export const ActionButtons = {
     //this.navigation();
     //this.highlightPokemons();
     this.pickItemsOnOut();
+    //this.sortUran();
   },
 
   navigation() {
@@ -97,6 +98,27 @@ export const ActionButtons = {
         }
       }, 300);
     }
+  },
+
+  sortUran() {
+    const nobr = Array.from(document.querySelectorAll("nobr")).find((tr) =>
+      tr.textContent.toLowerCase().includes("продать")
+    );
+    const table = nobr.parentNode;
+    const tbody = table.children[2].querySelector("tbody");
+    let dataRows = Array.from(tbody.children).filter(
+      (el) => el.tagName === "TR"
+    );
+    let bold = [];
+    let normal = [];
+
+    isBoldRow = (tr) =>
+      tr.querySelector('a[style*="font-weight:bold"]') !== null;
+    for (const tr of dataRows) {
+      (isBoldRow(tr) ? bold : normal).push(tr);
+    }
+
+    tbody.append(...bold, ...normal);
   },
 };
 
