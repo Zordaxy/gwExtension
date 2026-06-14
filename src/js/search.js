@@ -8,9 +8,10 @@ export const Search = {
   async findShopPrices() {
     const island = Parse.parseIsland();
     const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-    let rows = document.querySelector(
+    const table = document.querySelector(
       "form[action='/objectedit.php'] table[cellpadding='4']"
-    ).rows;
+    );
+    let rows = table.rows;
     let filteredRows = Array.prototype.filter.call(rows, (elem) => {
       const count = +elem.querySelectorAll("td")[1]?.innerText;
       const resourceId = elem
@@ -19,7 +20,11 @@ export const Search = {
       return count !== 0 && resourceId && !isNaN(count);
     });
 
-    Http.processWithDelay(filteredRows, async (row) => {
+    // Added disabled — entries are fetched one by one below, so we only enable
+    // "apply all" once every row has its recommended price.
+    const applyAll = AddLine.appendShopApplyAll(table);
+
+    await Http.processWithDelay(filteredRows, async (row) => {
       let inputPriceLine = row.querySelectorAll("td input[name]");
       let resourceId = inputPriceLine[0].name.slice(7, -1);
 
@@ -34,5 +39,9 @@ export const Search = {
       }
       AddLine.appendShopCount(row, localData, resourceId);
     });
+
+    if (applyAll) {
+      applyAll.disabled = false;
+    }
   },
 };

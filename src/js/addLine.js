@@ -3,45 +3,101 @@ import { Http } from './http';
 import { Settings } from './settings';
 import { App } from './app';
 
+// Minimum acceptable profit before a shop offer is flagged as a thin margin:
+// 4k for items priced under 100k, 6k from 100k up.
+const minMargin = (price) => (price < 100000 ? 4000 : 6000);
+
 export const AddLine = {
     appendShopCount(row, minShop, itemId) {
-        let cost = Storage.getCost(itemId);
+        const cost = Storage.getCost(itemId) || 0;
+        const minPrice = Number(minShop.minPrice);
+        const profit = minPrice - cost;
 
-        let countTd = document.createElement('td');
-        let profit = minShop.minPrice - cost;
+        // Thin margin → not worth chasing the market. Flag it red and, when
+        // applied, price it at twice cost instead of matching the competitor.
+        const isThin = cost > 0 && profit < minMargin(minPrice);
+        const expected = isThin
+            ? Math.round(cost * 2)
+            : this._adjustedPrice(minPrice, minShop);
 
-        // let currentPrice = row.querySelectorAll('td input')[2].value;
-        // let needChange = (!Settings.friends.includes(minShop.seller) || minShop.minPrice !== currentPrice) &&
-        //     profit > 2500;
+        const priceClass = isThin ? 'red' : minShop.isNoOffers ? 'brown' : 'green';
+        const profitText =
+            profit > 0
+                ? `<span class='green'>+${profit}</span>`
+                : `<span class='red'>${profit}</span>`;
 
-        profit = profit > 0 ? "<span class='green'>+" + profit + "</span>" : "<span class='red'>" + profit + "</span>";
-
-        // if (needChange) {
-        countTd.setAttribute("seller", minShop.seller);
-        countTd.setAttribute("newPrice", minShop.minPrice);
-        countTd.setAttribute("isNoOffers", minShop.isNoOffers);
-        minShop.minPrice = !minShop.isNoOffers ? "<span class='green'>" + minShop.minPrice + "</span>" : "<span class='brown'>" + minShop.minPrice + "</span>";
+        const countTd = document.createElement('td');
+        countTd.setAttribute('seller', minShop.seller);
+        countTd.setAttribute('newPrice', minPrice);
+        countTd.setAttribute('isNoOffers', minShop.isNoOffers);
+        countTd.dataset.expected = expected;
         countTd.onclick = this._changeShopPrice;
-        // }
+        countTd.innerHTML = `<span class='${priceClass}'>${minPrice}</span>(${profitText}) ${minShop.seller}`;
 
-        countTd.innerHTML = minShop.minPrice + "(" + profit + ") " + minShop.seller;
         row.appendChild(countTd);
+        this._markShopRow(countTd);
+    },
+
+    // Price we'd set when matching the cheapest competitor: undercut the gos
+    // offer by 1001, round non-friends down to the nearest 10, leave friends as-is.
+    _adjustedPrice(minPrice, minShop) {
+        if (minShop.isNoOffers) {
+            return minPrice - 1001;
+        }
+        if (!Settings.friends.includes(minShop.seller)) {
+            return Math.floor((minPrice - 1) / 10) * 10;
+        }
+        return minPrice;
     },
 
     _changeShopPrice(event) {
-        const eventElement = event.target.closest('td');
-        const isSellerFriend = Settings.friends.includes(eventElement.getAttribute("seller"));
-        const isNoOffers = eventElement.getAttribute("isNoOffers") === 'true' ? true : false;
+        const cell = event.target.closest('td');
+        cell.closest('tr').querySelectorAll('td input')[2].value = Number(cell.dataset.expected);
+        AddLine._markShopRow(cell);
+    },
 
-        let price = eventElement.getAttribute("newPrice");
+    // Show a green check on the offer cell when the sell price already equals
+    // the recommended price; remove it otherwise.
+    _markShopRow(cell) {
+        cell.querySelector('.saved-price--ok')?.remove();
 
-        if (isNoOffers) {
-            price = price - 1001;
-        } else if (!isSellerFriend) {
-            price = Math.floor((price - 1) / 10) * 10;
+        const sellInput = cell.closest('tr').querySelectorAll('td input')[2];
+        if (sellInput && Number(sellInput.value) === Number(cell.dataset.expected)) {
+            const ok = document.createElement('span');
+            ok.className = 'saved-price--ok';
+            ok.textContent = ' ✓';
+            ok.title = 'Sell price matches the recommended price';
+            cell.appendChild(ok);
+        }
+    },
+
+    // "apply all" button on the shop table header: writes the recommended sell
+    // price (matched competitor, or twice cost for thin margins) into every
+    // already-processed row, then refreshes the checks. Starts disabled and is
+    // returned so the caller can enable it once every row has been checked.
+    appendShopApplyAll(table) {
+        const header = [...table.rows].find((r) => r.textContent.includes('Цена продажи'));
+        if (!header) {
+            return null;
         }
 
-        event.target.closest('tr').querySelectorAll('td input')[2].value = price;
+        const button = document.createElement('button');
+        button.type = 'button'; // inside a <form> — must not submit it
+        button.textContent = 'apply all';
+        button.className = 'apply-all';
+        button.disabled = true; // enabled once all offers are fetched
+        button.onclick = () => {
+            table.querySelectorAll('td[data-expected]').forEach((cell) => {
+                cell.closest('tr').querySelectorAll('td input')[2].value = Number(cell.dataset.expected);
+                this._markShopRow(cell);
+            });
+        };
+
+        const td = document.createElement('td');
+        td.appendChild(button);
+        header.appendChild(td);
+
+        return button;
     },
 
     appendAdvertisementData(lineId, price, seller, cost) {
@@ -125,7 +181,7 @@ export const AddLine = {
             checkBox.onclick = this._selectItem;
 
             if (Storage.hasItem(itemId)) {
-                checkBox.parentNode.parentNode.style.backgroundColor = "lightGreen";
+                checkBox.parentNode.parentNode.classList.add("row--selected");
                 checkBox.checked = true;
             }
         }
@@ -133,7 +189,9 @@ export const AddLine = {
 
     _selectItem(event) {
         let checkBox = event.target || event.srcElement;
-        checkBox.parentNode.parentNode.style.backgroundColor = checkBox.checked ? "lightGreen" : "white";
+        let row = checkBox.parentNode.parentNode;
+        row.classList.toggle("row--selected", checkBox.checked);
+        row.classList.toggle("row--clear", !checkBox.checked);
         Storage.saveItem(checkBox.id);
     },
 }

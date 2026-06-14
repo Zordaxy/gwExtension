@@ -1,0 +1,83 @@
+/* Styles for the extension popup document (popup.html).
+   Separate from main.css, which is injected into the gwars.io page. */
+
+:root {
+  color-scheme: light;
+}
+body {
+  width: 320px;
+  margin: 0;
+  padding: 12px;
+  font: 13px/1.4 -apple-system, system-ui, sans-serif;
+  background: #d0eed0;
+  color: #1a1a1a;
+}
+h1 {
+  margin: 0 0 10px;
+  font-size: 15px;
+}
+fieldset {
+  border: 1px solid #9cc39c;
+  border-radius: 6px;
+  margin: 0 0 10px;
+  padding: 8px 10px 10px;
+}
+legend {
+  padding: 0 4px;
+  font-weight: 600;
+}
+.field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 4px 0;
+}
+.field input[type="number"],
+.field input[type="text"] {
+  width: 110px;
+  padding: 2px 4px;
+  border: 1px solid #9cc39c;
+  border-radius: 4px;
+  background: #fff;
+}
+.field--check {
+  justify-content: flex-start;
+  gap: 6px;
+}
+.hint {
+  margin: 0 0 10px;
+  font-size: 11px;
+  color: #4a6a4a;
+}
+.actions {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 6px;
+  background: #d0eed0;
+}
+button {
+  padding: 5px 12px;
+  border: 1px solid #2e7d32;
+  border-radius: 5px;
+  background: #2e7d32;
+  color: #fff;
+  cursor: pointer;
+}
+button#reset {
+  background: #fff;
+  color: #2e7d32;
+}
+.status {
+  margin-left: auto;
+  color: #2e7d32;
+  font-weight: 600;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.status--show {
+  opacity: 1;
+}

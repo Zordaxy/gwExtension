@@ -17,18 +17,18 @@ export const AutoPublic = {
                         </p>
                         <table>
                             <tr>
-                                <td style="color:#fff">Цена продажи за EUN:</td>
+                                <td>Цена продажи за EUN:</td>
                                 <td width=55><input onchange="localStorage.setItem('apSellPrice', this.value)" id="sellPrice" size="3" value="${localStorage.getItem('apSellPrice')}"></td>
                             </tr>
                             <tr>
-                                <td style="color:#fff">Цена покупки за EUN:</td>
+                                <td>Цена покупки за EUN:</td>
                                 <td>
                                     <input type="text" id="buyPrice" onchange="localStorage.setItem('apBuyPrice', this.value)" size="3" value="${localStorage.getItem('apBuyPrice')}">
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="2" align="center">
-                                    <p style="color:white;">
+                                    <p>
                                         <input onclick="localStorage.setItem('apIsland', -1)" name="browser" type="radio" ${(localStorage.getItem('apIsland') == '-1' ? 'checked' : '')}>
                                         [Все] 
                                         <input onclick="localStorage.setItem('apIsland', 0)" name="browser" type="radio" ${(localStorage.getItem('apIsland') == '0' ? 'checked' : '')}>

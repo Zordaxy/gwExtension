@@ -20,7 +20,7 @@ export class Result {
                     </table>\
                 ';
         this._result = document.createElement('div');
-        this._result.className = 'item-finder__search-results';
+        this._result.className = 'item-finder__search-results is-hidden';
         this._result.innerHTML = html;
         this.content = this._result.querySelector('.item-finder__search-results-holder');
         document.body.appendChild(this._result);
@@ -30,12 +30,12 @@ export class Result {
     }
     close(e) {
         if (e) e.preventDefault();
-        this._result.style.display = 'none';
+        this._result.classList.add('is-hidden');
         this.blacker.hide();
     }
 
     open() {
         this.content.innerHTML = '';
-        this._result.style.display = 'block';
+        this._result.classList.remove('is-hidden');
     }
 };

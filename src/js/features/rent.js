@@ -28,7 +28,7 @@ export class Rent {
     #appendAddLink(url, durability1, durability2) {
         let referenceContainer = document.createElement('a');
         referenceContainer.href = url;
-        referenceContainer.style = "text-decoration:none;font-weight:bold;color:#007700";
+        referenceContainer.classList.add('rent-link');
         referenceContainer.innerText = 'rent';
 
         referenceContainer.onclick = () => {

@@ -3,10 +3,9 @@ const path = require('path');
 
 module.exports = {
     entry: {
-        bundle: [
-            './src/main.js',
-            './src/css/main.css'
-        ],
+        // CSS is not bundled: main.css ships to the page via the manifest
+        // content_scripts.css (copied by CopyPlugin), and popup.css via popup.html.
+        bundle: './src/main.js',
         popup: './src/popup.js'
     },
     output: {
@@ -52,22 +51,6 @@ module.exports = {
                         ]
                     }
                 }
-            },
-            {
-                test: /\.css$/,
-                use: [
-                    {
-                        loader: "style-loader"
-                    },
-                    {
-                        loader: "css-loader",
-                        options: {
-                            modules: true,
-                            importLoaders: 1,
-                            sourceMap: true,
-                        }
-                    }
-                ]
             }
         ]
     }

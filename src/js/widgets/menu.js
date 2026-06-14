@@ -7,7 +7,7 @@ export class Menu {
             this._element = document.createElement('a');
             this._element.innerHTML = html;
             this._element.href = '#';
-            this._element.style.textDecoration = 'none';
+            this._element.classList.add('menu-link');
             this._element.onclick = callback;
             chat.parentNode.appendChild(this._element);
         }
