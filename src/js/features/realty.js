@@ -102,12 +102,12 @@ export class Realty {
         return tr;
     }
 
-    // Open every given property's edit page in a new tab.
+    // Open every given property's page in a new tab.
     #openAll(rows) {
         rows.forEach((row) => {
             const id = this.#objectId(row);
             if (id) {
-                window.open(`/objectedit.php?id=${id}`, '_blank');
+                window.open(`/object.php?id=${id}`, '_blank');
             }
         });
     }
