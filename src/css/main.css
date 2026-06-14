@@ -218,6 +218,25 @@
     min-width: 80px;
 }
 
+.realty-subgroup {
+    background: #e8f5e8;
+    color: var(--gw-border);
+    font-style: italic;
+    padding: 6px 8px 6px 24px;
+}
+
+.realty-show-all-link {
+    float: right;
+    font-style: normal;
+    font-weight: bold;
+    color: var(--gw-border-light);
+    text-decoration: none;
+}
+
+.realty-show-all-link:hover {
+    text-decoration: underline;
+}
+
 .money-reset {
     color: red;
     font-weight: bold;

@@ -20,7 +20,9 @@ module.exports = {
             ],
         })
     ],
-    devtool: 'inline-source-map',
+    // External source maps: keeps bundle.js small and unminified while DevTools
+    // still maps to original source (loads the separate .map only when open).
+    devtool: 'source-map',
     optimization: {
         minimize: false
     },

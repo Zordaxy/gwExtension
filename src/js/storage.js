@@ -67,10 +67,23 @@ export const Storage = {
 
     setLabel(value) {
         window.localStorage.setItem('label', value);
+    },
+
+    // propertyId -> shopTypes[], learned when a property's objectedit page is
+    // opened. Used by the realty page to sub-sort properties by shop type.
+    getPropertyTypes() {
+        return JSON.parse(window.localStorage.getItem(Keys.propertyTypes) || '{}');
+    },
+
+    setPropertyTypes(propertyId, shopTypes) {
+        const all = this.getPropertyTypes();
+        all[propertyId] = shopTypes;
+        window.localStorage.setItem(Keys.propertyTypes, JSON.stringify(all));
     }
 }
 
 class Keys {
     static itemKey = 'item-price';
     static priceToSet = 'item-priceToSet';
+    static propertyTypes = 'property-shopTypes';
 }

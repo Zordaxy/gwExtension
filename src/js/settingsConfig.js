@@ -13,7 +13,7 @@ export const EDITABLE_DEFAULTS = {
     steel: 20,
     aluminium: 292,
     solomka: 45,
-    grass: 42,
+    weed: 42,
     boxites: 34,
     oil: 37,
     seaweed: 33,

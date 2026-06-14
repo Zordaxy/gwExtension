@@ -1,5 +1,7 @@
 import { Settings } from "js/settings";
 import { RESOURCE_PAGE_CODES } from "js/settingsConfig";
+import { Ordinal } from "data/ordinal";
+import { Storage } from "js/storage";
 
 // Decorates the object-edit page (objectedit.php):
 //  - each resource row gets a saved-price cell (click to apply), plus an
@@ -8,12 +10,61 @@ import { RESOURCE_PAGE_CODES } from "js/settingsConfig";
 //    optimal production balance.
 export const ObjectEdit = {
     init() {
-        if (!window.location.pathname.includes("/objectedit.php")) {
+        const path = window.location.pathname;
+
+        if (path.includes("/objectedit.php")) {
+            this.markPrices();
+            this.balanceMoney();
+        }
+
+        // Learn shopTypes whenever a property is opened — on the view page
+        // (object.php) or the edit page (objectedit.php). Kept separate from the
+        // decorations above so a failure there can't block the recording.
+        if (path.includes("/object.php") || path.includes("/objectedit.php")) {
+            this.recordShopTypes();
+        }
+    },
+
+    // --- Shop types --------------------------------------------------------
+
+    // Derive which shopTypes this property deals in (from the items it lists)
+    // and cache propertyId -> shopTypes so the realty page can sub-sort by type.
+    // shopTypes can change, so re-derive and overwrite whenever the page opens.
+    recordShopTypes() {
+        const propertyId = new URLSearchParams(window.location.search).get("id");
+        if (!propertyId) {
             return;
         }
 
-        this.markPrices();
-        this.balanceMoney();
+        const ids = new Set();
+        // price[r|p|m][<itemId>] inputs name the items the property buys/sells.
+        document.querySelectorAll('input[name^="price"]').forEach((input) => {
+            const match = input.name.match(/\[(.+)\]/);
+            if (match) {
+                ids.add(match[1]);
+            }
+        });
+        // statlist.php?r=<itemId> / ...&lockr=<itemId> references.
+        document
+            .querySelectorAll('a[href*="statlist.php?r="], a[href*="lockr="]')
+            .forEach((link) => {
+                const match = link.href.match(/(?:[?&]r=|lockr=)([^&]+)/);
+                if (match) {
+                    ids.add(decodeURIComponent(match[1]));
+                }
+            });
+
+        const shopTypes = [
+            ...new Set([...ids].map((id) => Ordinal.get(id)?.shopType).filter(Boolean)),
+        ].sort();
+
+        console.log(`GW Checker: property ${propertyId} shopTypes`, shopTypes);
+
+        // Only write when it actually changed.
+        const stored = Storage.getPropertyTypes()[propertyId];
+        if (JSON.stringify(stored) !== JSON.stringify(shopTypes)) {
+            Storage.setPropertyTypes(propertyId, shopTypes);
+        }
     },
 
     // --- Resource prices ---------------------------------------------------
