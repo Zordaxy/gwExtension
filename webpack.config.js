@@ -41,11 +41,10 @@ module.exports = {
                         "presets": [
                             ["@babel/preset-env",
                                 {
-                                    "useBuiltIns": "entry",
-                                    "corejs": "3.8",
-                                    "targets": {
-                                        "browsers": "defaults, not ie 11, not ie_mob 11"
-                                    },
+                                    // No core-js polyfills: the extension only runs in
+                                    // current Chrome/Firefox, which support everything used.
+                                    "useBuiltIns": false,
+                                    "targets": "last 2 Chrome versions, last 2 Firefox versions",
                                     "modules": false
                                 }]
                         ]
