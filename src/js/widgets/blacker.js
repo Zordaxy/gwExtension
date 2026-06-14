@@ -7,9 +7,6 @@ export class Blacker {
         this._blacker.onclick = () => {
             this._blacker.style.display = 'none';
             App.result.close();
-            if (App.settingsTab) {
-                App.settingsTab.hide();
-            }
         };
         document.body.appendChild(this._blacker);
     }

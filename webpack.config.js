@@ -1,20 +1,19 @@
-const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyPlugin = require('copy-webpack-plugin');
 const path = require('path');
 
 module.exports = {
-    entry: [
-        './src/main.js',
-        './src/css/main.css'
-    ],
+    entry: {
+        bundle: [
+            './src/main.js',
+            './src/css/main.css'
+        ],
+        popup: './src/popup.js'
+    },
     output: {
-        filename: 'bundle.js',
+        filename: '[name].js',
         path: path.resolve(__dirname, 'dist')
     },
     plugins: [
-        new HtmlWebpackPlugin({
-            title: "Webpack Output",
-        }),
         new CopyPlugin({
             patterns: [
                 { from: './src/assets' },

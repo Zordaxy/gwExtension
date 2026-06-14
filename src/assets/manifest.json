@@ -7,9 +7,7 @@
     {
       "matches": [
         "https://*.gwars.io/*",
-        "https://gwars.io/*",
-        "https://www.gwars.io/*",
-        "https://*.gwars.io/*"
+        "https://gwars.io/*"
       ],
       "css": [
         "main.css"
@@ -25,7 +23,6 @@
     "default_title": "gwChecker"
   },
   "permissions": [
-    "activeTab",
     "storage"
   ]
 }

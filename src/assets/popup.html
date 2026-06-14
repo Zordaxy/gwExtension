@@ -1,1 +1,153 @@
-<p>No content. Extension renders elements directly on required page</p>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>GW Checker settings</title>
+    <style>
+      :root {
+        color-scheme: light;
+      }
+      body {
+        width: 320px;
+        margin: 0;
+        padding: 12px;
+        font: 13px/1.4 -apple-system, system-ui, sans-serif;
+        background: #d0eed0;
+        color: #1a1a1a;
+      }
+      h1 {
+        margin: 0 0 10px;
+        font-size: 15px;
+      }
+      fieldset {
+        border: 1px solid #9cc39c;
+        border-radius: 6px;
+        margin: 0 0 10px;
+        padding: 8px 10px 10px;
+      }
+      legend {
+        padding: 0 4px;
+        font-weight: 600;
+      }
+      .field {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin: 4px 0;
+      }
+      .field input[type="number"],
+      .field input[type="text"] {
+        width: 110px;
+        padding: 2px 4px;
+        border: 1px solid #9cc39c;
+        border-radius: 4px;
+        background: #fff;
+      }
+      .field--check {
+        justify-content: flex-start;
+        gap: 6px;
+      }
+      .hint {
+        margin: 0 0 10px;
+        font-size: 11px;
+        color: #4a6a4a;
+      }
+      .actions {
+        position: sticky;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding-top: 6px;
+        background: #d0eed0;
+      }
+      button {
+        padding: 5px 12px;
+        border: 1px solid #2e7d32;
+        border-radius: 5px;
+        background: #2e7d32;
+        color: #fff;
+        cursor: pointer;
+      }
+      button#reset {
+        background: #fff;
+        color: #2e7d32;
+      }
+      .status {
+        margin-left: auto;
+        color: #2e7d32;
+        font-weight: 600;
+        opacity: 0;
+        transition: opacity 0.2s;
+      }
+      .status--show {
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>GW Checker settings</h1>
+    <p class="hint">Reload the game page to apply changes.</p>
+
+    <!-- Form structure is declared here; popup.js only reads/writes values.
+         Input name = path into the editable settings (e.g. resources.hours). -->
+    <form id="settings">
+      <fieldset>
+        <legend>General</legend>
+        <label class="field">
+          Eco multiplier
+          <input type="number" step="any" name="eco" />
+        </label>
+        <label class="field">
+          Funny digit
+          <input type="text" name="funnyDigit" />
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Buttons</legend>
+        <label class="field field--check">
+          <input type="checkbox" name="showButtons.prices" /> Check prices
+        </label>
+        <label class="field field--check">
+          <input type="checkbox" name="showButtons.bag" /> Bag sell
+        </label>
+        <label class="field field--check">
+          <input type="checkbox" name="showButtons.advertisement" /> Advertisements
+        </label>
+        <label class="field field--check">
+          <input type="checkbox" name="showButtons.countShop" /> Count shop
+        </label>
+        <label class="field field--check">
+          <input type="checkbox" name="showButtons.eco" /> Eco
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Resource prices</legend>
+        <label class="field">hours <input type="number" step="any" name="resources.hours" /></label>
+        <label class="field">uranium <input type="number" step="any" name="resources.uranium" /></label>
+        <label class="field">ganjium <input type="number" step="any" name="resources.ganjium" /></label>
+        <label class="field">steel <input type="number" step="any" name="resources.steel" /></label>
+        <label class="field">aluminium <input type="number" step="any" name="resources.aluminium" /></label>
+        <label class="field">solomka <input type="number" step="any" name="resources.solomka" /></label>
+        <label class="field">grass <input type="number" step="any" name="resources.grass" /></label>
+        <label class="field">boxites <input type="number" step="any" name="resources.boxites" /></label>
+        <label class="field">oil <input type="number" step="any" name="resources.oil" /></label>
+        <label class="field">seaweed <input type="number" step="any" name="resources.seaweed" /></label>
+        <label class="field">plastic <input type="number" step="any" name="resources.plastic" /></label>
+        <label class="field">rubber <input type="number" step="any" name="resources.rubber" /></label>
+        <label class="field">battery <input type="number" step="any" name="resources.battery" /></label>
+      </fieldset>
+
+      <div class="actions">
+        <button id="save" type="submit">Save</button>
+        <button id="reset" type="button">Reset</button>
+        <span id="status" class="status" role="status" aria-live="polite"></span>
+      </div>
+    </form>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

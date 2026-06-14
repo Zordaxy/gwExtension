@@ -1,32 +1,20 @@
+import { cloneDefaults, mergeOverrides, readOverrides } from "./settingsConfig";
+
 export const Settings = {
-  // TODO: Make resources adjustable
-  // TODO: Add option to update resources in production
+  // Not user-editable (no popup controls for these).
   friends: ["Michegan"],
-  funnyDigit: "",
-  resources: {
-    hours: 275,
-    uranium: 195,
-    ganjium: 197,
-    steel: 20,
-    aluminium: 292,
-    solomka: 45,
-    grass: 42,
-    boxites: 34,
-    oil: 37,
-    seaweed: 33,
-    plastic: 360,
-    rubber: 288,
-    battery: 238,
-  },
   rentOwners: new Map([]),
   domain: "https://www.gwars.io",
-  showButtons: {
-    prices: true,
-    bag: true,
-    advertisement: true,
-    countShop: true,
-    settings: false,
-    eco: true,
+
+  // User-editable defaults (resources, funnyDigit, showButtons, eco).
+  // Overwritten in place by load() before App.init() runs, so every
+  // synchronous `Settings.x` read elsewhere keeps working unchanged.
+  ...cloneDefaults(),
+
+  // Merge persisted overrides from chrome.storage over the defaults.
+  // Call once at startup, before anything reads Settings. Edits made in the
+  // popup take effect on the next page load.
+  async load() {
+    Object.assign(this, mergeOverrides(await readOverrides()));
   },
-  eco: 1.9,
 };
