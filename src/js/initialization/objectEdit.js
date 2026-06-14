@@ -117,6 +117,16 @@ export const ObjectEdit = {
         const balance = Number(balanceNode.textContent.replace(/[^0-9]/g, ""));
         const target = Settings.productionBalance;
 
+        // Quick "x" shortcut: withdraw all but 10 so the object keeps a balance of 10.
+        const reset = document.createElement("td");
+        reset.textContent = "x";
+        reset.className = "money-reset";
+        reset.title = "Withdraw all but 10";
+        reset.onclick = () => {
+            moneyOut.value = balance - 10;
+        };
+        moneyOut.closest("tr").appendChild(reset);
+
         if (balance > target) {
             // Withdraw the excess so the object keeps exactly the target balance.
             moneyOut.value = balance - target;

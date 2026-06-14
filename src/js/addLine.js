@@ -84,7 +84,7 @@ export const AddLine = {
         const button = document.createElement('button');
         button.type = 'button'; // inside a <form> — must not submit it
         button.textContent = 'apply all';
-        button.className = 'apply-all';
+        button.className = 'apply-all apply-all--shop';
         button.disabled = true; // enabled once all offers are fetched
         button.onclick = () => {
             table.querySelectorAll('td[data-expected]').forEach((cell) => {

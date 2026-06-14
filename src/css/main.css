@@ -200,6 +200,17 @@
     opacity: 0.5;
 }
 
+.apply-all--shop {
+    min-width: 110px;
+}
+
+.money-reset {
+    color: red;
+    font-weight: bold;
+    cursor: pointer;
+    padding-left: 6px;
+}
+
 /* ---------- Shared visibility utility ---------- */
 
 .is-hidden {
