@@ -6,7 +6,7 @@ export class Blacker {
         this._blacker.className = 'blacker';
         this._blacker.onclick = () => {
             this._blacker.style.display = 'none';
-            result.close();
+            App.result.close();
             if (App.settingsTab) {
                 App.settingsTab.hide();
             }

@@ -23,10 +23,9 @@ export class Result {
         this._result.className = 'item-finder__search-results';
         this._result.innerHTML = html;
         this.content = this._result.querySelector('.item-finder__search-results-holder');
-        this._result.querySelector('.item-finder__search-results-close').onclick = this.close();
         document.body.appendChild(this._result);
-        document.getElementById("closeResult").onclick = () => {
-            result.close();
+        document.getElementById("closeResult").onclick = (e) => {
+            this.close(e);
         }
     }
     close(e) {
