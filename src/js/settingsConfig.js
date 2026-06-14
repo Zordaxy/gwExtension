@@ -29,6 +29,7 @@ export const EDITABLE_DEFAULTS = {
     advertisement: true,
     countShop: true,
     eco: true,
+    sortProperties: true,
   },
   eco: 1.9,
 };

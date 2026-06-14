@@ -204,6 +204,20 @@
     min-width: 110px;
 }
 
+.realty-group {
+    background: var(--gw-head-bg);
+    color: var(--gw-head-fg);
+    font-weight: bold;
+    font-size: 14px;
+    padding: 16px 8px;
+    border-top: 3px solid var(--gw-border);
+}
+
+.realty-show-all {
+    margin-left: 8px;
+    min-width: 80px;
+}
+
 .money-reset {
     color: red;
     font-weight: bold;

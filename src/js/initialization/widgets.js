@@ -8,6 +8,7 @@ import { Eco } from "js/features/eco";
 import { BagSell } from "js/features/bagSell";
 import { Statistics } from "../features/statistics";
 import { Rent } from "../features/rent";
+import { Realty } from "../features/realty";
 
 export const Widgets = {
     init(app) {
@@ -47,6 +48,11 @@ export const Widgets = {
                 condition: document.querySelector('[action="object-hdo.php"]'),
                 label: 'rent',
                 action: () => new Rent().init()
+            },
+            {
+                condition: Settings.showButtons.sortProperties && window.location.pathname.includes('info.realty.php'),
+                label: 'sortProperties',
+                action: () => new Realty().sortProperties()
             }
         ];
 
