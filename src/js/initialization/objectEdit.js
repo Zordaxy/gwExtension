@@ -78,6 +78,7 @@ export const ObjectEdit = {
                 const settingsKey = RESOURCE_PAGE_CODES[pageKey] || pageKey;
                 return {
                     input,
+                    pageKey,
                     row: input.closest("tr"),
                     stored: Settings.resources[settingsKey],
                 };
@@ -93,6 +94,12 @@ export const ObjectEdit = {
 
         this.addApplyAll(entries, render);
         render();
+
+        // Uran row gets an extra "x" that fills its "Максимум" (pricem[uran]).
+        const uran = entries.find((entry) => entry.pageKey === "uran");
+        if (uran) {
+            this.addUranMax(uran.row);
+        }
     },
 
     // Append the trailing cell on a resource row: a clickable red saved price
@@ -116,7 +123,52 @@ export const ObjectEdit = {
             };
         }
 
+        // Keep the saved-price cell before the uran "x" button if it exists.
+        const uranMax = row.querySelector(".uran-max");
+        if (uranMax) {
+            row.insertBefore(cell, uranMax);
+        } else {
+            row.appendChild(cell);
+        }
+    },
+
+    // "x" on the uran row that fills its "Максимум" (pricem[uran]) with the
+    // amount needed to cover the uran the product will consume. See setUranMax.
+    addUranMax(row) {
+        const cell = document.createElement("td");
+        cell.textContent = "stop";
+        cell.className = "money-reset uran-max";
+        cell.title = "Fill the uran maximum";
+        cell.onclick = () => this.setUranMax(row);
         row.appendChild(cell);
+    },
+
+    setUranMax(row) {
+        const table = row.closest("table");
+        const pricem = row.querySelector('input[name^="pricem["]');
+        if (!pricem) {
+            return;
+        }
+
+        // a — the cell right after the pricem input (Ед/ч for this resource).
+        const a = Number(pricem.closest("td").nextElementSibling?.textContent);
+        // c — this row's "Наличие" (current uran stock).
+        const c = Number(row.cells[1]?.textContent);
+        // b — fractional part of the first resource row's "Наличие" (the produced
+        // item's stock), e.g. 4.32 -> 0.32.
+        const header = [...table.rows].find((r) => r.textContent.includes("Наличие"));
+        const stock = Number(header?.nextElementSibling?.cells[1]?.textContent);
+
+        if (![a, stock, c].every(Number.isFinite)) {
+            return;
+        }
+
+        const b = stock % 1;
+        let sum = (1 - b) * a + 2;
+        while (sum < c) {
+            sum += a;
+        }
+        pricem.value = Math.floor(sum);
     },
 
     // Put an "apply all" button on the header row above the resource rows

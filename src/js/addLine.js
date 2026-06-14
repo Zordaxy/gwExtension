@@ -185,6 +185,8 @@ export const AddLine = {
                 checkBox.checked = true;
             }
         }
+
+        return itemLine;
     },
 
     _selectItem(event) {

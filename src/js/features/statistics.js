@@ -27,8 +27,13 @@ export class Statistics {
 
   async #renderStatisticsSection(items, key) {
     const island = Parse.parseIsland();
-    const sectionText = `<th colspan="7">${key} <a href="#" id="closeResult" class="item-finder__search-results-close">закрити</span></th>`;
-    AddLine.addItemLine(sectionText);
+    const sectionText = `<th colspan="7">${key} <a href="#" class="item-finder__search-results-close section-toggle">закрити</a></th>`;
+    const headerRow = AddLine.addItemLine(sectionText);
+    headerRow.classList.add("section-header");
+    headerRow.querySelector(".section-toggle").onclick = (event) => {
+      event.preventDefault();
+      this.#toggleSection(headerRow);
+    };
 
     const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -55,7 +60,7 @@ export class Statistics {
             <td class="wb">${minPrice}</td>
             <td class="wb">${cost}</td>
             <td class="wb">${minGosPrice ? minGosPrice - cost : "-"}</td>
-            <td class="wb" id="${itemId}Difference">${difference}</td>
+            <td class="wb ${difference > 10000 ? "green" : ""}" id="${itemId}Difference">${difference}</td>
             <td>
                 <a href="${
                   Settings.domain
@@ -66,6 +71,20 @@ export class Statistics {
       },
       600
     );
+  }
+
+  // Collapse/expand the rows under a section header (up to the next header).
+  #toggleSection(headerRow) {
+    const collapsed = headerRow.classList.toggle("is-collapsed");
+    headerRow.querySelector(".section-toggle").textContent = collapsed
+      ? "показати"
+      : "закрити";
+
+    let row = headerRow.nextElementSibling;
+    while (row && !row.classList.contains("section-header")) {
+      row.classList.toggle("is-hidden", collapsed);
+      row = row.nextElementSibling;
+    }
   }
 
   #getItemLink(itemId, title) {

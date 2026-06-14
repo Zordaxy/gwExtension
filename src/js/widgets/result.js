@@ -4,7 +4,7 @@ export class Result {
         let html = '\
                     <table class="item-finder__table">\
                         <thead>\
-                            <tr><th colspan="7">Результати пошуку <a href="#" id="closeResult" class="item-finder__search-results-close">закрити</span></th></tr>\
+                            <tr><th colspan="7">Результати пошуку <a href="#" id="closeResult" class="item-finder__search-results-close">закрити</a></th></tr>\
                             <tr class="colspan">\
                                 <th class="smallBox"></th>\
                                 <th class="item">Предмет</th>\

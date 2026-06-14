@@ -167,7 +167,7 @@
 /* ---------- Saved price (objectedit) ---------- */
 
 .saved-price {
-    color: red;
+    color: green;
     font-weight: bold;
     cursor: pointer;
     padding-left: 6px;
@@ -193,6 +193,7 @@
     cursor: pointer;
     font-size: 11px;
     padding: 1px 6px;
+    min-width: 80px;
 }
 
 .apply-all:disabled {
