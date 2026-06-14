@@ -1,16 +1,26 @@
 import { Settings } from "js/settings";
 import { RESOURCE_PAGE_CODES } from "js/settingsConfig";
 
-// The object-edit page (objectedit.php) lists each resource in its own <tr>
-// with a "price per unit" input named pricer[<code>], matched against the saved
-// prices in Settings.resources (the editable subset of EDITABLE_DEFAULTS).
-export const ObjectPrices = {
-    // Only objectedit.php has the resource price inputs; bail elsewhere.
+// Decorates the object-edit page (objectedit.php):
+//  - each resource row gets a saved-price cell (click to apply), plus an
+//    "apply all" button on the header row;
+//  - the money form is pre-filled so submitting leaves the object at the
+//    optimal production balance.
+export const ObjectEdit = {
     init() {
         if (!window.location.pathname.includes("/objectedit.php")) {
             return;
         }
 
+        this.markPrices();
+        this.balanceMoney();
+    },
+
+    // --- Resource prices ---------------------------------------------------
+
+    markPrices() {
+        // Each resource row holds a "price per unit" input named pricer[<code>],
+        // matched against the saved prices in Settings.resources.
         const entries = [...document.querySelectorAll('input[name^="pricer["]')]
             .map((input) => {
                 const pageKey = input.name.slice("pricer[".length, -1); // pricer[metal] -> metal
@@ -28,7 +38,7 @@ export const ObjectPrices = {
             return;
         }
 
-        const render = () => entries.forEach((entry) => this.mark(entry, render));
+        const render = () => entries.forEach((entry) => this.markRow(entry, render));
 
         this.addApplyAll(entries, render);
         render();
@@ -36,7 +46,7 @@ export const ObjectPrices = {
 
     // Append the trailing cell on a resource row: a clickable red saved price
     // when it differs from the current input, or a green check when they match.
-    mark({ input, row, stored }, render) {
+    markRow({ input, row, stored }, render) {
         row.querySelector(".saved-price")?.remove();
 
         const cell = document.createElement("td");
@@ -84,5 +94,35 @@ export const ObjectPrices = {
         const cell = document.createElement("td");
         cell.appendChild(button);
         header.appendChild(cell);
+    },
+
+    // --- Money balance -----------------------------------------------------
+
+    // The money form ("Управление счетом") shows the object's current balance
+    // after "на объекте" inside a <b>. Pre-fill money_in / money_out so
+    // submitting the form leaves the object at the optimal production balance.
+    balanceMoney() {
+        const moneyIn = document.querySelector('[name="money_in"]');
+        const moneyOut = document.querySelector('[name="money_out"]');
+        if (!moneyIn || !moneyOut) {
+            return;
+        }
+
+        // "на объекте <b>$500,057</b>" sits in the money_out row.
+        const balanceNode = moneyOut.closest("tr")?.querySelector("b");
+        if (!balanceNode) {
+            return;
+        }
+
+        const balance = Number(balanceNode.textContent.replace(/[^0-9]/g, ""));
+        const target = Settings.productionBalance;
+
+        if (balance > target) {
+            // Withdraw the excess so the object keeps exactly the target balance.
+            moneyOut.value = balance - target;
+        } else if (balance < target) {
+            // Top up the difference to reach the target balance.
+            moneyIn.value = target - balance;
+        }
     },
 };

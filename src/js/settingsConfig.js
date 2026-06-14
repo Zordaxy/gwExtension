@@ -22,6 +22,7 @@ export const EDITABLE_DEFAULTS = {
     battery: 238,
   },
   funnyDigit: "",
+  productionBalance: 1000000,
   showButtons: {
     prices: true,
     bag: true,
