@@ -53,6 +53,11 @@ export const Parse = {
       el.textContent.includes("Дешевле всего за")
     );
 
+    if (!td) {
+      console.log("No shop price found");
+      return null;
+    }
+
     const priceBold = [...td.querySelectorAll("b")].find((b) => {
       const prev = b.previousSibling;
       return (

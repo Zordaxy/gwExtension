@@ -57,6 +57,10 @@ export class BagSell {
 
         // Take into account min shop price and no such item in advertisement
         let minShopPrice = Parse.shopPriceFromAdvList(doc);
+        if (!minShopPrice) {
+          console.log("No shop price found");
+          return;
+        }
         if (minShopPrice < minItem?.price || !minItem) {
           minItem = { price: minShopPrice, seller: "shop" };
         }
