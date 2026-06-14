@@ -175,3 +175,33 @@
 .sell-eco:hover {
     background-color: lightgreen;
 }
+
+.saved-price {
+    color: red;
+    font-weight: bold;
+    cursor: pointer;
+    padding-left: 6px;
+    white-space: nowrap;
+}
+
+.saved-price:hover {
+    text-decoration: underline;
+}
+
+.saved-price--ok {
+    color: #339933;
+    cursor: default;
+}
+
+.saved-price--ok:hover {
+    text-decoration: none;
+}
+
+.apply-all {
+    background: #c0ddc0;
+    border: 1px solid #339933;
+    cursor: pointer;
+    font-size: 11px;
+    padding: 1px 6px;
+    min-width: 60px;
+}

@@ -32,6 +32,15 @@ export const EDITABLE_DEFAULTS = {
   eco: 1.9,
 };
 
+// objectedit.php names its resource price inputs (pricer[<code>]) with the
+// game's internal codes, two of which differ from the keys in
+// EDITABLE_DEFAULTS.resources above. List those exceptions here; every other
+// code matches a resource key directly, so callers fall back to the code itself.
+export const RESOURCE_PAGE_CODES = {
+  metal: "steel", // Сталь
+  uran: "uranium", // Уран
+};
+
 // Deep clone helper — the editable defaults are JSON-safe (numbers/strings/booleans/plain objects).
 export const cloneDefaults = () => JSON.parse(JSON.stringify(EDITABLE_DEFAULTS));
 
