@@ -15,6 +15,7 @@ export const ObjectEdit = {
         if (path.includes("/objectedit.php")) {
             this.markPrices();
             this.balanceMoney();
+            this.shopSaveTimer();
         }
 
         // Learn shopTypes whenever a property is opened — on the view page
@@ -135,6 +136,50 @@ export const ObjectEdit = {
                 amOut.value = result;
             }
         });
+    },
+
+    // --- Shop save cooldown --------------------------------------------------
+
+    // A shop can save its prices once every 4 hours. Record the save time on
+    // click and, next to the shop's object link, show a red "Xh Ym" countdown,
+    // or a green check when the 4h have passed (or nothing was ever saved).
+    shopSaveTimer() {
+        const saveButton = document.querySelector(
+            'input[type="submit"][value="Сохранить настройки магазина"]'
+        );
+        const propertyId = new URLSearchParams(window.location.search).get("id");
+        if (!saveButton || !propertyId) {
+            return;
+        }
+
+        saveButton.addEventListener("click", () => {
+            Storage.setShopSaveTime(propertyId, Date.now());
+        });
+
+        const link =
+            document.querySelector(
+                `a[href="${Settings.domain}/object.php?id=${propertyId}"]`
+            ) || document.querySelector(`a[href*="object.php?id=${propertyId}"]`);
+        if (!link) {
+            return;
+        }
+
+        const fourHours = 4 * 60 * 60 * 1000;
+        const saved = Storage.getShopSaveTimes()[propertyId];
+        const remaining = saved ? saved + fourHours - Date.now() : 0;
+
+        const indicator = document.createElement("span");
+        if (remaining > 0) {
+            const hours = Math.floor(remaining / (60 * 60 * 1000));
+            const minutes = Math.floor((remaining % (60 * 60 * 1000)) / (60 * 1000));
+            const pad = (n) => String(n).padStart(2, "0");
+            indicator.className = "shop-timer";
+            indicator.textContent = ` ${pad(hours)}:${pad(minutes)}`;
+        } else {
+            indicator.className = "green";
+            indicator.textContent = " ✓";
+        }
+        link.after(indicator);
     },
 
     // --- Shop types --------------------------------------------------------

@@ -39,10 +39,11 @@ export class BagSell {
           element: Ordinal.get(itemId),
         };
       })
-      .filter((x) => x.element);
+      // Only new items (full durability) — skip used ones (e.g. 10/14).
+      .filter((x) => x.element && this.#isNew(x.parent));
     console.log(itemsList);
 
-    Http.processWithDelay(
+    return Http.processWithDelay(
       itemsList,
       async ({ parent, element }) => {
         if (!element) {
@@ -89,12 +90,16 @@ export class BagSell {
             ? (+minItem.price - 1) * durability
             : Math.floor((minItem.price - 1) / 10) * 10;
           const isMine = minItem.seller?.indexOf("Michegan") > -1;
+          // Keep the label green only if the item isn't already on sale, or the
+          // recommended price undercuts the price it's listed at.
+          const listed = this.#listedPrice(parent);
+          const green = !isMine && (listed === null || minItem.price < listed);
 
           const linkNode = this.#generateLink(
             newPrice,
             searchString,
             label,
-            isMine
+            green
           );
           parent.appendChild(linkNode);
           // AddLine.appendAdvertisementData(curentId, minItem.price, minItem.seller, Storage.getCost(itemId));
@@ -104,11 +109,11 @@ export class BagSell {
     );
   };
 
-  #generateLink(newCost, searchString, label = "sell eco", isMine = false) {
+  #generateLink(newCost, searchString, label = "sell eco", green = true) {
     let linkNode = document.createElement("span");
     linkNode.innerHTML = label;
     linkNode.classList.add("sell-eco");
-    if (!isMine) linkNode.classList.add("green");
+    if (green) linkNode.classList.add("green");
 
     linkNode.onclick = () => {
       Storage.setPrice(newCost);
@@ -152,5 +157,24 @@ export class BagSell {
     const durability = labelNode?.textContent.trim();
 
     return +durability;
+  }
+
+  // New = full durability (current === max). Items without a max (consumables)
+  // are left for the Ordinal filter to drop, so treat them as new here.
+  #isNew(node) {
+    const idSuffix = node.id.split("_").pop();
+    const td2 = document.querySelector(`#item_td2_${idSuffix}`);
+    const match = td2?.textContent.match(/Прочность предмета:\s*(\d+)\/(\d+)/);
+    return !match || match[1] === match[2];
+  }
+
+  // Price the item is currently listed for, or null when it isn't on sale.
+  #listedPrice(node) {
+    const idSuffix = node.id.split("_").pop();
+    const td2 = document.querySelector(`#item_td2_${idSuffix}`);
+    const match = td2?.textContent.match(
+      /Предмет выставлен на продажу за \$(\d+)/
+    );
+    return match ? Number(match[1]) : null;
   }
 }

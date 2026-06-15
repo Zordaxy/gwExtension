@@ -71,33 +71,63 @@ export const AddLine = {
         }
     },
 
-    // "apply all" button on the shop table header: writes the recommended sell
-    // price (matched competitor, or twice cost for thin margins) into every
-    // already-processed row, then refreshes the checks. Starts disabled and is
-    // returned so the caller can enable it once every row has been checked.
-    appendShopApplyAll(table) {
+    // Build the shop-table header controls: "countShop" on top, "apply all"
+    // below, stacked in one cell. Both buttons (and a checkmark to the right of
+    // each) keep their space from the start, so nothing jumps when offers load
+    // or buttons are clicked. Returns refs so the caller can flip state later.
+    //  - countShop ✓ shows when every offer has been fetched.
+    //  - apply all is disabled until then; its ✓ shows once clicked.
+    buildShopControls(table, onCountShop) {
         const header = [...table.rows].find((r) => r.textContent.includes('Цена продажи'));
         if (!header) {
             return null;
         }
 
-        const button = document.createElement('button');
-        button.type = 'button'; // inside a <form> — must not submit it
-        button.textContent = 'apply all';
-        button.className = 'apply-all apply-all--shop';
-        button.disabled = true; // enabled once all offers are fetched
-        button.onclick = () => {
+        const makeCheck = () => {
+            const check = document.createElement('span');
+            check.className = 'green';
+            check.textContent = ' ✓';
+            check.style.visibility = 'hidden'; // reserve the space, no jump
+            return check;
+        };
+
+        // countShop (top)
+        const countButton = document.createElement('button');
+        countButton.type = 'button';
+        countButton.textContent = 'countShop';
+        countButton.className = 'apply-all apply-all--shop';
+        const countCheck = makeCheck();
+        countButton.onclick = () => {
+            countButton.disabled = true; // prevent a second run
+            onCountShop();
+        };
+
+        // apply all (bottom)
+        const applyButton = document.createElement('button');
+        applyButton.type = 'button';
+        applyButton.textContent = 'apply all';
+        applyButton.className = 'apply-all apply-all--shop';
+        applyButton.disabled = true; // enabled once all offers are fetched
+        const applyCheck = makeCheck();
+        applyButton.onclick = () => {
             table.querySelectorAll('td[data-expected]').forEach((cell) => {
                 cell.closest('tr').querySelectorAll('td input')[2].value = Number(cell.dataset.expected);
                 this._markShopRow(cell);
             });
+            applyCheck.style.visibility = 'visible';
         };
 
+        const countLine = document.createElement('div');
+        countLine.append(countButton, countCheck);
+        const applyLine = document.createElement('div');
+        applyLine.append(applyButton, applyCheck);
+
         const td = document.createElement('td');
-        td.appendChild(button);
+        td.style.whiteSpace = 'nowrap'; // keep each check to the right of its button
+        td.append(countLine, applyLine);
         header.appendChild(td);
 
-        return button;
+        return { applyAll: applyButton, countCheck };
     },
 
     appendAdvertisementData(lineId, price, seller, cost) {

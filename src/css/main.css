@@ -252,6 +252,11 @@
     padding-left: 8px;
 }
 
+.shop-timer {
+    color: red;
+    font-size: 8px;
+}
+
 /* ---------- Shared visibility utility ---------- */
 
 .is-hidden {

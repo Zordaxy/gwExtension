@@ -101,6 +101,18 @@ export const Storage = {
 
     setMissing(missing) {
         window.localStorage.setItem(Keys.shopMissing, JSON.stringify(missing));
+    },
+
+    // { shopId: timestamp } of the last "save shop settings" click, kept per
+    // shop (a shop can only save its prices once every 4 hours).
+    getShopSaveTimes() {
+        return JSON.parse(window.localStorage.getItem(Keys.shopSaveTimes) || '{}');
+    },
+
+    setShopSaveTime(shopId, timestamp) {
+        const all = this.getShopSaveTimes();
+        all[shopId] = timestamp;
+        window.localStorage.setItem(Keys.shopSaveTimes, JSON.stringify(all));
     }
 }
 
@@ -110,4 +122,5 @@ class Keys {
     static propertyTypes = 'property-shopTypes';
     static propertyResources = 'property-resources';
     static shopMissing = 'shop-missing';
+    static shopSaveTimes = 'shop-save-times';
 }
