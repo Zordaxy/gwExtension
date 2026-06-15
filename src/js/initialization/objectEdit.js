@@ -16,7 +16,7 @@ export const ObjectEdit = {
         if (path.includes("/objectedit.php")) {
             this.markPrices();
             this.balanceMoney();
-            this.shopSaveTimer();
+            this.recordShopSave();
         }
 
         // Learn shopTypes whenever a property is opened — on the view page
@@ -30,6 +30,10 @@ export const ObjectEdit = {
             this.addRememberMissing();
             this.addRefillButton();
         }
+
+        // Shop save cooldowns are shown everywhere (the nav bookmarks bar links
+        // to each shop), so the timers persist across pages and refreshes.
+        this.showShopTimers();
     },
 
     // --- Shop restock --------------------------------------------------------
@@ -144,43 +148,57 @@ export const ObjectEdit = {
     // A shop can save its prices once every 4 hours. Record the save time on
     // click and, next to the shop's object link, show a red "Xh Ym" countdown,
     // or a green check when the 4h have passed (or nothing was ever saved).
-    shopSaveTimer() {
+    // The object id — from the URL, or the hidden form field (the URL loses
+    // ?id after the settings form POSTs it as a hidden field).
+    propertyId() {
+        return (
+            new URLSearchParams(window.location.search).get("id") ||
+            document.querySelector('input[name="id"]')?.value ||
+            null
+        );
+    },
+
+    // On a shop's edit page, store the save time when settings are saved.
+    recordShopSave() {
         const saveButton = document.querySelector(
             'input[type="submit"][value="Сохранить настройки магазина"]'
         );
-        const propertyId = new URLSearchParams(window.location.search).get("id");
+        const propertyId = this.propertyId();
         if (!saveButton || !propertyId) {
             return;
         }
-
         saveButton.addEventListener("click", () => {
             Storage.setShopSaveTime(propertyId, Date.now());
         });
+    },
 
-        const link =
-            document.querySelector(
-                `a[href="${Settings.domain}/object.php?id=${propertyId}"]`
-            ) || document.querySelector(`a[href*="object.php?id=${propertyId}"]`);
-        if (!link) {
-            return;
-        }
-
+    // On every page, show each shop's save cooldown next to its object link
+    // (e.g. the nav bookmarks): a red "hh:mm" countdown, or a green check once
+    // the 4h have passed. Only shops with a stored save time get a marker.
+    showShopTimers() {
+        const times = Storage.getShopSaveTimes();
         const fourHours = 4 * 60 * 60 * 1000;
-        const saved = Storage.getShopSaveTimes()[propertyId];
-        const remaining = saved ? saved + fourHours - Date.now() : 0;
 
-        const indicator = document.createElement("span");
-        if (remaining > 0) {
-            const hours = Math.floor(remaining / (60 * 60 * 1000));
-            const minutes = Math.floor((remaining % (60 * 60 * 1000)) / (60 * 1000));
-            const pad = (n) => String(n).padStart(2, "0");
-            indicator.className = "shop-timer";
-            indicator.textContent = ` ${pad(hours)}:${pad(minutes)}`;
-        } else {
-            indicator.className = "green";
-            indicator.textContent = " ✓";
-        }
-        link.after(indicator);
+        document.querySelectorAll('a[href*="object.php?id="]').forEach((link) => {
+            const id = link.href.match(/id=(\d+)/)?.[1];
+            if (!id || times[id] === undefined) {
+                return;
+            }
+
+            const remaining = times[id] + fourHours - Date.now();
+            const indicator = document.createElement("span");
+            if (remaining > 0) {
+                const hours = Math.floor(remaining / (60 * 60 * 1000));
+                const minutes = Math.floor((remaining % (60 * 60 * 1000)) / (60 * 1000));
+                const pad = (n) => String(n).padStart(2, "0");
+                indicator.className = "shop-timer";
+                indicator.textContent = ` ${pad(hours)}:${pad(minutes)}`;
+            } else {
+                indicator.className = "green";
+                indicator.textContent = " ✓";
+            }
+            link.after(indicator);
+        });
     },
 
     // --- Shop types --------------------------------------------------------
@@ -189,7 +207,7 @@ export const ObjectEdit = {
     // and cache propertyId -> shopTypes so the realty page can sub-sort by type.
     // shopTypes can change, so re-derive and overwrite whenever the page opens.
     recordShopTypes() {
-        const propertyId = new URLSearchParams(window.location.search).get("id");
+        const propertyId = this.propertyId();
         if (!propertyId) {
             return;
         }
