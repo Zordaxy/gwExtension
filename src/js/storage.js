@@ -79,6 +79,28 @@ export const Storage = {
         const all = this.getPropertyTypes();
         all[propertyId] = shopTypes;
         window.localStorage.setItem(Keys.propertyTypes, JSON.stringify(all));
+    },
+
+    // propertyId -> developed item ids[], learned the same way. Used to mark in
+    // the price table whether any property develops a given item.
+    getPropertyResources() {
+        return JSON.parse(window.localStorage.getItem(Keys.propertyResources) || '{}');
+    },
+
+    setPropertyResources(propertyId, resources) {
+        const all = this.getPropertyResources();
+        all[propertyId] = resources;
+        window.localStorage.setItem(Keys.propertyResources, JSON.stringify(all));
+    },
+
+    // { resourceId: missingCount } captured from one shop's "Приобретаемые
+    // ресурсы" table. Single object — overridden each time, not kept per shop.
+    getMissing() {
+        return JSON.parse(window.localStorage.getItem(Keys.shopMissing) || '{}');
+    },
+
+    setMissing(missing) {
+        window.localStorage.setItem(Keys.shopMissing, JSON.stringify(missing));
     }
 }
 
@@ -86,4 +108,6 @@ class Keys {
     static itemKey = 'item-price';
     static priceToSet = 'item-priceToSet';
     static propertyTypes = 'property-shopTypes';
+    static propertyResources = 'property-resources';
+    static shopMissing = 'shop-missing';
 }

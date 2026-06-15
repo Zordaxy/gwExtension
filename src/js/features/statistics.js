@@ -20,6 +20,18 @@ export class Statistics {
     // Stored quantities across the storage houses, fetched before populating.
     this.availability = await this.#fetchAvailability();
 
+    // Map each developed item to a property that develops it (for the ✓ link).
+    this.developedBy = {};
+    for (const [propertyId, items] of Object.entries(
+      Storage.getPropertyResources()
+    )) {
+      (items || []).forEach((id) => {
+        if (!this.developedBy[id]) {
+          this.developedBy[id] = propertyId;
+        }
+      });
+    }
+
     let groups = Ordinal.getGroupedElements();
 
     for (const [key, value] of Object.entries(groups)) {
@@ -58,7 +70,7 @@ export class Statistics {
 
   async #renderStatisticsSection(items, key) {
     const island = Parse.parseIsland();
-    const sectionText = `<th colspan="8">${key} <a href="#" class="item-finder__search-results-close section-toggle">закрити</a></th>`;
+    const sectionText = `<th colspan="9">${key} <a href="#" class="item-finder__search-results-close section-toggle">закрити</a></th>`;
     const headerRow = AddLine.addItemLine(sectionText);
     headerRow.classList.add("section-header");
     headerRow.querySelector(".section-toggle").onclick = (event) => {
@@ -97,7 +109,12 @@ export class Statistics {
                   Settings.domain
                 }/statlist.php?r=${itemId}">${resourcePrice}</a>
             </td>
-            <td class="wb">${this.availability?.[itemId] || 0}</td>`;
+            <td class="wb">${this.availability?.[itemId] || 0}</td>
+            <td class="wb">${
+              this.developedBy?.[itemId]
+                ? `<a class="green" target="_blank" href="${Settings.domain}/object.php?id=${this.developedBy[itemId]}">✓</a>`
+                : "<span class='red'>x</span>"
+            }</td>`;
 
         AddLine.addItemLine(text, itemId);
       },

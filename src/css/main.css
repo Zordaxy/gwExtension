@@ -245,6 +245,13 @@
     padding-left: 6px;
 }
 
+.refill-all {
+    color: green;
+    font-weight: bold;
+    cursor: pointer;
+    padding-left: 8px;
+}
+
 /* ---------- Shared visibility utility ---------- */
 
 .is-hidden {

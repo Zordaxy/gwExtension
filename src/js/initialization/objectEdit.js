@@ -23,6 +23,118 @@ export const ObjectEdit = {
         if (path.includes("/object.php") || path.includes("/objectedit.php")) {
             this.recordShopTypes();
         }
+
+        if (path.includes("/object.php")) {
+            this.addRememberMissing();
+            this.addRefillButton();
+        }
+    },
+
+    // --- Shop restock --------------------------------------------------------
+
+    // On a shop page, "remember" parses the "Приобретаемые ресурсы" table and
+    // stores { resourceId: missingCount } (full - available) so a storage house
+    // can be drained to refill it. Overrides any previously remembered shop.
+    addRememberMissing() {
+        // The actual header cell: starts with the title and has no nested table
+        // (so we skip the outer wrappers whose text also contains the title).
+        const header = [...document.querySelectorAll("td")].find(
+            (td) =>
+                td.textContent.trim().startsWith("Приобретаемые ресурсы") &&
+                !td.querySelector("table")
+        );
+        const table = header?.closest("table");
+        if (!table) {
+            return;
+        }
+
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = "remember";
+        button.className = "apply-all";
+
+        // Checkmark shown once "remember" has been clicked.
+        const done = document.createElement("span");
+        done.className = "green";
+        done.textContent = " ✓";
+        done.style.display = "none";
+
+        button.onclick = () => {
+            this.rememberMissing(table);
+            done.style.display = "";
+        };
+
+        // A full-width row on top of the table, so the button lines up with the
+        // table's right edge (checkmark to its left).
+        const cell = document.createElement("td");
+        cell.colSpan = table.rows[0]?.cells.length || 1;
+        cell.style.textAlign = "right";
+        cell.append(done, button);
+
+        const row = document.createElement("tr");
+        row.appendChild(cell);
+        table.tBodies[0].prepend(row);
+    },
+
+    rememberMissing(table) {
+        const missing = {};
+
+        [...table.rows].forEach((row) => {
+            const link = row.cells[0]?.querySelector('a[href*="statlist.php?r="]');
+            const id = link?.href.match(/[?&]r=([^&]+)/)?.[1];
+            // "Наличие, ед." is "available/full"; missing = full - available.
+            const [available, full] = (row.cells[1]?.textContent || "")
+                .split("/")
+                .map((part) => Number(part.trim()));
+
+            if (!id || !Number.isFinite(available) || !Number.isFinite(full)) {
+                return;
+            }
+            const count = full - available;
+            if (count > 0) {
+                missing[decodeURIComponent(id)] = count;
+            }
+        });
+
+        Storage.setMissing(missing);
+    },
+
+    // On a storage house, a green "+" by the "Забрать" header fills each row's
+    // am_out input with the remembered missing count for that resource.
+    addRefillButton() {
+        const header = [...document.querySelectorAll("td")].find(
+            (td) => td.textContent.trim() === "Забрать"
+        );
+        if (!header) {
+            return;
+        }
+
+        const button = document.createElement("span");
+        button.textContent = "+";
+        button.className = "refill-all";
+        button.title = "Fill withdrawals with the remembered missing counts";
+        button.onclick = () => this.refillMissing();
+
+        header.appendChild(button);
+    },
+
+    refillMissing() {
+        const missing = Storage.getMissing();
+        document.querySelectorAll('input[name="am_out"]').forEach((amOut) => {
+            const row = amOut.closest("tr");
+            const id = row?.querySelector('input[name="resource"]')?.value;
+            if (!id || missing[id] == null) {
+                return;
+            }
+
+            // Subtract what you already have ("У вас", the 3rd cell) from the
+            // stored missing count; leave the field alone when nothing's needed.
+            const youHave = Number(row.cells[2]?.textContent.trim()) || 0;
+            const result = missing[id] - youHave;
+            if (result > 0) {
+                amOut.value = result;
+            }
+        });
     },
 
     // --- Shop types --------------------------------------------------------
@@ -58,13 +170,46 @@ export const ObjectEdit = {
             ...new Set([...ids].map((id) => Ordinal.get(id)?.shopType).filter(Boolean)),
         ].sort();
 
-        console.log(`GW Checker: property ${propertyId} shopTypes`, shopTypes);
-
         // Only write when it actually changed.
         const stored = Storage.getPropertyTypes()[propertyId];
         if (JSON.stringify(stored) !== JSON.stringify(shopTypes)) {
             Storage.setPropertyTypes(propertyId, shopTypes);
         }
+
+        // Also record which item(s) this property develops.
+        const produced = this.collectProducedItems();
+        const storedProduced = Storage.getPropertyResources()[propertyId];
+        if (JSON.stringify(storedProduced) !== JSON.stringify(produced)) {
+            Storage.setPropertyResources(propertyId, produced);
+        }
+    },
+
+    // The item(s) a property develops: the pricep[<id>] input on the edit page,
+    // or the links under the "Производимые ресурсы" table on the view page.
+    collectProducedItems() {
+        const ids = new Set();
+
+        document.querySelectorAll('input[name^="pricep["]').forEach((input) => {
+            const match = input.name.match(/\[(.+)\]/);
+            if (match) {
+                ids.add(match[1]);
+            }
+        });
+
+        const header = [...document.querySelectorAll("td")].find(
+            (td) => td.textContent.trim() === "Производимые ресурсы"
+        );
+        header
+            ?.closest("table")
+            ?.querySelectorAll('a[href*="statlist.php?r="]')
+            .forEach((link) => {
+                const match = link.href.match(/[?&]r=([^&]+)/);
+                if (match) {
+                    ids.add(decodeURIComponent(match[1]));
+                }
+            });
+
+        return [...ids];
     },
 
     // --- Resource prices ---------------------------------------------------
