@@ -17,6 +17,9 @@ export class Statistics {
     App.result.open();
     App.blacker.show();
 
+    // Stored quantities across the storage houses, fetched before populating.
+    this.availability = await this.#fetchAvailability();
+
     let groups = Ordinal.getGroupedElements();
 
     for (const [key, value] of Object.entries(groups)) {
@@ -25,9 +28,37 @@ export class Statistics {
     }
   };
 
+  // Sum how many of each item is stored across the three storage houses linked
+  // in the nav ("Д Мікс", "Д Стволи", "Д Бронь"). Returns { itemId: total }.
+  async #fetchAvailability() {
+    const labels = ["Д Мікс", "Д Стволи", "Д Бронь"];
+    const links = [...document.querySelectorAll("a")].filter((a) =>
+      labels.includes(a.textContent.trim())
+    );
+
+    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    const totals = {};
+
+    for (const link of links) {
+      const doc = await Http.fetchGet(link.href);
+      // Each resource row carries input[name="resource"]; its quantity is the
+      // second <td> ("#") of the row.
+      doc.querySelectorAll('input[name="resource"]').forEach((input) => {
+        const id = input.value;
+        const qty = Number(input.closest("tr")?.cells[1]?.textContent.trim());
+        if (id && Number.isFinite(qty)) {
+          totals[id] = (totals[id] || 0) + qty;
+        }
+      });
+      await delay(200);
+    }
+
+    return totals;
+  }
+
   async #renderStatisticsSection(items, key) {
     const island = Parse.parseIsland();
-    const sectionText = `<th colspan="7">${key} <a href="#" class="item-finder__search-results-close section-toggle">закрити</a></th>`;
+    const sectionText = `<th colspan="8">${key} <a href="#" class="item-finder__search-results-close section-toggle">закрити</a></th>`;
     const headerRow = AddLine.addItemLine(sectionText);
     headerRow.classList.add("section-header");
     headerRow.querySelector(".section-toggle").onclick = (event) => {
@@ -65,7 +96,8 @@ export class Statistics {
                 <a href="${
                   Settings.domain
                 }/statlist.php?r=${itemId}">${resourcePrice}</a>
-            </td>`;
+            </td>
+            <td class="wb">${this.availability?.[itemId] || 0}</td>`;
 
         AddLine.addItemLine(text, itemId);
       },
