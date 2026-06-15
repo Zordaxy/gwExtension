@@ -2,6 +2,7 @@ import { Settings } from "js/settings";
 import { RESOURCE_PAGE_CODES } from "js/settingsConfig";
 import { Ordinal } from "data/ordinal";
 import { Storage } from "js/storage";
+import { Realty } from "js/features/realty";
 
 // Decorates the object-edit page (objectedit.php):
 //  - each resource row gets a saved-price cell (click to apply), plus an
@@ -221,12 +222,27 @@ export const ObjectEdit = {
             Storage.setPropertyTypes(propertyId, shopTypes);
         }
 
-        // Also record which item(s) this property develops.
-        const produced = this.collectProducedItems();
-        const storedProduced = Storage.getPropertyResources()[propertyId];
-        if (JSON.stringify(storedProduced) !== JSON.stringify(produced)) {
-            Storage.setPropertyResources(propertyId, produced);
+        // Record which item(s) this property develops — but never for the
+        // skipped types (shops, banks, houses, syndicate bases), which sell
+        // rather than develop. Clear any stale entry left for those.
+        const name = this.propertyName();
+        if (name && Realty.SKIP_PREFIXES.some((prefix) => name.startsWith(prefix))) {
+            Storage.removePropertyResources(propertyId);
+        } else {
+            const produced = this.collectProducedItems();
+            const storedProduced = Storage.getPropertyResources()[propertyId];
+            if (JSON.stringify(storedProduced) !== JSON.stringify(produced)) {
+                Storage.setPropertyResources(propertyId, produced);
+            }
         }
+    },
+
+    // Property name from the page title: "... (NAME) ..." on objectedit,
+    // "NAME в SECTOR ..." on object.php.
+    propertyName() {
+        const title = document.title || "";
+        const parens = title.match(/\(([^)]+)\)/);
+        return (parens ? parens[1] : title.split(" в ")[0]).trim();
     },
 
     // The item(s) a property develops: the pricep[<id>] input on the edit page,

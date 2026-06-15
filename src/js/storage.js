@@ -93,6 +93,14 @@ export const Storage = {
         window.localStorage.setItem(Keys.propertyResources, JSON.stringify(all));
     },
 
+    removePropertyResources(propertyId) {
+        const all = this.getPropertyResources();
+        if (propertyId in all) {
+            delete all[propertyId];
+            window.localStorage.setItem(Keys.propertyResources, JSON.stringify(all));
+        }
+    },
+
     // { resourceId: missingCount } captured from one shop's "Приобретаемые
     // ресурсы" table. Single object — overridden each time, not kept per shop.
     getMissing() {
