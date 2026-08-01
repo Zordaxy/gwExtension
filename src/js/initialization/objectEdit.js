@@ -319,10 +319,13 @@ export const ObjectEdit = {
         this.addApplyAll(entries, render);
         render();
 
-        // Uran row gets an extra "x" that fills its "Максимум" (pricem[uran]).
-        const uran = entries.find((entry) => entry.pageKey === "uran");
-        if (uran) {
-            this.addUranMax(uran.row);
+        // Prefer uran for the production-stop shortcut, falling back to metal
+        // on properties that do not consume uran.
+        const stopResource =
+            entries.find((entry) => entry.pageKey === "uran") ||
+            entries.find((entry) => entry.pageKey === "metal");
+        if (stopResource) {
+            this.addResourceMax(stopResource);
         }
     },
 
@@ -347,27 +350,27 @@ export const ObjectEdit = {
             };
         }
 
-        // Keep the saved-price cell before the uran "x" button if it exists.
-        const uranMax = row.querySelector(".uran-max");
-        if (uranMax) {
-            row.insertBefore(cell, uranMax);
+        // Keep the saved-price cell before the production-stop button.
+        const resourceMax = row.querySelector(".resource-max");
+        if (resourceMax) {
+            row.insertBefore(cell, resourceMax);
         } else {
             row.appendChild(cell);
         }
     },
 
-    // "x" on the uran row that fills its "Максимум" (pricem[uran]) with the
-    // amount needed to cover the uran the product will consume. See setUranMax.
-    addUranMax(row) {
+    // Fill the selected resource's "Максимум" with the amount needed to cover
+    // what the product will consume before production stops.
+    addResourceMax({ pageKey, row }) {
         const cell = document.createElement("td");
         cell.textContent = "stop";
-        cell.className = "money-reset uran-max";
-        cell.title = "Fill the uran maximum";
-        cell.onclick = () => this.setUranMax(row);
+        cell.className = "money-reset resource-max";
+        cell.title = `Fill the ${pageKey} maximum`;
+        cell.onclick = () => this.setResourceMax(row);
         row.appendChild(cell);
     },
 
-    setUranMax(row) {
+    setResourceMax(row) {
         const table = row.closest("table");
         const pricem = row.querySelector('input[name^="pricem["]');
         if (!pricem) {
@@ -376,7 +379,7 @@ export const ObjectEdit = {
 
         // a — the cell right after the pricem input (Ед/ч for this resource).
         const a = Number(pricem.closest("td").nextElementSibling?.textContent);
-        // c — this row's "Наличие" (current uran stock).
+        // c — this row's "Наличие" (current resource stock).
         const c = Number(row.cells[1]?.textContent);
         // b — fractional part of the first resource row's "Наличие" (the produced
         // item's stock), e.g. 4.32 -> 0.32.
