@@ -14,6 +14,6 @@ export class Menu {
     }
 
     get element() {
-        return this.element;
+        return this._element;
     }
 };

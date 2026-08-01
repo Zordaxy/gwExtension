@@ -1,11 +1,14 @@
 import { Storage } from "js/storage";
+import { Http } from "js/http";
+import { Menu } from "js/widgets/menu";
+import { PROPERTY_SKIP_PREFIXES, PropertyInfo } from "js/propertyInfo";
 
 // Realty list (info.realty.php): set aside the properties we don't manage here,
 // regroup the rest by sector (header + "show all"), and sub-sort each sector by
-// the shopTypes learned when its properties were opened (objectedit).
+// the shopTypes learned when its managed properties were opened.
 export class Realty {
     // Property types to hide — matched against the object link text.
-    static SKIP_PREFIXES = ['Банк', 'Частный дом', 'База синдиката', 'Магазин'];
+    static SKIP_PREFIXES = PROPERTY_SKIP_PREFIXES;
 
     sortProperties() {
         const table = document.querySelector('table.withborders');
@@ -14,7 +17,10 @@ export class Realty {
         }
 
         const body = table.tBodies[0];
-        const [header, ...rows] = [...body.rows]; // first row is the column header
+        body.querySelectorAll('.realty-generated-row').forEach((row) => row.remove());
+
+        const header = body.rows[0];
+        const rows = [...body.rows].slice(1).filter((row) => this.#objectId(row));
         const colSpan = header.cells.length;
         this.types = Storage.getPropertyTypes(); // propertyId -> shopTypes[]
 
@@ -47,6 +53,77 @@ export class Realty {
 
         // ...then the remaining properties, in their original order, at the end.
         others.forEach((row) => body.appendChild(row));
+
+        this.#addRefreshButton();
+    }
+
+    #addRefreshButton() {
+        if (document.querySelector('.refresh-properties')) {
+            return;
+        }
+
+        const menu = new Menu('refresh properties', () => this.#refreshProperties());
+        menu.element?.classList.add('refresh-properties');
+    }
+
+    async #refreshProperties() {
+        const button = document.querySelector('.refresh-properties');
+        document.querySelector('.refresh-properties-check')?.remove();
+        const properties = [
+            ...new Map(
+                [...document.querySelectorAll('table.withborders tr')]
+                    .filter((row) => {
+                        const type = this.#typeName(row);
+                        return (
+                            type &&
+                            !Realty.SKIP_PREFIXES.some((prefix) =>
+                                type.startsWith(prefix)
+                            )
+                        );
+                    })
+                    .map((row) => {
+                        const link = row.cells[0]?.querySelector(
+                            'a[href*="object.php?id="]'
+                        );
+                        const id = this.#objectId(row);
+                        return id && link ? [id, link.href] : null;
+                    })
+                    .filter(Boolean)
+            ).entries(),
+        ];
+
+        Storage.clearPropertyInfo();
+        if (button) {
+            button.textContent = `refreshing 0/${properties.length}`;
+            button.style.pointerEvents = 'none';
+        }
+
+        try {
+            let completed = 0;
+            await Http.processWithDelay(
+                properties,
+                async ([propertyId, url]) => {
+                    const doc = await Http.fetchGet(url);
+                    PropertyInfo.record(doc, propertyId);
+                    completed += 1;
+                    if (button) {
+                        button.textContent = `refreshing ${completed}/${properties.length}`;
+                    }
+                },
+                200
+            );
+            this.sortProperties();
+
+            const check = document.createElement('span');
+            check.className = 'green refresh-properties-check';
+            check.textContent = ' ✓';
+            button?.after(check);
+        } finally {
+            if (button) {
+                button.textContent = 'refresh properties';
+                button.style.pointerEvents = '';
+            }
+        }
     }
 
     // Within one sector, group rows by their stored shopTypes (sorted), and keep
@@ -98,6 +175,7 @@ export class Realty {
         cell.appendChild(link);
 
         const tr = document.createElement('tr');
+        tr.className = 'realty-generated-row';
         tr.appendChild(cell);
         return tr;
     }
@@ -142,6 +220,7 @@ export class Realty {
         cell.append(label, ' ', button);
 
         const tr = document.createElement('tr');
+        tr.className = 'realty-generated-row';
         tr.appendChild(cell);
         return tr;
     }

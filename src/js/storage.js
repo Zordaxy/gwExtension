@@ -81,6 +81,14 @@ export const Storage = {
         window.localStorage.setItem(Keys.propertyTypes, JSON.stringify(all));
     },
 
+    removePropertyTypes(propertyId) {
+        const all = this.getPropertyTypes();
+        if (propertyId in all) {
+            delete all[propertyId];
+            window.localStorage.setItem(Keys.propertyTypes, JSON.stringify(all));
+        }
+    },
+
     // propertyId -> developed item ids[], learned the same way. Used to mark in
     // the price table whether any property develops a given item.
     getPropertyResources() {
@@ -99,6 +107,16 @@ export const Storage = {
             delete all[propertyId];
             window.localStorage.setItem(Keys.propertyResources, JSON.stringify(all));
         }
+    },
+
+    removePropertyInfo(propertyId) {
+        this.removePropertyTypes(propertyId);
+        this.removePropertyResources(propertyId);
+    },
+
+    clearPropertyInfo() {
+        window.localStorage.removeItem(Keys.propertyTypes);
+        window.localStorage.removeItem(Keys.propertyResources);
     },
 
     // { resourceId: missingCount } captured from one shop's "Приобретаемые

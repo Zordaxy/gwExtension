@@ -33,11 +33,22 @@ export class Statistics {
     }
 
     let groups = Ordinal.getGroupedElements();
+    const itemIds = Object.values(groups).flatMap((items) =>
+      items.map((item) => item.id)
+    );
+    this.totalItems = itemIds.length;
+    this.renderedItems = 0;
+    this.advertisementPrices = new Map();
+    App.result.setProgress("rows", 0, itemIds.length);
 
     for (const [key, value] of Object.entries(groups)) {
       const items = value.map((x) => x.id);
       await this.#renderStatisticsSection(items, key);
     }
+
+    await this.#populateAdvertisementPrices(itemIds);
+    await this.#populateResourcePrices(itemIds);
+    App.result.setProgress("done", itemIds.length, itemIds.length);
   };
 
   // Sum how many of each item is stored across the three storage houses linked
@@ -47,9 +58,11 @@ export class Statistics {
     const links = [...document.querySelectorAll("a")].filter((a) =>
       labels.includes(a.textContent.trim())
     );
+    App.result.setProgress("availability", 0, links.length);
 
     const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     const totals = {};
+    let completed = 0;
 
     for (const link of links) {
       const doc = await Http.fetchGet(link.href);
@@ -62,6 +75,8 @@ export class Statistics {
           totals[id] = (totals[id] || 0) + qty;
         }
       });
+      completed += 1;
+      App.result.setProgress("availability", completed, links.length);
       await delay(200);
     }
 
@@ -70,6 +85,7 @@ export class Statistics {
 
   async #renderStatisticsSection(items, key) {
     const island = Parse.parseIsland();
+    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     const sectionText = `<th colspan="9">${key} <a href="#" class="item-finder__search-results-close section-toggle">закрити</a></th>`;
     const headerRow = AddLine.addItemLine(sectionText);
     headerRow.classList.add("section-header");
@@ -78,37 +94,39 @@ export class Statistics {
       this.#toggleSection(headerRow);
     };
 
-    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
     return Http.processWithDelay(
       items,
       async (itemId) => {
         const shopsDoc = await Fetcher.shopsList(itemId);
-        await delay(200);
-        const marketDoc = await Fetcher.adverticementsList(itemId);
-        await delay(200);
-        const resDoc = await Fetcher.resourceList(itemId);
 
         const parsedShops = Parse.shopPriceFromShopsList(shopsDoc);
-        const { minPrice } = parsedShops[island];
-        const minGosPrice = Parse.gosPrice(marketDoc);
-        let resourcePrice = Parse.resourcePrice(resDoc, itemId);
+        const shopData = parsedShops[island];
+        let { minPrice } = shopData;
+        if (shopData.isNoOffers) {
+          await delay(200);
+          const marketDoc = await Fetcher.adverticementsList(itemId);
+          minPrice = Parse.gosPrice(marketDoc);
+          this.advertisementPrices.set(itemId, minPrice);
+        }
 
-        let cost = Storage.getCost(itemId);
+        const cost = Math.round(Storage.getCost(itemId));
         const difference = +minPrice - cost;
+        const shopPriceUrl = shopData.isNoOffers
+          ? `${Settings.domain}/market.php?buy=1&item_id=${itemId}`
+          : `${Settings.domain}/statlist.php?r=${itemId}&type=i`;
+        const shopPrice = minPrice
+          ? `<a href="${shopPriceUrl}">${minPrice}</a>`
+          : "-";
+        const differenceText = minPrice ? difference : "-";
 
         let text = `
             <td class="wb smallBox"><input type="checkbox" id="${itemId}"></td>
             <td class="wb">${this.#getItemLink(itemId, parsedShops.title)}</td>
-            <td class="wb">${minPrice}</td>
+            <td class="wb" id="${itemId}ShopPrice">${shopPrice}</td>
             <td class="wb">${cost}</td>
-            <td class="wb">${minGosPrice ? minGosPrice - cost : "-"}</td>
-            <td class="wb ${difference > 10000 ? "green" : ""}" id="${itemId}Difference">${difference}</td>
-            <td>
-                <a href="${
-                  Settings.domain
-                }/statlist.php?r=${itemId}">${resourcePrice}</a>
-            </td>
+            <td class="wb" id="${itemId}AdvertisementPrice">...</td>
+            <td class="wb ${difference > 10000 ? "green" : ""}" id="${itemId}Difference">${differenceText}</td>
+            <td id="${itemId}ResourcePrice">...</td>
             <td class="wb">${this.availability?.[itemId] || 0}</td>
             <td class="wb">${
               this.developedBy?.[itemId]
@@ -117,8 +135,66 @@ export class Statistics {
             }</td>`;
 
         AddLine.addItemLine(text, itemId);
+        this.renderedItems += 1;
+        App.result.setProgress("rows", this.renderedItems, this.totalItems);
       },
-      600
+      200
+    );
+  }
+
+  async #populateAdvertisementPrices(itemIds) {
+    App.result.setProgress("advertisements", 0, itemIds.length);
+    let completed = 0;
+    return Http.processWithDelay(
+      itemIds,
+      async (itemId) => {
+        let advertisementPrice;
+        if (this.advertisementPrices.has(itemId)) {
+          advertisementPrice = this.advertisementPrices.get(itemId);
+        } else {
+          const marketDoc = await Fetcher.adverticementsList(itemId);
+          advertisementPrice = Parse.gosPrice(marketDoc);
+        }
+        const cell = document.getElementById(`${itemId}AdvertisementPrice`);
+        if (cell) {
+          const link = document.createElement("a");
+          link.href = `${Settings.domain}/market.php?buy=1&item_id=${itemId}`;
+          link.textContent = advertisementPrice
+            ? Math.round(advertisementPrice - Storage.getCost(itemId))
+            : "-";
+          cell.replaceChildren(link);
+        }
+
+        completed += 1;
+        App.result.setProgress("advertisements", completed, itemIds.length);
+      },
+      200
+    );
+  }
+
+  async #populateResourcePrices(itemIds) {
+    App.result.setProgress("resources", 0, itemIds.length);
+    let completed = 0;
+    return Http.processWithDelay(
+      itemIds,
+      async (itemId) => {
+        const resourceDoc = await Fetcher.resourceList(itemId);
+        const resourcePrice = Parse.resourcePrice(resourceDoc, itemId);
+        const cell = document.getElementById(`${itemId}ResourcePrice`);
+        if (cell) {
+          const link = document.createElement("a");
+          link.href = `${Settings.domain}/statlist.php?r=${itemId}`;
+          link.textContent =
+            typeof resourcePrice === "number"
+              ? Math.round(resourcePrice)
+              : resourcePrice;
+          cell.replaceChildren(link);
+        }
+
+        completed += 1;
+        App.result.setProgress("resources", completed, itemIds.length);
+      },
+      200
     );
   }
 

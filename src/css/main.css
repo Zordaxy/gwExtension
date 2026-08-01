@@ -42,6 +42,11 @@
     text-decoration: none;
 }
 
+.item-finder__progress {
+    margin-left: 8px;
+    font-weight: normal;
+}
+
 /* ---------- Results table ---------- */
 
 .item-finder__table {

@@ -4,7 +4,7 @@ export class Result {
         let html = '\
                     <table class="item-finder__table">\
                         <thead>\
-                            <tr><th colspan="9">Результати пошуку <a href="#" id="closeResult" class="item-finder__search-results-close">закрити</a></th></tr>\
+                            <tr><th colspan="9">Результати пошуку <span class="item-finder__progress"></span><a href="#" id="closeResult" class="item-finder__search-results-close">закрити</a></th></tr>\
                             <tr class="colspan">\
                                 <th class="smallBox"></th>\
                                 <th class="item">Предмет</th>\
@@ -25,6 +25,7 @@ export class Result {
         this._result.className = 'item-finder__search-results is-hidden';
         this._result.innerHTML = html;
         this.content = this._result.querySelector('.item-finder__search-results-holder');
+        this.progress = this._result.querySelector('.item-finder__progress');
         document.body.appendChild(this._result);
         document.getElementById("closeResult").onclick = (e) => {
             this.close(e);
@@ -38,6 +39,11 @@ export class Result {
 
     open() {
         this.content.innerHTML = '';
+        this.progress.textContent = '';
         this._result.classList.remove('is-hidden');
+    }
+
+    setProgress(phase, current, total) {
+        this.progress.textContent = `${phase} (${current}/${total})`;
     }
 };
