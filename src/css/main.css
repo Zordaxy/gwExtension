@@ -111,6 +111,24 @@
     font-weight: bold;
 }
 
+.availability-low,
+.availability-medium,
+.availability-high {
+    font-weight: bold;
+}
+
+.availability-low {
+    color: #b8860b;
+}
+
+.availability-medium {
+    color: orange;
+}
+
+.availability-high {
+    color: red;
+}
+
 .brown {
     color: brown;
     font-weight: bold;

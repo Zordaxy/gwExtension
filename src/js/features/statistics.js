@@ -118,6 +118,13 @@ export class Statistics {
           ? `<a href="${shopPriceUrl}">${minPrice}</a>`
           : "-";
         const differenceText = minPrice ? difference : "-";
+        const availability = this.availability?.[itemId] || 0;
+        const hasProduction = Boolean(this.developedBy?.[itemId]);
+        const availabilityClass = this.#availabilityClass(
+          cost,
+          availability,
+          hasProduction
+        );
 
         let text = `
             <td class="wb smallBox"><input type="checkbox" id="${itemId}"></td>
@@ -125,11 +132,13 @@ export class Statistics {
             <td class="wb" id="${itemId}ShopPrice">${shopPrice}</td>
             <td class="wb">${cost}</td>
             <td class="wb" id="${itemId}AdvertisementPrice">...</td>
-            <td class="wb ${difference > 10000 ? "green" : ""}" id="${itemId}Difference">${differenceText}</td>
+            <td class="wb ${
+              difference > 10000 && !hasProduction ? "green" : ""
+            }" id="${itemId}Difference">${differenceText}</td>
             <td id="${itemId}ResourcePrice">...</td>
-            <td class="wb">${this.availability?.[itemId] || 0}</td>
+            <td class="wb ${availabilityClass}">${availability}</td>
             <td class="wb">${
-              this.developedBy?.[itemId]
+              hasProduction
                 ? `<a class="green" target="_blank" href="${Settings.domain}/object.php?id=${this.developedBy[itemId]}">✓</a>`
                 : "<span class='red'>x</span>"
             }</td>`;
@@ -140,6 +149,34 @@ export class Statistics {
       },
       200
     );
+  }
+
+  #availabilityClass(cost, availability, hasProduction) {
+    if (!hasProduction) {
+      return "";
+    }
+
+    let thresholds;
+    if (cost > 200000) {
+      thresholds = { low: 10, medium: 15, high: 20 };
+    } else if (cost >= 100000) {
+      thresholds = { low: 15, medium: 20, high: 25 };
+    } else if (cost >= 60000) {
+      thresholds = { low: 20, medium: 30, high: 40 };
+    } else {
+      thresholds = { low: 30, medium: 50, high: 70 };
+    }
+
+    if (availability >= thresholds.high) {
+      return "availability-high";
+    }
+    if (availability >= thresholds.medium) {
+      return "availability-medium";
+    }
+    if (availability >= thresholds.low) {
+      return "availability-low";
+    }
+    return "";
   }
 
   async #populateAdvertisementPrices(itemIds) {
