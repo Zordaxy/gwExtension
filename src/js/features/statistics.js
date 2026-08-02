@@ -133,7 +133,9 @@ export class Statistics {
             <td class="wb">${cost}</td>
             <td class="wb" id="${itemId}AdvertisementPrice">...</td>
             <td class="wb ${
-              difference > 10000 && !hasProduction ? "green" : ""
+              difference > 10000 && availability <= 3 && !hasProduction
+                ? "green"
+                : ""
             }" id="${itemId}Difference">${differenceText}</td>
             <td id="${itemId}ResourcePrice">...</td>
             <td class="wb ${availabilityClass}">${availability}</td>
