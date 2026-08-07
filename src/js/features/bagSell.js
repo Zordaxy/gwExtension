@@ -85,7 +85,17 @@ export class BagSell {
           const newPrice = Math.max(0, minimumPrice - 200);
           const label = `Set to ${newPrice}`;
           // Highlight when the listed price exceeds the market/shop minimum.
-          const listed = this.#listedPrice(parent);
+          const myAdvertisement = Parse.advPriceForSeller(
+            doc,
+            element.id,
+            "Michegan",
+            isDrop
+          );
+          const listed = myAdvertisement
+            ? isDrop
+              ? myAdvertisement.price * durability
+              : myAdvertisement.price
+            : this.#listedPrice(parent);
           const green = listed === null || minimumPrice < listed;
 
           const linkNode = this.#generateLink(

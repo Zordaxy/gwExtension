@@ -5,6 +5,18 @@ import { ShopsPriceResult, aggregateShopRows } from "./parseUtils";
 export const Parse = {
   // Expects doc from: Fetcher.adverticementsList(itemId)
   advPrice(div, itemId, isDrop = false) {
+    return this.advPrices(div, itemId, isDrop)[0];
+  },
+
+  // Expects doc from: Fetcher.adverticementsList(itemId)
+  advPriceForSeller(div, itemId, seller, isDrop = false) {
+    return this.advPrices(div, itemId, isDrop).find(
+      (result) => result.seller === seller
+    );
+  },
+
+  // Expects doc from: Fetcher.adverticementsList(itemId)
+  advPrices(div, itemId, isDrop = false) {
     let rawElems = div.querySelectorAll("table")[0].querySelectorAll("tr");
 
     let elems = [].filter.call(rawElems, (elem) => {
@@ -27,10 +39,9 @@ export const Parse = {
       let island = td[3]?.textContent?.slice(1, 2);
       let price =
         td[0]?.querySelector("b")?.textContent?.replace(/[\$\,]/g, "") | 0;
-      let seller = td[4]?.textContent?.slice(
-        0,
-        td[4]?.textContent?.indexOf(" [")
-      );
+      let seller = td[4]
+        ?.querySelector('a[href^="/info.php"] b')
+        ?.textContent.trim();
       const isIndirectSell = td[4]?.textContent?.indexOf("написать") > 0;
 
       if (!isIndirectSell && island === "G" && price) {
@@ -44,7 +55,7 @@ export const Parse = {
     });
     results.sort((a, b) => a.price - b.price);
 
-    return results[0];
+    return results;
   },
 
   // Expects doc from: Fetcher.adverticementsList(itemId)
