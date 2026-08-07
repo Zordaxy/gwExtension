@@ -5,18 +5,6 @@ import { ShopsPriceResult, aggregateShopRows } from "./parseUtils";
 export const Parse = {
   // Expects doc from: Fetcher.adverticementsList(itemId)
   advPrice(div, itemId, isDrop = false) {
-    return this.advPrices(div, itemId, isDrop)[0];
-  },
-
-  // Expects doc from: Fetcher.adverticementsList(itemId)
-  advPriceForSeller(div, itemId, seller, isDrop = false) {
-    return this.advPrices(div, itemId, isDrop).find(
-      (result) => result.seller === seller
-    );
-  },
-
-  // Expects doc from: Fetcher.adverticementsList(itemId)
-  advPrices(div, itemId, isDrop = false) {
     let rawElems = div.querySelectorAll("table")[0].querySelectorAll("tr");
 
     let elems = [].filter.call(rawElems, (elem) => {
@@ -55,7 +43,7 @@ export const Parse = {
     });
     results.sort((a, b) => a.price - b.price);
 
-    return results;
+    return results[0];
   },
 
   // Expects doc from: Fetcher.adverticementsList(itemId)

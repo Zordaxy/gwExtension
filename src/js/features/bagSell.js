@@ -85,17 +85,7 @@ export class BagSell {
           const newPrice = Math.max(0, minimumPrice - 200);
           const label = `Set to ${newPrice}`;
           // Highlight when the listed price exceeds the market/shop minimum.
-          const myAdvertisement = Parse.advPriceForSeller(
-            doc,
-            element.id,
-            "Michegan",
-            isDrop
-          );
-          const listed = myAdvertisement
-            ? isDrop
-              ? myAdvertisement.price * durability
-              : myAdvertisement.price
-            : this.#listedPrice(parent);
+          const listed = this.#listedPrice(parent);
           const green = listed === null || minimumPrice < listed;
 
           const linkNode = this.#generateLink(
@@ -173,7 +163,10 @@ export class BagSell {
 
   // Price the item is currently listed for, or null when it isn't on sale.
   #listedPrice(node) {
-    const description = node.querySelectorAll("td")[4]?.textContent;
+    const idSuffix = node.id.split("_").pop();
+    const description = document.querySelector(
+      `#item_td2_${idSuffix}`
+    )?.textContent;
     const match = description?.match(
       /Предмет выставлен на продажу за\s+(?:\$([\d,]+)|([\d,]+)\$)/
     );
