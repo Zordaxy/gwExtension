@@ -56,21 +56,14 @@ export class BagSell {
 
         let minItem = Parse.advPrice(doc, element.id, isDrop);
 
-        // Take into account min shop price and no such item in advertisement
-        let minShopPrice = Parse.shopPriceFromAdvList(doc);
-        if (!minShopPrice) {
-          console.log("No shop price found");
-          return;
-        }
-        if (minShopPrice < minItem?.price || !minItem) {
+        const minShopPrice = Parse.shopPriceFromAdvList(doc);
+        if (minShopPrice && (minShopPrice < minItem?.price || !minItem)) {
           minItem = { price: minShopPrice, seller: "shop" };
         }
 
         // TODO: Check case with shop price over gos
 
         if (minItem) {
-          const label = `Set to ${minItem.price}`;
-
           const title = this.#parseTitle(parent);
           const item = Ordinal.get(element.id);
 
@@ -86,9 +79,11 @@ export class BagSell {
                 : `${title} [${durability}/0]`;
           }
 
-          const newPrice = isDrop
-            ? (+minItem.price - 1) * durability
-            : Math.floor((minItem.price - 1) / 10) * 10;
+          const minimumPrice = isDrop
+            ? +minItem.price * durability
+            : +minItem.price;
+          const newPrice = Math.max(0, minimumPrice - 200);
+          const label = `Set to ${newPrice}`;
           const isMine = minItem.seller?.indexOf("Michegan") > -1;
           // Keep the label green only if the item isn't already on sale, or the
           // recommended price undercuts the price it's listed at.

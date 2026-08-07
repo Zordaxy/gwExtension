@@ -42,9 +42,9 @@ export const Parse = {
         }
       }
     });
-    results?.sort((a, b) => a?.price < b?.price);
+    results.sort((a, b) => a.price - b.price);
 
-    return results?.[0];
+    return results[0];
   },
 
   // Expects doc from: Fetcher.adverticementsList(itemId)
