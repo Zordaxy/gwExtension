@@ -84,11 +84,10 @@ export class BagSell {
             : +minItem.price;
           const newPrice = Math.max(0, minimumPrice - 200);
           const label = `Set to ${newPrice}`;
-          const isMine = minItem.seller?.indexOf("Michegan") > -1;
           // Keep the label green only if the item isn't already on sale, or the
           // recommended price undercuts the price it's listed at.
           const listed = this.#listedPrice(parent);
-          const green = !isMine && (listed === null || minItem.price < listed);
+          const green = listed === null || minimumPrice < listed;
 
           const linkNode = this.#generateLink(
             newPrice,
@@ -168,8 +167,8 @@ export class BagSell {
     const idSuffix = node.id.split("_").pop();
     const td2 = document.querySelector(`#item_td2_${idSuffix}`);
     const match = td2?.textContent.match(
-      /Предмет выставлен на продажу за \$(\d+)/
+      /Предмет выставлен на продажу за \$([\d,]+)/
     );
-    return match ? Number(match[1]) : null;
+    return match ? Number(match[1].replaceAll(",", "")) : null;
   }
 }
