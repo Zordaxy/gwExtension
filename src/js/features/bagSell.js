@@ -84,8 +84,7 @@ export class BagSell {
             : +minItem.price;
           const newPrice = Math.max(0, minimumPrice - 200);
           const label = `Set to ${newPrice}`;
-          // Keep the label green only if the item isn't already on sale, or the
-          // recommended price undercuts the price it's listed at.
+          // Highlight when the listed price exceeds the market/shop minimum.
           const listed = this.#listedPrice(parent);
           const green = listed === null || minimumPrice < listed;
 
@@ -164,11 +163,11 @@ export class BagSell {
 
   // Price the item is currently listed for, or null when it isn't on sale.
   #listedPrice(node) {
-    const idSuffix = node.id.split("_").pop();
-    const td2 = document.querySelector(`#item_td2_${idSuffix}`);
-    const match = td2?.textContent.match(
-      /Предмет выставлен на продажу за \$([\d,]+)/
+    const description = node.querySelectorAll("td")[4]?.textContent;
+    const match = description?.match(
+      /Предмет выставлен на продажу за\s+(?:\$([\d,]+)|([\d,]+)\$)/
     );
-    return match ? Number(match[1].replaceAll(",", "")) : null;
+    const price = match?.[1] ?? match?.[2];
+    return price ? Number(price.replaceAll(",", "")) : null;
   }
 }
