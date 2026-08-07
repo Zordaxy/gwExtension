@@ -5,13 +5,9 @@ import { ShopsPriceResult, aggregateShopRows } from "./parseUtils";
 export const Parse = {
   // Expects doc from: Fetcher.adverticementsList(itemId)
   advPrice(div, itemId, isDrop = false) {
-    let rawElems = div.querySelectorAll("table")[0].querySelectorAll("tr");
-
-    let elems = [].filter.call(rawElems, (elem) => {
-      const tds = elem.querySelectorAll("td");
-      return [].filter.call(tds, (element) => {
-        return element.textContent.trim() === "[G]";
-      });
+    const elems = [...div.querySelectorAll("tr")].filter((tr) => {
+      const td = tr.querySelectorAll("td");
+      return td.length === 5 && td[3].textContent.trim() === "[G]";
     });
 
     let item = Ordinal.get(itemId);
