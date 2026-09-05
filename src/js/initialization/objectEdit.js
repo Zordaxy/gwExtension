@@ -16,6 +16,7 @@ export const ObjectEdit = {
             this.markPrices();
             this.balanceMoney();
             this.recordShopSave();
+            this.addSpecialSettingsTransfer();
         }
 
         // Learn property details only from the view page, where ownership can
@@ -168,6 +169,107 @@ export const ObjectEdit = {
         saveButton.addEventListener("click", () => {
             Storage.setShopSaveTime(propertyId, Date.now());
         });
+    },
+
+    // Copy/paste the three-column special-settings rows between properties.
+    // The page has no stable ids for this section, so identify it by its row
+    // shape (input sizes 2, 6, 6) within the edit form near the description.
+    addSpecialSettingsTransfer() {
+        const descriptionText = "Описание постройки: его увидят все игроки";
+        const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+        let descriptionNode = null;
+        while (walker.nextNode()) {
+            if (walker.currentNode.textContent.includes(descriptionText)) {
+                descriptionNode = walker.currentNode;
+                break;
+            }
+        }
+        if (!descriptionNode) {
+            return;
+        }
+
+        const rows = this.specialSettingsRows(descriptionNode.parentElement);
+        if (!rows.length) {
+            return;
+        }
+
+        const controls = document.createElement("span");
+        controls.className = "special-settings-transfer";
+
+        const copy = document.createElement("button");
+        copy.type = "button";
+        copy.textContent = "copy";
+        copy.className = "apply-all";
+
+        const paste = document.createElement("button");
+        paste.type = "button";
+        paste.textContent = "paste";
+        paste.className = "apply-all";
+
+        const refreshPaste = () => {
+            paste.disabled = !this.specialSettingsMatch(Storage.getSpecialSettings(), rows);
+        };
+
+        copy.onclick = () => {
+            Storage.setSpecialSettings(
+                rows.map((row) => [...row.querySelectorAll("input")].map((input) => input.value))
+            );
+            refreshPaste();
+        };
+
+        paste.onclick = () => {
+            const values = Storage.getSpecialSettings();
+            if (!this.specialSettingsMatch(values, rows)) {
+                refreshPaste();
+                return;
+            }
+            rows.forEach((row, rowIndex) => {
+                [...row.querySelectorAll("input")].forEach((input, inputIndex) => {
+                    input.value = values[rowIndex][inputIndex];
+                });
+            });
+            Storage.clearSpecialSettings();
+            refreshPaste();
+        };
+
+        controls.append(copy, paste);
+        descriptionNode.after(controls);
+        refreshPaste();
+    },
+
+    specialSettingsRows(anchor) {
+        const forms = [...document.querySelectorAll("form")];
+        const anchorForm = anchor.closest("form");
+        const orderedForms = anchorForm
+            ? [anchorForm, ...forms.filter((form) => form !== anchorForm)]
+            : forms;
+
+        for (const form of orderedForms) {
+            const rows = [...form.querySelectorAll("tr")].filter((row) => {
+                const inputs = [...row.querySelectorAll("input")];
+                return (
+                    inputs.length === 3 &&
+                    inputs.map((input) => input.getAttribute("size")).join(",") === "2,6,6"
+                );
+            });
+            if (rows.length) {
+                return rows;
+            }
+        }
+        return [];
+    },
+
+    specialSettingsMatch(values, rows) {
+        return (
+            Array.isArray(values) &&
+            values.length === rows.length &&
+            values.every(
+                (row) =>
+                    Array.isArray(row) &&
+                    row.length === 3 &&
+                    row.every((value) => typeof value === "string")
+            )
+        );
     },
 
     // On every page, show each shop's save cooldown next to its object link

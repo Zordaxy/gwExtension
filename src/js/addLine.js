@@ -3,9 +3,22 @@ import { Http } from './http';
 import { Settings } from './settings';
 import { App } from './app';
 
-// Minimum acceptable profit before a shop offer is flagged as a thin margin:
-// 4k for items priced under 100k, 6k from 100k up.
-const minMargin = (price) => (price < 100000 ? 4000 : 6000);
+// Price-band boundaries are fixed; only their required-profit amounts are
+// configurable. Read Settings at call time so popup changes affect the next
+// countShop run without reloading the game page.
+export const minMargin = (price) => {
+    const configured = price < 60000
+        ? Settings.requiredProfit.below60000
+        : price < 100000
+            ? Settings.requiredProfit.from60000To99999
+            : price < 200000
+                ? Settings.requiredProfit.from100000To199999
+                : price < 300000
+                    ? Settings.requiredProfit.from200000To299999
+                    : Settings.requiredProfit.from300000;
+
+    return Settings.halveRequiredProfit ? configured / 2 : configured;
+};
 
 export const AddLine = {
     appendShopCount(row, minShop, itemId) {

@@ -139,6 +139,22 @@ export const Storage = {
         const all = this.getShopSaveTimes();
         all[shopId] = timestamp;
         window.localStorage.setItem(Keys.shopSaveTimes, JSON.stringify(all));
+    },
+
+    getSpecialSettings() {
+        try {
+            return JSON.parse(window.localStorage.getItem(Keys.specialSettings) || 'null');
+        } catch {
+            return null;
+        }
+    },
+
+    setSpecialSettings(values) {
+        window.localStorage.setItem(Keys.specialSettings, JSON.stringify(values));
+    },
+
+    clearSpecialSettings() {
+        window.localStorage.removeItem(Keys.specialSettings);
     }
 }
 
@@ -149,4 +165,5 @@ class Keys {
     static propertyResources = 'property-resources';
     static shopMissing = 'shop-missing';
     static shopSaveTimes = 'shop-save-times';
+    static specialSettings = 'object-special-settings';
 }

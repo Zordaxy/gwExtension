@@ -51,6 +51,33 @@
       </fieldset>
 
       <fieldset>
+        <legend>Required profit</legend>
+        <label class="field">
+          Below 60,000
+          <input type="number" min="0" step="any" name="requiredProfit.below60000" />
+        </label>
+        <label class="field">
+          60,000–99,999
+          <input type="number" min="0" step="any" name="requiredProfit.from60000To99999" />
+        </label>
+        <label class="field">
+          100,000–199,999
+          <input type="number" min="0" step="any" name="requiredProfit.from100000To199999" />
+        </label>
+        <label class="field">
+          200,000–299,999
+          <input type="number" min="0" step="any" name="requiredProfit.from200000To299999" />
+        </label>
+        <label class="field">
+          300,000 and above
+          <input type="number" min="0" step="any" name="requiredProfit.from300000" />
+        </label>
+        <label class="field field--check">
+          <input type="checkbox" name="halveRequiredProfit" /> Halve required profit
+        </label>
+      </fieldset>
+
+      <fieldset>
         <legend>Resource prices</legend>
         <label class="field">hours <input type="number" step="any" name="resources.hours" /></label>
         <label class="field">uranium <input type="number" step="any" name="resources.uranium" /></label>

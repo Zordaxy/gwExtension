@@ -36,7 +36,9 @@ function fillForm(values) {
   }
 }
 
-function readForm() {
+const isRequiredProfit = (name) => name.startsWith("requiredProfit.");
+
+function readForm(current) {
   const result = cloneDefaults();
   for (const input of form.elements) {
     if (!input.name) continue;
@@ -47,7 +49,18 @@ function readForm() {
       // Blank or non-numeric input keeps the default rather than persisting
       // 0/NaN, which would silently corrupt cost/price calculations.
       const n = Number(input.value);
-      if (input.value.trim() === "" || !Number.isFinite(n)) continue;
+      if (
+        input.value.trim() === "" ||
+        !Number.isFinite(n) ||
+        (isRequiredProfit(input.name) && n < 0)
+      ) {
+        // Required-profit validation is stricter: an invalid edit must not
+        // replace the last valid saved (or merged default) value.
+        if (isRequiredProfit(input.name)) {
+          setAt(result, input.name, valueAt(current, input.name));
+        }
+        continue;
+      }
       setAt(result, input.name, n);
     } else {
       setAt(result, input.name, input.value);
@@ -65,7 +78,7 @@ function flash(message) {
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   try {
-    await writeOverrides(readForm());
+    await writeOverrides(readForm(await currentValues()));
     flash("Saved");
   } catch {
     flash("Save failed");

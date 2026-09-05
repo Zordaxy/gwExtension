@@ -23,6 +23,14 @@ export const EDITABLE_DEFAULTS = {
   },
   funnyDigit: "",
   productionBalance: 1000000,
+  requiredProfit: {
+    below60000: 5000,
+    from60000To99999: 10000,
+    from100000To199999: 15000,
+    from200000To299999: 20000,
+    from300000: 30000,
+  },
+  halveRequiredProfit: false,
   showButtons: {
     prices: true,
     bag: true,

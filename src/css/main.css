@@ -268,6 +268,12 @@
     padding-left: 6px;
 }
 
+.special-settings-transfer {
+    display: inline-flex;
+    gap: 4px;
+    margin-left: 8px;
+}
+
 .refill-all {
     color: green;
     font-weight: bold;
