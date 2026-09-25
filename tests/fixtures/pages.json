@@ -1,0 +1,15 @@
+{
+  "property-edit": {
+    "file": "pages/property-edit.html",
+    "sourceUrlPattern": "/objectedit.php?id=<id>",
+    "capturedAt": "2026-09-05",
+    "encoding": "utf-8",
+    "originalEncoding": "windows-1251",
+    "features": [
+      "special-settings-transfer",
+      "money-balance",
+      "shop-save-cooldown",
+      "count-shop-controls"
+    ]
+  }
+}

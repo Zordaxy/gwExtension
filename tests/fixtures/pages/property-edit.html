@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Sanitized property edit fixture</title>
+</head>
+<body>
+  <!-- Sanitized from a real gwars.io objectedit.php capture. -->
+  <form action="/objectedit.php" method="POST" style="display:inline" id="moneysubmit">
+<input type="hidden" name="money_action" value="1">
+<input type="hidden" name="id" value="100001">
+<table cellpadding="0" cellspacing="2">
+<tbody><tr>
+<td align="right">Пополнить счет:&nbsp;</td>
+<td><input type="text" name="money_in" value="0" size="5" maxlength="9"></td>
+<td>&nbsp;У вас <b>$16,233,628</b>,</td>
+</tr>
+<tr>
+<td align="right">Забрать со счета:&nbsp;</td>
+<td><input type="text" name="money_out" value="0" size="5" maxlength="9"></td>
+<td>&nbsp;на объекте <b>$125,000</b></td>
+</tr>
+</tbody></table>
+</form>
+
+  <form action="/objectedit.php" method="POST" style="display:inline">
+<table width="100%" cellpadding="4" cellspacing="1">
+<tbody><tr>
+ <td width="100%" align="center" bgcolor="#d0eed0"><font color="#990000"><b>Настройки покупки-продажи предметов</b></font></td>
+ <td align="center" bgcolor="#d0eed0"><b>Наличие</b></td>
+ <td align="center" bgcolor="#d0eed0"><b>Максимум</b></td>
+ <td align="center" bgcolor="#d0eed0"><nobr><b>Цена покупки</b></nobr></td>
+ <td align="center" bgcolor="#d0eed0"><nobr><b>Цена продажи</b></nobr></td>
+</tr>
+<tr>
+<td>НСВ </td>
+<td>2</td>
+<td align="center"><input type="text" style="width:40" name="pricem[nsv]" size="2" value="2" title="Максимум 840 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[nsv]" value="45000"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=nsv&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[nsv]" value="114700"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=nsv_i&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Type 67 HMG </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[type67]" size="2" value="0" title="Максимум 840 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[type67]" value="0"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=type67&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[type67]" value="0"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=type67_i&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>АRM "Галил" </td>
+<td>1</td>
+<td align="center"><input type="text" style="width:40" name="pricem[galil]" size="2" value="2" title="Максимум 840 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[galil]" value="50000"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=galil&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[galil]" value="129390"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=galil_i&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>SIG MG 710 </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[sig710]" size="2" value="0" title="Максимум 840 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[sig710]" value="0"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=sig710&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[sig710]" value="0"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=sig710_i&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Vickers MG Light </td>
+<td>1</td>
+<td align="center"><input type="text" style="width:40" name="pricem[vickers]" size="2" value="2" title="Максимум 840 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[vickers]" value="102500"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=vickers&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[vickers]" value="261400"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=vickers_i&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>VZ-59 Heavy Gun </td>
+<td>2</td>
+<td align="center"><input type="text" style="width:40" name="pricem[vz59]" size="2" value="2" title="Максимум 840 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[vz59]" value="120000"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=vz59&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[vz59]" value="285280"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=vz59_i&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>HK MG-36 </td>
+<td>2</td>
+<td align="center"><input type="text" style="width:40" name="pricem[mg36]" size="2" value="2" title="Максимум 840 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[mg36]" value="150000"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=mg36&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[mg36]" value="360270"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=mg36_i&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>M-61 Volcano </td>
+<td>1</td>
+<td align="center"><input type="text" style="width:40" name="pricem[m61]" size="2" value="2" title="Максимум 840 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[m61]" value="140000"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=m61&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[m61]" value="336470"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=m61_i&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>AAT m.52 </td>
+<td>1</td>
+<td align="center"><input type="text" style="width:40" name="pricem[aat]" size="2" value="2" title="Максимум 840 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[aat]" value="145000"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=aat&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[aat]" value="366480"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=aat_i&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>XM-312 </td>
+<td>1</td>
+<td align="center"><input type="text" style="width:40" name="pricem[xm312]" size="2" value="2" title="Максимум 840 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[xm312]" value="125000"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=xm312&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[xm312]" value="294890"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=xm312_i&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>MG-45 Sturm </td>
+<td>1</td>
+<td align="center"><input type="text" style="width:40" name="pricem[sturm]" size="2" value="2" title="Максимум 840 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[sturm]" value="110000"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=sturm&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[sturm]" value="526978"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=sturm_i&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>mk48 Venom </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[venom]" size="2" value="2" title="Максимум 840 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[venom]" value="125000"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=venom&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[venom]" value="0"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=venom_i&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Пулемёт HK MG-4 </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[mg4]" size="2" value="0" title="Максимум 840 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[mg4]" value="0"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=mg4&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[mg4]" value="0"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=mg4_i&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Zastava M87 </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[zastava]" size="2" value="0" title="Максимум 840 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[zastava]" value="0"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=zastava&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[zastava]" value="0"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=zastava_i&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Форт-401 </td>
+<td>1</td>
+<td align="center"><input type="text" style="width:40" name="pricem[fort401]" size="2" value="2" title="Максимум 840 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[fort401]" value="125000"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=fort401&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[fort401]" value="531410"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=fort401_i&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Vektor SS-77 </td>
+<td>1</td>
+<td align="center"><input type="text" style="width:40" name="pricem[vektorss77]" size="2" value="2" title="Максимум 840 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[vektorss77]" value="115000"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=vektorss77&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[vektorss77]" value="285970"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=vektorss77_i&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>XM 806 </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[xm806]" size="2" value="4" title="Максимум 840 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[xm806]" value="127500"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=xm806&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[xm806]" value="0"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=xm806_i&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>КОРД-6П50 </td>
+<td>1</td>
+<td align="center"><input type="text" style="width:40" name="pricem[kord]" size="2" value="2" title="Максимум 840 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[kord]" value="140000"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=kord&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[kord]" value="605820"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=kord_i&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>XK-12 7.62 </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[xk12]" size="2" value="0" title="Максимум 840 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[xk12]" value="0"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=xk12&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[xk12]" value="0"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=xk12_i&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Lewis MG </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[lewis]" size="2" value="0" title="Максимум 840 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[lewis]" value="0"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=lewis&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[lewis]" value="0"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=lewis_i&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Type 95 MG </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[type95]" size="2" value="0" title="Максимум 840 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[type95]" value="0"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=type95&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[type95]" value="0"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=type95_i&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>M16A2 Heavy Gun </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[m16a2]" size="2" value="0" title="Максимум 840 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[m16a2]" value="0"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=m16a2&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[m16a2]" value="0"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=m16a2_i&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Rising Sun T62 </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[type62]" size="2" value="0" title="Максимум 840 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[type62]" value="0"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=type62&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[type62]" value="0"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=type62_i&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>AR70/84 "Beretta" </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[ar70]" size="2" value="0" title="Максимум 840 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[ar70]" value="0"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=ar70&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[ar70]" value="0"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=ar70_i&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Пулемет ZB 53 </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[zb53]" size="2" value="0" title="Максимум 840 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[zb53]" value="0"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=zb53&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[zb53]" value="0"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=zb53_i&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>MG-95 ONYX </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[onyx]" size="2" value="0" title="Максимум 840 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[onyx]" value="0"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=onyx&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[onyx]" value="0"><a href="https://www.gwars.io/objectedit.php?id=100001&amp;lockr=onyx_i&amp;lock=1&amp;rlpt=00000" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr><td colspan="5" bgcolor="#d0eed0" align="center"><input type="submit" value="Сохранить настройки магазина" style="background: #c0ddc0"></td></tr>
+</tbody></table>
+
+<input type="hidden" name="save" value="1">
+<input type="hidden" name="skip_about" value="1">
+<input type="hidden" name="id" value="100001">
+</form>
+
+  <form action="/objectedit.php" method="POST" style="display:inline">
+<input type="hidden" name="save_about" value="1">
+<input type="hidden" name="id" value="100001">
+<table border="0" cellpadding="3" cellspacing="0" width="100%"><tbody><tr><td colspan="2" align="center">
+<textarea name="objectdesc" cols="80" rows="4" style="width:100%"></textarea>
+</td></tr>
+<tr>
+<td bgcolor="#d0eed0" align="left"><b>Описание постройки: его увидят все игроки</b></td>
+<td bgcolor="#d0eed0" align="right"><input type="submit" value="»»" style="background: #c0ddc0"></td></tr>
+</tbody></table>
+</form>
+  <a href="/object.php?id=100001">Test property</a>
+</body>
+</html>

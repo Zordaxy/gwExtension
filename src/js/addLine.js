@@ -40,12 +40,28 @@ export const AddLine = {
                 : `<span class='red'>${profit}</span>`;
 
         const countTd = document.createElement('td');
+        countTd.setAttribute('data-test-edit-price-in-property', '');
         countTd.setAttribute('seller', minShop.seller);
         countTd.setAttribute('newPrice', minPrice);
         countTd.setAttribute('isNoOffers', minShop.isNoOffers);
         countTd.dataset.expected = expected;
         countTd.onclick = this._changeShopPrice;
         countTd.innerHTML = `<span class='${priceClass}'>${minPrice}</span>(${profitText}) ${minShop.seller}`;
+
+        const overrideLabel = document.createElement('label');
+        const override = document.createElement('input');
+        override.type = 'checkbox';
+        overrideLabel.append(override, ' Ignore profit threshold');
+        // Label clicks also trigger a checkbox click; only the change event
+        // should apply the newly selected recommendation.
+        overrideLabel.onclick = (event) => event.stopPropagation();
+        override.onchange = () => {
+            countTd.dataset.expected = override.checked
+                ? this._adjustedPrice(minPrice, minShop)
+                : expected;
+            this._changeShopPrice({ target: countTd });
+        };
+        countTd.append(' ', overrideLabel);
 
         row.appendChild(countTd);
         this._markShopRow(countTd);
