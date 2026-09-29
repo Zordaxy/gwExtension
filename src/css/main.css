@@ -210,6 +210,15 @@
     text-decoration: none;
 }
 
+[data-test-edit-price-in-property],
+[data-test-ignore-profit-treshold] {
+    cursor: pointer;
+}
+
+[data-test-edit-price-in-property]:hover {
+    background-color: rgba(90, 150, 90, 0.12);
+}
+
 .apply-all {
     background: #c0ddc0;
     border: 1px solid var(--gw-border-light);

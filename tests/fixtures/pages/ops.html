@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Sanitized operations fixture</title>
+<style>
+.opclist { font-size:9pt; line-height:20px; margin-bottom:20px; }
+.opclist, .opclist * { box-sizing:border-box; font-size:9pt; }
+.opclist a.opclistname { color:#004400; }
+.opclist a.opclistname:hover { color:#009900; }
+.opclist a:focus-visible { outline:2px solid #004400; outline-offset:3px; }
+.opclist.opnight a:focus-visible { outline-color:#a4cfa4; }
+.opclisthead { display:flex; align-items:baseline; gap:5px; margin:0 0 5px; }
+.opclisthead h2 { margin:0; padding:0; font-size:12px; line-height:20px; }
+.opclistgrid { display:flex; flex-wrap:wrap; gap:10px; }
+.opclistcard { display:flex; align-items:flex-start; flex:1 1 100%; min-width:0;
+.opclistart { flex:0 0 120px; width:120px; height:80px; margin:0; overflow:hidden; }
+.opclistart picture { display:block; width:100%; height:100%; }
+.opclistart img { display:block; width:100%; height:100%; object-fit:cover; object-position:center; }
+.opclistbody { flex:1 1 auto; min-width:0; padding:5px 10px; }
+.opclistdesc { margin:0; color:#486748; }
+.opclistfoot { display:flex; flex-wrap:wrap; align-items:baseline; gap:0 10px; }
+.opclistskill { flex:1 1 180px; }
+.opclistexp { display:inline; margin-left:5px; color:#486748; font-size:11px; }
+.opclistnext { font-size:8px; opacity:0.6; }
+.opclist a.opclistenter { margin:0; padding:5px 15px; color:#fff; font-weight:bold; line-height:20px; white-space:nowrap; }
+.opclist.opnight a.opclistenter { background:#245024; color:#ffffff; }
+.opclist a.opclistenter:hover { background:#00aa00; }
+.opclist.opnight a.opclistenter:hover { background:#2f6b2f; }
+.opclistempty { padding:15px 10px; color:#669966; }
+.opclist.opnight .opclistcard { border-color:#393939; }
+.opclist.opnight .opclistart { background:#1e241e; }
+.opclist.opnight .opclistart img { mix-blend-mode:normal; opacity:.65; filter:brightness(.65) saturate(.5); }
+.opclist.opnight h2, .opclist.opnight .opclistskill { color:#c4cec4; }
+.opclist.opnight .opclistdesc, .opclist.opnight .opclistexp, .opclist.opnight .opclistempty { color:#a0ada0; }
+</style>
+</head>
+<body>
+<div class="opclist txt"><div class="opclisthead"><h2>Доступные операции</h2></div><div class="opclistgrid"><div class="opclistcard greenlightbg"><div class="opclistart greenlightbg"><picture><source media="(max-width:650px)" srcset="https://images.gwars.io/i/ops/warehouse-pencil-v3-mobile.png"><img src="https://images.gwars.io/i/ops/warehouse-pencil-v3-desktop.png" width="480" height="320" alt=""></picture></div><div class="opclistbody"><a class="opclistname" href="/ops.php?cls=warehouse"><b>Складские рейды</b></a><p class="opclistdesc">Ищите наводки, изучайте охрану и готовьте налёт.</p><div class="opclistfoot"><a class="opclistenter greenbutton_nh" href="/ops.php?cls=warehouse" aria-label="Перейти: Складские рейды">Перейти</a></div></div></div><div class="opclistcard greenlightbg"><div class="opclistart greenlightbg"><picture><source media="(max-width:650px)" srcset="https://images.gwars.io/i/ops/salvage-pencil-v6-mobile.png"><img src="https://images.gwars.io/i/ops/salvage-pencil-v6-desktop.png" width="480" height="320" alt=""></picture></div><div class="opclistbody"><a class="opclistname" href="/ops.php?cls=salvage"><b>Поиск трофеев</b></a><p class="opclistdesc">Обследуйте заброшенные места в поисках оставленной добычи.</p><div class="opclistfoot"><a class="opclistenter greenbutton_nh" href="/ops.php?cls=salvage" aria-label="Перейти: Поиск трофеев">Перейти</a></div></div></div></div></div>
+</body>
+</html>

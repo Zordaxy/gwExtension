@@ -3,7 +3,25 @@ export const ActionButtons = {
     //this.navigation();
     //this.highlightPokemons();
     this.pickItemsOnOut();
+    this.addQuestSetLink();
     //this.sortUran();
+  },
+
+  addQuestSetLink() {
+    if (window.location.pathname !== "/ops.php") return;
+
+    const heading = Array.from(document.querySelectorAll(".opclisthead h2"))
+      .find((element) => element.textContent.trim() === "Доступные операции");
+    if (!heading || document.getElementById("gw-wear-quest-set")) return;
+
+    const link = document.createElement("a");
+    link.id = "gw-wear-quest-set";
+    link.href = "/home.do.php?putset=7";
+    link.textContent = "wear quest set";
+    // Run the game's handler in the page context, outside the content-script world.
+    link.setAttribute("onclick", "return postdo('/home.do.php?putset=7')");
+    link.style.cssText = "text-decoration:none;border-bottom:1px dashed;";
+    heading.after(link);
   },
 
   navigation() {

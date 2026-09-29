@@ -1,5 +1,9 @@
 # Page fixtures
 
+`pages/ops.html` retains the available-operations heading, layout styles, and
+operation cards from the supplied `/ops.php` capture for the quest-set shortcut.
+Scripts, surrounding account content, and player progress have been removed.
+
 `pages/property-edit.html` is a sanitized UTF-8 fixture extracted from a real
 `objectedit.php` capture. It keeps the description, money-management, and shop
 special-settings forms used by the extension.

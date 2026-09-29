@@ -1,4 +1,12 @@
 {
+  "ops": {
+    "file": "pages/ops.html",
+    "sourceUrlPattern": "/ops.php",
+    "capturedAt": "2026-09-28",
+    "encoding": "utf-8",
+    "originalEncoding": "windows-1251",
+    "features": ["wear-quest-set"]
+  },
   "property-edit": {
     "file": "pages/property-edit.html",
     "sourceUrlPattern": "/objectedit.php?id=<id>",

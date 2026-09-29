@@ -141,6 +141,32 @@ export const Storage = {
         window.localStorage.setItem(Keys.shopSaveTimes, JSON.stringify(all));
     },
 
+    // Sparse { shopId: { itemId: true } } map of profit-threshold overrides.
+    getShopProfitOverrides() {
+        return JSON.parse(window.localStorage.getItem(Keys.shopProfitOverrides) || '{}');
+    },
+
+    setShopProfitOverride(shopId, itemId, checked) {
+        if (!shopId || !itemId) {
+            return;
+        }
+        const all = this.getShopProfitOverrides();
+        if (checked) {
+            all[shopId] = all[shopId] || {};
+            all[shopId][itemId] = true;
+        } else if (all[shopId]) {
+            delete all[shopId][itemId];
+            if (!Object.keys(all[shopId]).length) {
+                delete all[shopId];
+            }
+        }
+        if (Object.keys(all).length) {
+            window.localStorage.setItem(Keys.shopProfitOverrides, JSON.stringify(all));
+        } else {
+            window.localStorage.removeItem(Keys.shopProfitOverrides);
+        }
+    },
+
     getSpecialSettings() {
         try {
             return JSON.parse(window.localStorage.getItem(Keys.specialSettings) || 'null');
@@ -165,5 +191,6 @@ class Keys {
     static propertyResources = 'property-resources';
     static shopMissing = 'shop-missing';
     static shopSaveTimes = 'shop-save-times';
+    static shopProfitOverrides = 'shop-profit-overrides';
     static specialSettings = 'object-special-settings';
 }

@@ -22,6 +22,9 @@ export const minMargin = (price) => {
 
 export const AddLine = {
     appendShopCount(row, minShop, itemId) {
+        const shopId = new URLSearchParams(window.location.search).get('id')
+            || document.querySelector('input[name="id"]')?.value;
+        const ignoreProfit = !!shopId && Storage.getShopProfitOverrides()[shopId]?.[itemId] === true;
         const cost = Storage.getCost(itemId) || 0;
         const minPrice = Number(minShop.minPrice);
         const profit = minPrice - cost;
@@ -44,26 +47,33 @@ export const AddLine = {
         countTd.setAttribute('seller', minShop.seller);
         countTd.setAttribute('newPrice', minPrice);
         countTd.setAttribute('isNoOffers', minShop.isNoOffers);
-        countTd.dataset.expected = expected;
+        countTd.dataset.expected = ignoreProfit ? this._adjustedPrice(minPrice, minShop) : expected;
         countTd.onclick = this._changeShopPrice;
-        countTd.innerHTML = `<span class='${priceClass}'>${minPrice}</span>(${profitText}) ${minShop.seller}`;
+        countTd.innerHTML = `<span class='${priceClass}'>${minPrice}</span>(${profitText})`;
 
         const overrideLabel = document.createElement('label');
         const override = document.createElement('input');
         override.type = 'checkbox';
-        overrideLabel.append(override, ' Ignore profit threshold');
+        override.checked = ignoreProfit;
+        override.setAttribute('data-test-ignore-profit-treshold', '');
+        override.setAttribute('aria-label', 'Ignore profit threshold');
+        overrideLabel.append(override);
         // Label clicks also trigger a checkbox click; only the change event
         // should apply the newly selected recommendation.
         overrideLabel.onclick = (event) => event.stopPropagation();
         override.onchange = () => {
+            Storage.setShopProfitOverride(shopId, itemId, override.checked);
             countTd.dataset.expected = override.checked
                 ? this._adjustedPrice(minPrice, minShop)
                 : expected;
             this._changeShopPrice({ target: countTd });
         };
-        countTd.append(' ', overrideLabel);
+        countTd.append(` ${minShop.seller}`);
 
-        row.appendChild(countTd);
+        const overrideTd = document.createElement('td');
+        overrideTd.appendChild(overrideLabel);
+
+        row.append(countTd, overrideTd);
         this._markShopRow(countTd);
     },
 
