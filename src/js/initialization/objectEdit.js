@@ -104,42 +104,147 @@ export const ObjectEdit = {
         Storage.setMissing(missing);
     },
 
-    // On a storage house, a green "+" by the "Забрать" header fills each row's
-    // am_out input with the remembered missing count for that resource.
+    // Load remembered withdrawals from the storage house title.
     addRefillButton() {
-        const header = [...document.querySelectorAll("td")].find(
-            (td) => td.textContent.trim() === "Забрать"
+        const title = [...document.querySelectorAll("td")].find(
+            (td) => !td.querySelector("table") && td.textContent.includes("Частный дом")
         );
-        if (!header) {
+        if (!title || !document.querySelector('input[name="am_out"]') ||
+            document.querySelector("[data-test-fill-storage-counts]")) {
             return;
         }
 
-        const button = document.createElement("span");
-        button.textContent = "+";
-        button.className = "refill-all";
+        const button = document.createElement("a");
+        button.href = "#";
+        button.textContent = "load";
+        button.className = "storage-load-link";
+        button.setAttribute("data-test-fill-storage-counts", "");
         button.title = "Fill withdrawals with the remembered missing counts";
-        button.onclick = () => this.refillMissing();
 
-        header.appendChild(button);
+        const done = document.createElement("span");
+        done.className = "green";
+        done.textContent = " ✓";
+        done.style.visibility = "hidden";
+        button.onclick = (event) => {
+            event.preventDefault();
+            this.refillMissing();
+            done.style.visibility = "visible";
+        };
+
+        const controls = document.createElement("span");
+        controls.className = "storage-load-controls";
+        const unload = document.createElement("a");
+        unload.href = "#";
+        unload.textContent = "unload";
+        unload.className = "storage-load-link";
+        unload.setAttribute("data-test-unload-storage-counts", "");
+        const unloaded = document.createElement("span");
+        unloaded.className = "green";
+        unloaded.textContent = " ✓";
+        unloaded.style.visibility = "hidden";
+        unload.onclick = (event) => {
+            event.preventDefault();
+            this.unloadStorage();
+            unloaded.style.visibility = "visible";
+        };
+        controls.append(done, button, unloaded, unload);
+        (title.querySelector("center") || title).append(controls);
     },
 
     refillMissing() {
         const missing = Storage.getMissing();
         document.querySelectorAll('input[name="am_out"]').forEach((amOut) => {
             const row = amOut.closest("tr");
+            row?.classList.remove("storage-count-changed");
             const id = row?.querySelector('input[name="resource"]')?.value;
-            if (!id || missing[id] == null) {
+            if (!id || id === "technite" || missing[id] == null) {
                 return;
             }
 
             // Subtract what you already have ("У вас", the 3rd cell) from the
             // stored missing count; leave the field alone when nothing's needed.
             const youHave = Number(row.cells[2]?.textContent.trim()) || 0;
-            const result = missing[id] - youHave;
+            const available = Number(row.cells[1]?.textContent.trim());
+            if (!Number.isFinite(available) || available < 0) {
+                return;
+            }
+            const result = Math.min(missing[id] - youHave, available);
             if (result > 0) {
+                row.classList.toggle("storage-count-changed", Number(amOut.value) !== result);
                 amOut.value = result;
             }
         });
+
+        this.sortStorageRows("am_out");
+    },
+
+    unloadStorage() {
+        document.querySelectorAll('input[name="am_in"]').forEach((input) => {
+            const row = input.closest("tr");
+            row?.classList.remove("storage-count-changed");
+            if (row?.querySelector('input[name="resource"]')?.value === "technite") {
+                return;
+            }
+            const count = Number(row?.cells[2]?.textContent.trim());
+            if (!Number.isFinite(count) || count < 0) {
+                return;
+            }
+            row.classList.toggle("storage-count-changed", Number(input.value) !== count);
+            input.value = count;
+        });
+        this.sortStorageRows("am_in");
+    },
+
+    sortStorageRows(inputName) {
+        const selector = `input[name="${inputName}"]`;
+        const tables = new Set([...document.querySelectorAll(selector)]
+            .map((input) => input.closest("table")).filter(Boolean));
+        tables.forEach((table) => {
+            // Reuse the resource-row slots so headers and totals stay in place.
+            const rows = [...table.rows].filter((row) =>
+                row.querySelector(selector) &&
+                row.querySelector('input[name="resource"]')?.value !== "technite");
+            const sorted = [...rows].sort((a, b) =>
+                Number(Number(b.querySelector(selector).value) > 0) -
+                Number(Number(a.querySelector(selector).value) > 0));
+            const slots = rows.map((row) => {
+                const slot = document.createComment("storage resource row");
+                row.replaceWith(slot);
+                return slot;
+            });
+            slots.forEach((slot, index) => slot.replaceWith(sorted[index]));
+        });
+        this.scrollToStorage(tables.values().next().value, inputName);
+    },
+
+    scrollToStorage(table, inputName) {
+        clearTimeout(this.storageScrollTimer);
+        cancelAnimationFrame(this.storageScrollFrame);
+        if (!table) {
+            return;
+        }
+        this.storageScrollTimer = setTimeout(() => {
+            if (!table.isConnected) {
+                return;
+            }
+            const start = window.scrollY;
+            const target = Math.max(0, start + table.getBoundingClientRect().top - window.innerHeight * 0.2);
+            const firstChangedInput = table.querySelector(`.storage-count-changed input[name="${inputName}"]`);
+            const startedAt = performance.now();
+            const animate = (now) => {
+                const progress = Math.min(1, (now - startedAt) / 1000);
+                const eased = progress < 0.5
+                    ? 8 * progress ** 4
+                    : 1 - (-2 * progress + 2) ** 4 / 2;
+                window.scrollTo({ top: start + (target - start) * eased, behavior: "instant" });
+                if (progress < 1) {
+                    this.storageScrollFrame = requestAnimationFrame(animate);
+                } else {
+                    firstChangedInput?.focus({ preventScroll: true });
+                }
+            };
+            this.storageScrollFrame = requestAnimationFrame(animate);
+        }, 200);
     },
 
     // --- Shop save cooldown --------------------------------------------------

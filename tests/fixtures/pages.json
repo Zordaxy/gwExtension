@@ -5,7 +5,9 @@
     "capturedAt": "2026-09-28",
     "encoding": "utf-8",
     "originalEncoding": "windows-1251",
-    "features": ["wear-quest-set"]
+    "features": [
+      "wear-quest-set"
+    ]
   },
   "property-edit": {
     "file": "pages/property-edit.html",
@@ -18,6 +20,16 @@
       "money-balance",
       "shop-save-cooldown",
       "count-shop-controls"
+    ]
+  },
+  "storage": {
+    "file": "pages/storage.html",
+    "sourceUrlPattern": "/object.php?id=<id>",
+    "capturedAt": "2026-10-03",
+    "encoding": "utf-8",
+    "originalEncoding": "windows-1251",
+    "features": [
+      "fill-storage-counts"
     ]
   }
 }

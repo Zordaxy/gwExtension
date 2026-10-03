@@ -8,6 +8,10 @@ Scripts, surrounding account content, and player progress have been removed.
 `objectedit.php` capture. It keeps the description, money-management, and shop
 special-settings forms used by the extension.
 
+`pages/storage.html` retains the private-house heading and complete resource
+withdrawal table from the supplied `object.php` capture. Owner details and
+extension controls are removed, and the object id is replaced with a placeholder.
+
 The capture was sanitized by removing scripts, unrelated page sections,
 extension-generated controls, identifying object data, and volatile lock
 tokens. Form actions were normalized to the path returned by the live DOM.
