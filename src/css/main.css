@@ -258,8 +258,11 @@
     padding: 6px 8px 6px 24px;
 }
 
-.realty-show-all-link {
+.realty-open-controls--link {
     float: right;
+}
+
+.realty-show-all-link {
     font-style: normal;
     font-weight: bold;
     color: var(--gw-border-light);

@@ -51,6 +51,10 @@ export const Search = {
         await delay(200);
         const marketDoc = await Fetcher.adverticementsList(resourceId);
         localData.minPrice = Parse.gosPrice(marketDoc);
+        const basePrice = Parse.basePrice(marketDoc);
+        if (basePrice !== undefined) {
+          localData.maxAllowedPrice = basePrice * 1.3;
+        }
       }
       AddLine.appendShopCount(row, localData, resourceId);
     });
@@ -58,5 +62,6 @@ export const Search = {
     // All calls finished: mark countShop done and enable apply all.
     this.controls.countCheck.style.visibility = "visible";
     this.controls.applyAll.disabled = false;
+    this.controls.applyAll.focus({ preventScroll: true });
   },
 };

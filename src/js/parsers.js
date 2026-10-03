@@ -93,6 +93,17 @@ export const Parse = {
   },
 
   // Expects doc from: Fetcher.adverticementsList(itemId)
+  basePrice(doc) {
+    const summary = [...doc.querySelectorAll("td.greengreenbg")].find((td) =>
+      td.textContent.includes("Базовая цена:")
+    );
+    const price = [...(summary?.querySelectorAll("b") || [])].find((b) =>
+      b.previousSibling?.textContent.includes("Базовая цена:")
+    );
+    const value = Number(price?.textContent.replace(/[$,\s]/g, ""));
+    return Number.isFinite(value) && value > 0 ? value : undefined;
+  },
+
   gosPrice(doc) {
     const gosShopRawPrice = doc.querySelector(
       'table [class="greengraybg"] div b'

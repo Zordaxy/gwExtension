@@ -6,8 +6,17 @@
     "encoding": "utf-8",
     "originalEncoding": "windows-1251",
     "features": [
-      "wear-quest-set"
+      "wear-quest-set",
+      "main-set"
     ]
+  },
+  "questlog": {
+    "file": "pages/questlog.html",
+    "sourceUrlPattern": "/questlog.php?id=<id>",
+    "capturedAt": "2026-10-03",
+    "encoding": "utf-8",
+    "originalEncoding": "windows-1251",
+    "features": ["wear-quest-set", "main-set"]
   },
   "property-edit": {
     "file": "pages/property-edit.html",
@@ -21,6 +30,14 @@
       "shop-save-cooldown",
       "count-shop-controls"
     ]
+  },
+  "market-no-offers": {
+    "file": "pages/market-no-offers.html",
+    "sourceUrlPattern": "/market.php?buy=1&item_id=ulr338",
+    "capturedAt": "2026-10-03",
+    "encoding": "utf-8",
+    "originalEncoding": "windows-1251",
+    "features": ["no-offers-base-price-fallback"]
   },
   "storage": {
     "file": "pages/storage.html",

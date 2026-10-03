@@ -2,6 +2,7 @@ import { Settings } from "js/settings";
 import { RESOURCE_PAGE_CODES } from "js/settingsConfig";
 import { Storage } from "js/storage";
 import { PropertyInfo } from "js/propertyInfo";
+import { Scroll } from "js/scroll";
 
 // Decorates the object-edit page (objectedit.php):
 //  - each resource row gets a saved-price cell (click to apply), plus an
@@ -218,33 +219,10 @@ export const ObjectEdit = {
     },
 
     scrollToStorage(table, inputName) {
-        clearTimeout(this.storageScrollTimer);
-        cancelAnimationFrame(this.storageScrollFrame);
-        if (!table) {
-            return;
-        }
-        this.storageScrollTimer = setTimeout(() => {
-            if (!table.isConnected) {
-                return;
-            }
-            const start = window.scrollY;
-            const target = Math.max(0, start + table.getBoundingClientRect().top - window.innerHeight * 0.2);
-            const firstChangedInput = table.querySelector(`.storage-count-changed input[name="${inputName}"]`);
-            const startedAt = performance.now();
-            const animate = (now) => {
-                const progress = Math.min(1, (now - startedAt) / 1000);
-                const eased = progress < 0.5
-                    ? 8 * progress ** 4
-                    : 1 - (-2 * progress + 2) ** 4 / 2;
-                window.scrollTo({ top: start + (target - start) * eased, behavior: "instant" });
-                if (progress < 1) {
-                    this.storageScrollFrame = requestAnimationFrame(animate);
-                } else {
-                    firstChangedInput?.focus({ preventScroll: true });
-                }
-            };
-            this.storageScrollFrame = requestAnimationFrame(animate);
-        }, 200);
+        Scroll.toElement(table, 0.2, () => {
+            table.querySelector(`.storage-count-changed input[name="${inputName}"]`)
+                ?.focus({ preventScroll: true });
+        });
     },
 
     // --- Shop save cooldown --------------------------------------------------

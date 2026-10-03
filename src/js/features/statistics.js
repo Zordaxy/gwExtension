@@ -51,12 +51,11 @@ export class Statistics {
     App.result.setProgress("done", itemIds.length, itemIds.length);
   };
 
-  // Sum how many of each item is stored across the three storage houses linked
-  // in the nav ("Д Мікс", "Д Стволи", "Д Бронь"). Returns { itemId: total }.
+  // Sum how many of each item is stored across houses linked as "ДІМ"
+  // in the nav. Returns { itemId: total }.
   async #fetchAvailability() {
-    const labels = ["Д Мікс", "Д Стволи", "Д Бронь"];
     const links = [...document.querySelectorAll("a")].filter((a) =>
-      labels.includes(a.textContent.trim())
+      a.textContent.trim() === "ДІМ"
     );
     App.result.setProgress("availability", 0, links.length);
 

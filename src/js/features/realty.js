@@ -168,11 +168,8 @@ export class Realty {
         link.href = '#';
         link.textContent = 'show all';
         link.className = 'realty-show-all-link';
-        link.onclick = (event) => {
-            event.preventDefault();
-            this.#openAll(rows);
-        };
-        cell.appendChild(link);
+        link.setAttribute('data-test-realty-show-all-link', '');
+        cell.appendChild(this.#bindOpenAll(link, rows));
 
         const tr = document.createElement('tr');
         tr.className = 'realty-generated-row';
@@ -180,14 +177,51 @@ export class Realty {
         return tr;
     }
 
-    // Open every given property's page in a new tab.
-    #openAll(rows) {
-        rows.forEach((row) => {
-            const id = this.#objectId(row);
-            if (id) {
-                window.open(`/object.php?id=${id}`, '_blank');
+    #bindOpenAll(control, rows) {
+        const wrapper = document.createElement('span');
+        wrapper.className = control.tagName === 'A'
+            ? 'realty-open-controls realty-open-controls--link'
+            : 'realty-open-controls';
+        const check = document.createElement('span');
+        check.className = 'green realty-show-all-check';
+        check.textContent = '✓ ';
+        check.title = 'All properties opened';
+        check.style.visibility = 'hidden';
+        wrapper.append(check, control);
+        let opening = false;
+        const open = async (event) => {
+            event.preventDefault();
+            if (opening) {
+                return;
             }
-        });
+            opening = true;
+            check.style.visibility = 'hidden';
+            try {
+                if (await this.#openAll(rows)) {
+                    check.style.visibility = 'visible';
+                }
+            } catch (error) {
+                console.error('Could not complete opening properties', error);
+            } finally {
+                opening = false;
+            }
+        };
+        control.onclick = open;
+        control.oncontextmenu = open;
+        return wrapper;
+    }
+
+    // Return to the property list after each opening, then wait before the next.
+    async #openAll(rows) {
+        const ids = rows.map((row) => this.#objectId(row)).filter(Boolean);
+        await Http.processWithDelay(ids, async (id) => {
+            window.open(`/object.php?id=${id}`, '_blank');
+            const result = await chrome.runtime.sendMessage({ type: 'reactivate-realty-tab' });
+            if (result?.ok !== true) {
+                throw new Error('Could not reactivate the property list');
+            }
+        }, 300);
+        return true;
     }
 
     #typeName(row) {
@@ -215,9 +249,8 @@ export class Realty {
         button.type = 'button';
         button.textContent = 'show all';
         button.className = 'apply-all realty-show-all';
-        button.onclick = () => this.#openAll(sectorRows);
-
-        cell.append(label, ' ', button);
+        button.setAttribute('data-test-realty-show-all', '');
+        cell.append(label, ' ', this.#bindOpenAll(button, sectorRows));
 
         const tr = document.createElement('tr');
         tr.className = 'realty-generated-row';

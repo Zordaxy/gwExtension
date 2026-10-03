@@ -3,6 +3,9 @@
   "name": "GW Checker",
   "description": "GwChecker description",
   "version": "3.1",
+  "background": {
+    "service_worker": "background.js"
+  },
   "content_scripts": [
     {
       "matches": [
@@ -23,6 +26,7 @@
     "default_title": "gwChecker"
   },
   "permissions": [
-    "storage"
+    "storage",
+    "webNavigation"
   ]
 }

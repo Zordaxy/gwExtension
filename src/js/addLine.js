@@ -2,6 +2,7 @@ import { Storage } from './storage';
 import { Http } from './http';
 import { Settings } from './settings';
 import { App } from './app';
+import { Scroll } from './scroll';
 
 // Price-band boundaries are fixed; only their required-profit amounts are
 // configurable. Read Settings at call time so popup changes affect the next
@@ -26,13 +27,16 @@ export const AddLine = {
             || document.querySelector('input[name="id"]')?.value;
         const ignoreProfit = !!shopId && Storage.getShopProfitOverrides()[shopId]?.[itemId] === true;
         const cost = Storage.getCost(itemId) || 0;
-        const minPrice = Number(minShop.minPrice);
+        const hasMaxAllowedPrice = minShop.isNoOffers && Number.isFinite(minShop.maxAllowedPrice);
+        const minPrice = hasMaxAllowedPrice
+            ? this._adjustedPrice(Number(minShop.minPrice), minShop)
+            : Number(minShop.minPrice);
         const profit = minPrice - cost;
 
-        // Thin margin → not worth chasing the market. Flag it red and, when
-        // applied, price it at twice cost instead of matching the competitor.
+        // Thin margins are red. The base-price fallback takes precedence over
+        // twice-cost pricing when no eligible shop offers exist.
         const isThin = cost > 0 && profit < minMargin(minPrice);
-        const expected = isThin
+        const expected = hasMaxAllowedPrice ? minPrice : isThin
             ? Math.round(cost * 2)
             : this._adjustedPrice(minPrice, minShop);
 
@@ -77,10 +81,13 @@ export const AddLine = {
         this._markShopRow(countTd);
     },
 
-    // Price we'd set when matching the cheapest competitor: undercut the gos
-    // offer by 1001, round non-friends down to the nearest 10, leave friends as-is.
+    // No offers: use the base-price limit when available, otherwise undercut
+    // the gos offer by 1001. Round competitors down to 10; leave friends as-is.
     _adjustedPrice(minPrice, minShop) {
         if (minShop.isNoOffers) {
+            if (Number.isFinite(minShop.maxAllowedPrice)) {
+                return Math.floor((minShop.maxAllowedPrice - 900) / 1000) * 1000;
+            }
             return minPrice - 1001;
         }
         if (!Settings.friends.includes(minShop.seller)) {
@@ -138,6 +145,7 @@ export const AddLine = {
         const countCheck = makeCheck();
         countButton.onclick = () => {
             countButton.disabled = true; // prevent a second run
+            Scroll.toElement(countButton, 0.1);
             onCountShop();
         };
 
@@ -154,6 +162,12 @@ export const AddLine = {
                 this._markShopRow(cell);
             });
             applyCheck.style.visibility = 'visible';
+            const saveButton = table.closest('form')?.querySelector(
+                'input[type="submit"][value="Сохранить настройки магазина"]'
+            );
+            Scroll.toElement(saveButton, 0.9, () => {
+                saveButton.focus({ preventScroll: true });
+            }, 'bottom');
         };
 
         const countLine = document.createElement('div');

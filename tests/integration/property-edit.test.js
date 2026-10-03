@@ -159,6 +159,80 @@ describe("other property-edit features", () => {
     expect(getByRole(document.body, "button", { name: "apply all" }).disabled).toBe(true);
   });
 
+  test("countShop waits 100ms then eases its button to 10% of the viewport", () => {
+    vi.useFakeTimers();
+    vi.stubGlobal("requestAnimationFrame", vi.fn());
+    vi.stubGlobal("cancelAnimationFrame", vi.fn());
+    try {
+      const scroll = vi.spyOn(window, "scrollTo").mockImplementation(() => {});
+      vi.spyOn(Search, "findShopPrices").mockImplementation(() => {});
+      vi.spyOn(window, "innerHeight", "get").mockReturnValue(1000);
+      vi.spyOn(window, "scrollY", "get").mockReturnValue(0);
+      Search.init();
+      const button = getByRole(document.body, "button", { name: "countShop" });
+      vi.spyOn(button, "getBoundingClientRect").mockReturnValue({ top: 500 });
+      fireEvent.click(button);
+      expect(Search.findShopPrices).toHaveBeenCalledOnce();
+      expect(button.disabled).toBe(true);
+      vi.advanceTimersByTime(99);
+      expect(requestAnimationFrame).not.toHaveBeenCalled();
+      vi.advanceTimersByTime(1);
+      const startedAt = performance.now();
+      const animate = requestAnimationFrame.mock.calls[0][0];
+      animate(startedAt + 250);
+      expect(scroll).toHaveBeenLastCalledWith({ top: 3.125, behavior: "instant" });
+      animate(startedAt + 750);
+      expect(scroll).toHaveBeenLastCalledWith({ top: 396.875, behavior: "instant" });
+      animate(startedAt + 1000);
+      expect(scroll).toHaveBeenLastCalledWith({ top: 400, behavior: "instant" });
+    } finally {
+      vi.clearAllTimers();
+      vi.useRealTimers();
+      vi.unstubAllGlobals();
+    }
+  });
+
+  test("apply all scrolls the save button to 10% above the bottom and focuses without submitting", () => {
+    vi.useFakeTimers();
+    vi.stubGlobal("requestAnimationFrame", vi.fn());
+    vi.stubGlobal("cancelAnimationFrame", vi.fn());
+    try {
+      const scroll = vi.spyOn(window, "scrollTo").mockImplementation(() => {});
+      vi.spyOn(window, "innerHeight", "get").mockReturnValue(1000);
+      vi.spyOn(window, "scrollY", "get").mockReturnValue(0);
+      Search.init();
+      const save = document.querySelector(
+        'input[type="submit"][value="Сохранить настройки магазина"]'
+      );
+      vi.spyOn(save, "getBoundingClientRect").mockReturnValue({ top: 1270, bottom: 1300 });
+      const focus = vi.spyOn(save, "focus");
+      const submit = vi.fn((event) => event.preventDefault());
+      save.closest("form").addEventListener("submit", submit);
+      const apply = getByRole(document.body, "button", { name: "apply all" });
+      apply.disabled = false;
+      fireEvent.click(apply);
+      vi.advanceTimersByTime(99);
+      expect(requestAnimationFrame).not.toHaveBeenCalled();
+      vi.advanceTimersByTime(1);
+      const startedAt = performance.now();
+      const animate = requestAnimationFrame.mock.calls[0][0];
+      animate(startedAt + 250);
+      expect(scroll).toHaveBeenLastCalledWith({ top: 3.125, behavior: "instant" });
+      animate(startedAt + 750);
+      expect(scroll).toHaveBeenLastCalledWith({ top: 396.875, behavior: "instant" });
+      expect(focus).not.toHaveBeenCalled();
+      animate(startedAt + 1000);
+      expect(scroll).toHaveBeenLastCalledWith({ top: 400, behavior: "instant" });
+      expect(focus).toHaveBeenCalledExactlyOnceWith({ preventScroll: true });
+      expect(document.activeElement).toBe(save);
+      expect(submit).not.toHaveBeenCalled();
+    } finally {
+      vi.clearAllTimers();
+      vi.useRealTimers();
+      vi.unstubAllGlobals();
+    }
+  });
+
   test("shows a completed save cooldown beside the property link", () => {
     const now = 2_000_000_000;
     vi.spyOn(Date, "now").mockReturnValue(now);

@@ -1,5 +1,14 @@
 # Page fixtures
 
+`pages/questlog.html` retains the available-operations heading, layout styles,
+and operation cards from the supplied `questlog.php?id=<id>` capture. Account
+content, scripts, quest history, and personal skill/progress values are removed.
+
+`pages/market-no-offers.html` retains the market search summary, base price,
+state shop delivery price, and empty player-offer table from the supplied
+`market.php?buy=1&item_id=ulr338` capture. Account content, scripts, favorite
+tokens, and extension controls are removed; the seller name is anonymized.
+
 `pages/ops.html` retains the available-operations heading, layout styles, and
 operation cards from the supplied `/ops.php` capture for the quest-set shortcut.
 Scripts, surrounding account content, and player progress have been removed.

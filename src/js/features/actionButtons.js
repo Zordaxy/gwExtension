@@ -8,20 +8,47 @@ export const ActionButtons = {
   },
 
   addQuestSetLink() {
-    if (window.location.pathname !== "/ops.php") return;
+    if (!["/ops.php", "/questlog.php"].includes(window.location.pathname)) return;
 
     const heading = Array.from(document.querySelectorAll(".opclisthead h2"))
       .find((element) => element.textContent.trim() === "Доступные операции");
     if (!heading || document.getElementById("gw-wear-quest-set")) return;
 
-    const link = document.createElement("a");
-    link.id = "gw-wear-quest-set";
-    link.href = "/home.do.php?putset=7";
-    link.textContent = "wear quest set";
-    // Run the game's handler in the page context, outside the content-script world.
-    link.setAttribute("onclick", "return postdo('/home.do.php?putset=7')");
-    link.style.cssText = "text-decoration:none;border-bottom:1px dashed;";
-    heading.after(link);
+    const checks = new Map();
+    let previous = heading;
+    for (const [setId, name, id, checkClass] of [
+      ["7", "quest set", "gw-wear-quest-set", "quest-set-check"],
+      ["2", "main set", "gw-wear-main-set", "main-set-check"],
+    ]) {
+      const link = document.createElement("a");
+      link.id = id;
+      link.href = `/home.do.php?putset=${setId}`;
+      link.target = "_blank";
+      link.textContent = name;
+      link.className = "green";
+      link.style.cssText = "text-decoration:none;font-weight:bold;color:#009900;";
+      const check = document.createElement("span");
+      check.className = `green ${checkClass}`;
+      check.textContent = "✓ ";
+      check.title = `${name} action completed`;
+      check.style.visibility = "hidden";
+      if (previous !== heading) check.style.marginLeft = "8px";
+      previous.after(check, link);
+      checks.set(setId, check);
+      previous = link;
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        check.style.visibility = "hidden";
+        window.open(link.href, "_blank");
+      });
+    }
+    chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+      if (message?.type !== "equipment-set-completed") return;
+      const check = checks.get(message.setId);
+      if (!check) return;
+      check.style.visibility = "visible";
+      sendResponse({ ok: true });
+    });
   },
 
   navigation() {
