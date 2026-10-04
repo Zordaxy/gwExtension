@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>Shop edit fixture</title></head><body>
+<table width="100%" cellpadding="4" cellspacing="1">
+<tbody><tr><td bgcolor="#d0eed0" align="center"><b><font color="#990000">Управление счетом</font></b></td></tr>
+<tr><td>
+
+<form action="/objectedit.php" method="POST" style="display:inline" id="moneysubmit">
+<input type="hidden" name="money_action" value="1">
+<input type="hidden" name="id" value="118340">
+<table cellpadding="0" cellspacing="2">
+<tbody><tr>
+<td align="right">Пополнить счет:&nbsp;</td>
+<td><input type="text" name="money_in" value="0" size="5" maxlength="9"></td>
+<td>&nbsp;У вас <b>$15,767,160</b>,</td>
+</tr>
+<tr>
+<td align="right">Забрать со счета:&nbsp;</td>
+<td><input type="text" name="money_out" value="0" size="5" maxlength="9"></td>
+<td>&nbsp;на объекте <b>$1,885,320</b></td>
+</tr>
+</tbody></table>
+</form>
+</td></tr>
+<tr><td bgcolor="#d0eed0" align="center"><input type="submit" value="Перевести" style="background: #c0ddc0"></td></tr>
+</tbody></table>
+<form action="/objectedit.php" method="POST" style="display:inline">
+<table width="100%" cellpadding="4" cellspacing="1">
+<tbody><tr>
+ <td width="100%" align="center" bgcolor="#d0eed0"><font color="#990000"><b>Настройки покупки-продажи предметов</b></font></td>
+ <td align="center" bgcolor="#d0eed0"><b>Наличие</b></td>
+ <td align="center" bgcolor="#d0eed0"><b>Максимум</b></td>
+ <td align="center" bgcolor="#d0eed0"><nobr><b>Цена покупки</b></nobr></td>
+ <td align="center" bgcolor="#d0eed0"><nobr><b>Цена продажи</b></nobr></td>
+</tr>
+<tr>
+<td>Siemens ME45</td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[sme45]" size="2" value="0" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[sme45]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=sme45&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[sme45]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=sme45_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Nokia 8910</td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[nokia8910]" size="2" value="0" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[nokia8910]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=nokia8910&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[nokia8910]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=nokia8910_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Panasonic X11</td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[px11]" size="2" value="0" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[px11]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=px11&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[px11]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=px11_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Nokia 7200</td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[nokia7200]" size="2" value="0" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[nokia7200]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=nokia7200&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[nokia7200]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=nokia7200_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Sony T300</td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[st300]" size="2" value="0" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[st300]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=st300&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[st300]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=st300_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Ботинки Коммандос </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[commboots]" size="2" value="0" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[commboots]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=commboots&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[commboots]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=commboots_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Ботинки Vanguard </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[vgboots]" size="2" value="0" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[vgboots]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=vgboots&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[vgboots]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=vgboots_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Ботинки Viper Patrol </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[viperboots]" size="2" value="0" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[viperboots]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=viperboots&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[viperboots]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=viperboots_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Ботинки Special Field </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[sfieldboots]" size="2" value="0" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[sfieldboots]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=sfieldboots&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[sfieldboots]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=sfieldboots_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Ботинки SWAT Tactical </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[swatt_boots]" size="2" value="0" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[swatt_boots]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=swatt_boots&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[swatt_boots]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=swatt_boots_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Pro-Hunter Safari </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[prohunter]" size="2" value="0" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[prohunter]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=prohunter&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[prohunter]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=prohunter_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Маскхалат KillSuit </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[killsuit]" size="2" value="4" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[killsuit]" value="17000"><a href="/objectedit.php?id=118340&amp;lockr=killsuit&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[killsuit]" value="32780"><a href="/objectedit.php?id=118340&amp;lockr=killsuit_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Woodland Camo </td>
+<td>8</td>
+<td align="center"><input type="text" style="width:40" name="pricem[woodland]" size="2" value="8" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[woodland]" value="27500"><a href="/objectedit.php?id=118340&amp;lockr=woodland&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[woodland]" value="59180"><a href="/objectedit.php?id=118340&amp;lockr=woodland_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Пустынный камуфляж </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[desertcamo]" size="2" value="0" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[desertcamo]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=desertcamo&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[desertcamo]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=desertcamo_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Маскхалат Ghost </td>
+<td>2</td>
+<td align="center"><input type="text" style="width:40" name="pricem[ghostmask]" size="2" value="4" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[ghostmask]" value="82500"><a href="/objectedit.php?id=118340&amp;lockr=ghostmask&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[ghostmask]" value="178990"><a href="/objectedit.php?id=118340&amp;lockr=ghostmask_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Маскхалат GSMask </td>
+<td>3</td>
+<td align="center"><input type="text" style="width:40" name="pricem[gsmask]" size="2" value="4" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[gsmask]" value="87500"><a href="/objectedit.php?id=118340&amp;lockr=gsmask&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[gsmask]" value="195470"><a href="/objectedit.php?id=118340&amp;lockr=gsmask_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Камуфляж Forest Ghost </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[forestghost]" size="2" value="4" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[forestghost]" value="90000"><a href="/objectedit.php?id=118340&amp;lockr=forestghost&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[forestghost]" value="174970"><a href="/objectedit.php?id=118340&amp;lockr=forestghost_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Маскхалат Shadow Squad </td>
+<td>3</td>
+<td align="center"><input type="text" style="width:40" name="pricem[shadowsquad]" size="2" value="5" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[shadowsquad]" value="97500"><a href="/objectedit.php?id=118340&amp;lockr=shadowsquad&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[shadowsquad]" value="367240"><a href="/objectedit.php?id=118340&amp;lockr=shadowsquad_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Большой рюкзак </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[bigbackpack]" size="2" value="0" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[bigbackpack]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=bigbackpack&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[bigbackpack]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=bigbackpack_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Костюм Alpenflage </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[alpenflage]" size="2" value="0" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[alpenflage]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=alpenflage&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[alpenflage]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=alpenflage_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Alpine Camo </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[alpinecamo]" size="2" value="0" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[alpinecamo]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=alpinecamo&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[alpinecamo]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=alpinecamo_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Разгрузочный жилет </td>
+<td>6</td>
+<td align="center"><input type="text" style="width:40" name="pricem[carryingvest]" size="2" value="6" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[carryingvest]" value="37500"><a href="/objectedit.php?id=118340&amp;lockr=carryingvest&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[carryingvest]" value="91975"><a href="/objectedit.php?id=118340&amp;lockr=carryingvest_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Полевой бинокль </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[binocular2]" size="2" value="5" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[binocular2]" value="60000"><a href="/objectedit.php?id=118340&amp;lockr=binocular2&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[binocular2]" value="137998"><a href="/objectedit.php?id=118340&amp;lockr=binocular2_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Туристический бинокль </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[binocular1]" size="2" value="0" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[binocular1]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=binocular1&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[binocular1]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=binocular1_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Toughbook </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[toughbook]" size="2" value="0" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[toughbook]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=toughbook&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[toughbook]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=toughbook_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Камуфляжный пояс </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[camobelt]" size="2" value="0" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[camobelt]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=camobelt&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[camobelt]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=camobelt_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Фляга HDF1 </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[flask_hdf1]" size="2" value="0" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[flask_hdf1]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=flask_hdf1&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[flask_hdf1]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=flask_hdf1_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Tacticam X01 </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[tacticam]" size="2" value="0" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[tacticam]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=tacticam&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[tacticam]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=tacticam_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Фонарь HighLander </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[highlander]" size="2" value="0" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[highlander]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=highlander&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[highlander]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=highlander_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Ветромер K4500 </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[k4500]" size="2" value="0" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[k4500]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=k4500&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[k4500]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=k4500_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Фонарь Intruder </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[intruderlight]" size="2" value="0" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[intruderlight]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=intruderlight&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[intruderlight]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=intruderlight_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Рация SWAT-R1 </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[swat_r1]" size="2" value="0" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[swat_r1]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=swat_r1&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[swat_r1]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=swat_r1_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>S-Стимулятор </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[stim_s]" size="2" value="0" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[stim_s]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=stim_s&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[stim_s]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=stim_s_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>F-Стимулятор </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[stim_f]" size="2" value="0" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[stim_f]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=stim_f&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[stim_f]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=stim_f_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Синяя таблетка </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[bluepill]" size="2" value="0" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[bluepill]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=bluepill&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[bluepill]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=bluepill_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr>
+<td>Красная таблетка </td>
+<td>0</td>
+<td align="center"><input type="text" style="width:40" name="pricem[redpill]" size="2" value="0" title="Максимум 802 единиц"></td>
+<td align="center"><nobr><input type="text" style="width:90" size="6" name="pricer[redpill]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=redpill&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td><td align="center"><nobr><input type="text" style="width:90" size="6" name="pricep[redpill]" value="0"><a href="/objectedit.php?id=118340&amp;lockr=redpill_i&amp;lock=1" style="color:#339933;;font-size:11pt;position:relative;top:2px;text-decoration:none;" class="material-icons">lock_open</a></nobr></td>
+</tr><tr><td colspan="5" bgcolor="#d0eed0" align="center"><input type="submit" value="Сохранить настройки магазина" style="background: #c0ddc0"></td></tr>
+</tbody></table>
+
+<input type="hidden" name="save" value="1">
+<input type="hidden" name="skip_about" value="1">
+<input type="hidden" name="id" value="118340">
+</form>
+</body></html>

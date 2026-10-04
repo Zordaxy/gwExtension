@@ -22,8 +22,8 @@ export const minMargin = (price) => {
 };
 
 export const AddLine = {
-    appendShopCount(row, minShop, itemId) {
-        const shopId = new URLSearchParams(window.location.search).get('id')
+    shopRecommendation(minShop, itemId, shopId) {
+        shopId ||= new URLSearchParams(window.location.search).get('id')
             || document.querySelector('input[name="id"]')?.value;
         const ignoreProfit = !!shopId && Storage.getShopProfitOverrides()[shopId]?.[itemId] === true;
         const cost = Storage.getCost(itemId) || 0;
@@ -40,6 +40,14 @@ export const AddLine = {
             ? Math.round(cost * 2)
             : this._adjustedPrice(minPrice, minShop);
 
+        return { shopId, ignoreProfit, minPrice, profit, isThin, expected,
+            price: ignoreProfit ? this._adjustedPrice(minPrice, minShop) : expected };
+    },
+
+    appendShopCount(row, minShop, itemId, recommendation) {
+        const { shopId, ignoreProfit, minPrice, profit, isThin, expected, price } =
+            recommendation || this.shopRecommendation(minShop, itemId);
+
         const priceClass = isThin ? 'red' : minShop.isNoOffers ? 'brown' : 'green';
         const profitText =
             profit > 0
@@ -51,7 +59,7 @@ export const AddLine = {
         countTd.setAttribute('seller', minShop.seller);
         countTd.setAttribute('newPrice', minPrice);
         countTd.setAttribute('isNoOffers', minShop.isNoOffers);
-        countTd.dataset.expected = ignoreProfit ? this._adjustedPrice(minPrice, minShop) : expected;
+        countTd.dataset.expected = price;
         countTd.onclick = this._changeShopPrice;
         countTd.innerHTML = `<span class='${priceClass}'>${minPrice}</span>(${profitText})`;
 
@@ -82,7 +90,7 @@ export const AddLine = {
     },
 
     // No offers: use the base-price limit when available, otherwise undercut
-    // the gos offer by 1001. Round competitors down to 10; leave friends as-is.
+    // the gos offer by 1001. Round competitors down to 2; leave friends as-is.
     _adjustedPrice(minPrice, minShop) {
         if (minShop.isNoOffers) {
             if (Number.isFinite(minShop.maxAllowedPrice)) {
@@ -91,7 +99,7 @@ export const AddLine = {
             return minPrice - 1001;
         }
         if (!Settings.friends.includes(minShop.seller)) {
-            return Math.floor((minPrice - 1) / 10) * 10;
+            return Math.floor((minPrice - 1) / 2) * 2;
         }
         return minPrice;
     },
@@ -141,12 +149,18 @@ export const AddLine = {
         const countButton = document.createElement('button');
         countButton.type = 'button';
         countButton.textContent = 'countShop';
+        countButton.setAttribute('data-test-count-ship', '');
         countButton.className = 'apply-all apply-all--shop';
         const countCheck = makeCheck();
-        countButton.onclick = () => {
+        const controls = { countButton, countCheck };
+        countButton.onclick = (options = {}) => {
             countButton.disabled = true; // prevent a second run
-            Scroll.toElement(countButton, 0.1);
-            onCountShop();
+            if (options.scroll !== false) Scroll.toElement(countButton, 0.1);
+            controls.countPromise = Promise.resolve(onCountShop(options));
+            controls.countPromise.catch((error) => {
+                countButton.disabled = false;
+                console.error('countShop failed', error);
+            });
         };
 
         // apply all (bottom)
@@ -156,12 +170,14 @@ export const AddLine = {
         applyButton.className = 'apply-all apply-all--shop';
         applyButton.disabled = true; // enabled once all offers are fetched
         const applyCheck = makeCheck();
-        applyButton.onclick = () => {
-            table.querySelectorAll('td[data-expected]').forEach((cell) => {
-                cell.closest('tr').querySelectorAll('td input')[2].value = Number(cell.dataset.expected);
-                this._markShopRow(cell);
+        applyButton.onclick = (options = {}) => {
+            (options.recommendations || controls.recommendations || []).forEach(({ row, input, price }) => {
+                const cell = row.querySelector('[data-test-edit-price-in-property]');
+                input.value = Number(cell ? cell.dataset.expected : price);
+                if (cell) this._markShopRow(cell);
             });
             applyCheck.style.visibility = 'visible';
+            if (options.scroll === false) return;
             const saveButton = table.closest('form')?.querySelector(
                 'input[type="submit"][value="Сохранить настройки магазина"]'
             );
@@ -180,7 +196,8 @@ export const AddLine = {
         td.append(countLine, applyLine);
         header.appendChild(td);
 
-        return { applyAll: applyButton, countCheck };
+        controls.applyAll = applyButton;
+        return controls;
     },
 
     appendAdvertisementData(lineId, price, seller, cost) {

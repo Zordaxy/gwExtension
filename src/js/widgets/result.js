@@ -39,6 +39,7 @@ export class Result {
 
     open() {
         this.content.innerHTML = '';
+        this.content.closest('table').tFoot?.remove();
         this.progress.textContent = '';
         this._result.classList.remove('is-hidden');
     }

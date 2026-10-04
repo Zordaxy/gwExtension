@@ -31,19 +31,23 @@ function fillForm(values) {
   for (const input of form.elements) {
     if (!input.name) continue;
     const value = valueAt(values, input.name);
-    if (input.type === "checkbox") input.checked = Boolean(value);
+    if (input.name === 'friends') input.value = value.join('\n');
+    else if (input.type === "checkbox") input.checked = Boolean(value);
     else input.value = value;
   }
 }
 
 const isRequiredProfit = (name) => name.startsWith("requiredProfit.");
+const isBumpInterval = (name) => name === 'shopBumpIntervalMinutes';
 
 function readForm(current) {
   const result = cloneDefaults();
   for (const input of form.elements) {
     if (!input.name) continue;
 
-    if (input.type === "checkbox") {
+    if (input.name === 'friends') {
+      result.friends = [...new Set(input.value.split(/\r?\n/).map((name) => name.trim()).filter(Boolean))];
+    } else if (input.type === "checkbox") {
       setAt(result, input.name, input.checked);
     } else if (input.type === "number") {
       // Blank or non-numeric input keeps the default rather than persisting
@@ -52,11 +56,12 @@ function readForm(current) {
       if (
         input.value.trim() === "" ||
         !Number.isFinite(n) ||
-        (isRequiredProfit(input.name) && n < 0)
+        (isRequiredProfit(input.name) && n < 0) ||
+        (isBumpInterval(input.name) && (!Number.isInteger(n) || n < 1))
       ) {
         // Required-profit validation is stricter: an invalid edit must not
         // replace the last valid saved (or merged default) value.
-        if (isRequiredProfit(input.name)) {
+        if (isRequiredProfit(input.name) || isBumpInterval(input.name)) {
           setAt(result, input.name, valueAt(current, input.name));
         }
         continue;

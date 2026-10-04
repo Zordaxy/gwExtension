@@ -20,6 +20,8 @@ import { Search } from "js/search";
 import { Parse } from "js/parsers";
 import { Http } from "js/http";
 import { Storage } from "js/storage";
+import { Settings } from 'js/settings';
+import { aggregateShopRows } from 'js/parseUtils';
 
 function marketPage() {
   const html = fs.readFileSync(path.resolve(__dirname,
@@ -33,6 +35,7 @@ function marketPage() {
 }
 
 beforeEach(() => {
+  Settings.friends = [];
   vi.useFakeTimers();
   document.body.innerHTML = `<form action='/objectedit.php'>
     <input name='id' value='100001'>
@@ -104,9 +107,25 @@ test.each([
   expect(input.value).toBe(String(expected));
 });
 
-test("eligible shop offers use only statlist and keep normal undercutting", async () => {
+test.each([true, false])('friend price is matched without rounding in rendered mode %s', async (render) => {
+  Settings.friends = ['Competitor'];
+  vi.spyOn(Parse, 'shopPriceFromShopsList').mockReturnValue({
+    G: { minPrice: 100003, seller: 'Competitor', isNoOffers: false },
+  });
+  vi.spyOn(Http, 'fetchGet').mockResolvedValue(document);
+  Search.init();
+  const pending = Search.findShopPrices({ render, scroll: false });
+  await vi.runAllTimersAsync();
+  const recommendations = await pending;
+  expect(recommendations[0].price).toBe(100003);
+  Search.controls.applyAll.onclick({ recommendations, scroll: false });
+  expect(recommendations[0].input.value).toBe('100003');
+});
+
+test.each([[100000, 99998], [100001, 100000], [100002, 100000], [100003, 100002]])(
+  "eligible shop price %s rounds down to %s in steps of two", async (price, expected) => {
   vi.spyOn(Parse, "shopPriceFromShopsList").mockReturnValue({
-    G: { minPrice: 100000, seller: "Competitor", isNoOffers: false },
+    G: { minPrice: price, seller: "Competitor", isNoOffers: false },
   });
   const fetch = vi.spyOn(Http, "fetchGet").mockResolvedValue(document);
   Search.init();
@@ -115,5 +134,21 @@ test("eligible shop offers use only statlist and keep normal undercutting", asyn
   await pending;
   expect(fetch).toHaveBeenCalledExactlyOnceWith("/statlist.php?r=ulr338&type=i");
   expect(document.querySelector("[data-test-edit-price-in-property]").dataset.expected)
-    .toBe("99990");
+    .toBe(String(expected));
+});
+
+test.each([
+  '<a href="/info.php?id=321"><b>Competitor</b></a>',
+  '<b><a href="https://gwars.io/info.php?id=321">Competitor</a></b>',
+  '<b><a href="http://www.gwars.io/info.php?id=321">Competitor</a></b>',
+])('shop parsing retains the selected seller profile link: %s', (sellerHtml) => {
+  const doc = new DOMParser().parseFromString(`<table><tr>
+    <td><a href="/object.php?id=123">[G] Shop</a></td>
+    <td>${sellerHtml}</td><td>$100000</td>
+  </tr></table>`, 'text/html');
+  doc.querySelectorAll('td, b').forEach((element) =>
+    Object.defineProperty(element, 'innerText', { get: () => element.textContent }));
+  expect(aggregateShopRows([...doc.querySelectorAll('tr')])).toMatchObject({
+    seller: 'Competitor', sellerUrl: '/info.php?id=321', minPrice: '100000',
+  });
 });

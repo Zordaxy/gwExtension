@@ -39,6 +39,22 @@
     "originalEncoding": "windows-1251",
     "features": ["no-offers-base-price-fallback"]
   },
+  "property-edit-accessories": {
+    "file": "pages/property-edit-accessories.html",
+    "sourceUrlPattern": "/objectedit.php?id=118340",
+    "capturedAt": "2026-10-04",
+    "encoding": "utf-8",
+    "originalEncoding": "windows-1251",
+    "features": ["bump-prices", "count-shop-controls"]
+  },
+  "realty-shops": {
+    "file": "pages/realty-shops.html",
+    "sourceUrlPattern": "/info.realty.php?id=1736883",
+    "capturedAt": "2026-10-04",
+    "encoding": "utf-8",
+    "originalEncoding": "windows-1251",
+    "features": ["sequential-shop-price-bump"]
+  },
   "storage": {
     "file": "pages/storage.html",
     "sourceUrlPattern": "/object.php?id=<id>",

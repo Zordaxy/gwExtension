@@ -6,6 +6,7 @@
 export const STORAGE_KEY = "gwSettings";
 
 export const EDITABLE_DEFAULTS = {
+  friends: [],
   resources: {
     hours: 275,
     uranium: 195,
@@ -23,6 +24,8 @@ export const EDITABLE_DEFAULTS = {
   },
   funnyDigit: "",
   productionBalance: 1000000,
+  shopBumpIntervalMinutes: 5,
+  nightTimeUpdate: true,
   requiredProfit: {
     below60000: 5000,
     from60000To99999: 10000,
@@ -63,6 +66,13 @@ export function mergeOverrides(overrides) {
   for (const key of Object.keys(values)) {
     if (overrides[key] === undefined) continue;
     const def = values[key];
+    if (Array.isArray(def)) {
+      if (Array.isArray(overrides[key])) {
+        values[key] = [...new Set(overrides[key].filter((value) => typeof value === 'string')
+          .map((value) => value.trim()).filter(Boolean))];
+      }
+      continue;
+    }
     values[key] =
       def && typeof def === "object" ? { ...def, ...overrides[key] } : overrides[key];
   }

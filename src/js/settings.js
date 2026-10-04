@@ -7,7 +7,6 @@ import {
 
 export const Settings = {
   // Not user-editable (no popup controls for these).
-  friends: ["Michegan"],
   rentOwners: new Map([]),
   domain: "https://www.gwars.io",
 

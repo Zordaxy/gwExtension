@@ -1,5 +1,14 @@
 # Page fixtures
 
+`pages/realty-shops.html` keeps the realty heading and property links from the
+supplied `info.realty.php?id=1736883` capture, including all 12 shops. Account
+navigation, inventories, scripts, extension controls, balances, lease details,
+and custom property names are removed or replaced with placeholders.
+
+`pages/property-edit-accessories.html` retains the money heading and shop form
+from the supplied accessory-shop capture (`objectedit.php?id=118340`). Scripts,
+account sections, volatile lock tokens, and extension controls are removed.
+
 `pages/questlog.html` retains the available-operations heading, layout styles,
 and operation cards from the supplied `questlog.php?id=<id>` capture. Account
 content, scripts, quest history, and personal skill/progress values are removed.

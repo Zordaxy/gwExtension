@@ -16,6 +16,7 @@ export class Statistics {
 
     App.result.open();
     App.blacker.show();
+    this.totals = { cost: 0, shopPrice: 0, quantity: 0 };
 
     // Stored quantities across the storage houses, fetched before populating.
     this.availability = await this.#fetchAvailability();
@@ -45,6 +46,7 @@ export class Statistics {
       const items = value.map((x) => x.id);
       await this.#renderStatisticsSection(items, key);
     }
+    this.#renderTotals();
 
     await this.#populateAdvertisementPrices(itemIds);
     await this.#populateResourcePrices(itemIds);
@@ -118,6 +120,11 @@ export class Statistics {
           : "-";
         const differenceText = minPrice ? difference : "-";
         const availability = this.availability?.[itemId] || 0;
+        if (availability > 0) {
+          this.totals.quantity += availability;
+          if (Number.isFinite(cost)) this.totals.cost += cost * availability;
+          if (Number.isFinite(Number(minPrice))) this.totals.shopPrice += Number(minPrice) * availability;
+        }
         const hasProduction = Boolean(this.developedBy?.[itemId]);
         const availabilityClass = this.#availabilityClass(
           cost,
@@ -178,6 +185,19 @@ export class Statistics {
       return "availability-low";
     }
     return "";
+  }
+
+  #renderTotals() {
+    const table = App.result.content.closest('table');
+    const row = table.createTFoot().insertRow();
+    row.setAttribute('data-test-statistics-totals', '');
+    const format = (value) => value.toLocaleString('en-US');
+    ['', 'Разом', format(this.totals.shopPrice), format(this.totals.cost), '', '', '',
+      format(this.totals.quantity), ''].forEach((value) => {
+      const cell = document.createElement('th');
+      cell.textContent = value;
+      row.append(cell);
+    });
   }
 
   async #populateAdvertisementPrices(itemIds) {

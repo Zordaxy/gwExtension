@@ -4,6 +4,45 @@ import { fireEvent } from "@testing-library/dom";
 vi.mock("js/storage", () => ({ Storage: { getPropertyTypes: () => ({}) } }));
 
 import { Realty } from "js/features/realty";
+import { loadPage } from '../helpers/loadPage';
+
+test.each([
+    ['Michegan', '$'], ['Other player', '$'], ['Michegan', 'Гб'], ['Other player', 'Гб'],
+])('adds the balance total for %s in %s and keeps it below sorted properties', (owner, currency) => {
+    const previousUrl = location.href;
+    try {
+        history.replaceState({}, '', '/info.realty.php?id=1736883');
+        loadPage('realty-shops');
+        document.querySelector('div > a b').textContent = owner;
+        const table = document.querySelector('table.withborders');
+        const properties = [...table.tBodies[0].rows].slice(1);
+        const money = (value) => currency === 'Гб' ? `${value} Гб` : `$${value}`;
+        properties.forEach((row) => { row.cells[2].textContent = money('0'); });
+        properties[0].cells[2].textContent = money('1,234,567');
+        properties[1].cells[2].textContent = money('2\u00a0345');
+        properties[2].cells[2].textContent = money('-100');
+        const group = table.tBodies[0].insertRow();
+        group.className = 'realty-generated-row';
+        group.insertCell().textContent = 'Group';
+        group.insertCell();
+        group.insertCell().textContent = '$9,999,999';
+        Realty.addMoneyTotal();
+        Realty.addMoneyTotal();
+        const footer = table.querySelector('[data-test-realty-money-total]');
+        expect(table.querySelectorAll('[data-test-realty-money-total]')).toHaveLength(1);
+        expect(footer.parentElement).toBe(table.tFoot);
+        expect(footer.cells[0].textContent).toBe('Итого');
+        expect(footer.cells[0].colSpan).toBe(2);
+        expect(footer.cells[1].textContent).toBe(currency === 'Гб' ? '1,236,812 гб' : '$1,236,812');
+        expect(footer.cells[1].align).toBe('right');
+        new Realty().sortProperties();
+        expect(table.rows[table.rows.length - 1]).toBe(footer);
+        expect(footer.cells[1].textContent).toBe(currency === 'Гб' ? '1,236,812 гб' : '$1,236,812');
+        expect(table.tBodies[0].querySelectorAll('a[href*="object.php?id="]')).toHaveLength(properties.length);
+    } finally {
+        history.replaceState({}, '', previousUrl);
+    }
+});
 
 test.each([
   ["[data-test-realty-show-all]", "click"],

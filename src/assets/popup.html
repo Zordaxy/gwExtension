@@ -26,6 +26,23 @@
           Оптимальний баланс
           <input type="number" step="any" name="productionBalance" />
         </label>
+        <label class="field">
+          Continuous shop bump interval (minutes)
+          <input type="number" min="1" step="1" name="shopBumpIntervalMinutes" />
+        </label>
+        <label class="field field--check">
+          <input type="checkbox" name="nightTimeUpdate" /> night time update
+        </label>
+        <p class="hint">Double the interval from 3 PM to 9 PM in your browser's local time.</p>
+      </fieldset>
+
+      <fieldset>
+        <legend>Friends</legend>
+        <label class="field field--friends">
+          Player names (one per line)
+          <textarea name="friends" rows="4"></textarea>
+        </label>
+        <p class="hint">Match these sellers' prices instead of undercutting them.</p>
       </fieldset>
 
       <fieldset>

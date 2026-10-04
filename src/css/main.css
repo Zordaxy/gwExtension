@@ -321,3 +321,279 @@
 .is-hidden {
     display: none;
 }
+
+.shop-bump-results {
+    max-width: 90vw;
+    max-height: 80vh;
+    overflow: auto;
+    padding: 12px;
+    border: 1px solid #336633;
+    border-radius: 3px;
+    background: #f0fff0;
+    color: #003300;
+    font-family: inherit;
+    box-shadow: 0 4px 18px rgba(0, 40, 0, 0.2);
+}
+
+.shop-bump-results::backdrop {
+    background: rgba(0, 30, 0, 0.25);
+}
+
+.shop-bump-results h3,
+.shop-bump-results h4 {
+    background: #d0eed0;
+    border: 1px solid #b5cbb5;
+    padding: 6px 10px;
+}
+
+.shop-bump-results h3 {
+    margin-top: 0;
+}
+
+.shop-bump-results a,
+.realty-shop-item-progress a {
+    color: #003300;
+}
+
+.shop-bump-results a:hover,
+.realty-shop-item-progress a:hover {
+    color: #339933;
+}
+
+.shop-bump-results table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.shop-bump-results th,
+.shop-bump-results td {
+    padding: 5px 10px;
+    border: 1px solid #b5cbb5;
+    text-align: left;
+}
+
+.shop-bump-results th {
+    background: #d0eed0;
+}
+
+.shop-bump-results tr:nth-child(even) td {
+    background: #e5f5e5;
+}
+
+.shop-bump-results tr:nth-child(odd) td {
+    background: #f5fff5;
+}
+
+.realty-shop-item-progress:not([hidden]) {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: 0;
+}
+
+.realty-shop-item-progress-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.realty-shop-item-progress a {
+    max-width: 260px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.realty-shop-item-progress progress {
+    width: 80px;
+}
+
+.realty-shop-item-progress progress,
+[data-test-bump-prices-progress] progress {
+    accent-color: #339933;
+}
+
+.realty-bump-status,
+.realty-bump-started:not([hidden]),
+.realty-bump-counter,
+.realty-bump-elapsed,
+.realty-bump-countdown:not([hidden]) {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 3px 6px;
+    border: 1px solid #b5cbb5;
+    border-radius: 3px;
+    background: #f0fff0;
+    vertical-align: middle;
+}
+
+.realty-bump-countdown,
+.realty-bump-started,
+.realty-bump-elapsed {
+    font-variant-numeric: tabular-nums;
+}
+
+.realty-continuous-bump,
+.realty-manual-bump {
+    font-size: 1em;
+    padding: 3px 6px;
+    vertical-align: middle;
+}
+
+.realty-continuous-bump {
+    font-weight: bold;
+}
+
+.realty-continuous-bump--running {
+    background: #a9d8a9;
+    border-color: #339933;
+    box-shadow: 0 0 0 4px rgba(51, 153, 51, 0.18), 0 0 16px 6px rgba(51, 153, 51, 0.3);
+}
+
+.realty-manual-bump {
+    background: #e5f5e5;
+    color: #4d4d4d;
+    font-weight: normal;
+}
+
+.realty-manual-bump:disabled {
+    opacity: 0.8;
+}
+
+.realty-bump-status[data-state="running"] {
+    background: #d0eed0;
+    color: #006600;
+    font-weight: bold;
+}
+
+.realty-bump-status[data-state="waiting"] {
+    color: #006600;
+}
+
+.realty-bump-status[data-state="inactive"] {
+    color: #666;
+}
+
+.realty-sellers-details {
+    width: fit-content;
+    margin: 8px auto 0;
+    color: #003300;
+}
+
+.realty-bump-summary-layout {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 12px;
+    width: fit-content;
+    margin: 8px auto 0;
+}
+
+.realty-bump-tables {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.realty-bump-tables .realty-sellers-details {
+    margin: 0;
+}
+
+.realty-bump-panel {
+    min-width: 265px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 4px;
+    padding: 10px;
+    border: 1px solid #b5cbb5;
+    border-radius: 3px;
+    background: #f0fff0;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.realty-bump-panel > :not(.realty-shop-item-progress) {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    white-space: nowrap;
+}
+
+.realty-bump-panel > [hidden] {
+    display: none;
+}
+
+.realty-seller-summary {
+    min-width: 600px;
+    margin: 4px 0 0;
+    border-collapse: collapse;
+    background: #f0fff0;
+    color: #003300;
+}
+
+.realty-seller-summary th,
+.realty-seller-summary td {
+    padding: 5px 10px;
+    border: 1px solid #b5cbb5;
+    text-align: left;
+}
+
+.realty-seller-summary th {
+    padding: 0;
+    background: #d0eed0;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.realty-summary-toggle {
+    display: block;
+    width: 100%;
+    padding: 5px 10px;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.realty-seller-summary th:last-child .realty-summary-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.realty-seller-summary th:last-child .realty-summary-toggle::after {
+    content: '▾';
+}
+
+.realty-seller-summary th:last-child .realty-summary-toggle[aria-expanded="false"]::after {
+    content: '▸';
+}
+
+.realty-seller-summary tbody[hidden] {
+    display: none;
+}
+
+.realty-seller-summary tr:nth-child(even) td {
+    background: #e5f5e5;
+}
+
+.realty-seller-summary td:not(:first-child) {
+    text-align: right;
+}
+
+.realty-seller-summary a {
+    color: #003300;
+}
+
+.realty-seller-summary a:hover {
+    color: #339933;
+}

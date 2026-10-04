@@ -10,6 +10,44 @@ export class Realty {
     // Property types to hide — matched against the object link text.
     static SKIP_PREFIXES = PROPERTY_SKIP_PREFIXES;
 
+    static addMoneyTotal() {
+        if (location.pathname !== '/info.realty.php') return;
+        const table = [...document.querySelectorAll('table.withborders')].find((candidate) =>
+            [...(candidate.tBodies[0]?.rows[0]?.cells || [])].some((cell) => /^Сч[её]т$/i.test(cell.textContent.trim())));
+        if (!table) return;
+        const header = table.tBodies[0].rows[0];
+        const moneyIndex = [...header.cells].findIndex((cell) => /^Сч[её]т$/i.test(cell.textContent.trim()));
+        const balances = [...table.tBodies].flatMap((body) => [...body.rows])
+            .filter((row) => row.cells[0]?.querySelector('a[href*="object.php?id="]'))
+            .map((row) => row.cells[moneyIndex]?.textContent || '');
+        const total = balances.reduce((sum, balance) => {
+                const text = balance.replace(/Гб|[$,\s]/gi, '');
+                const amount = text ? Number(text) : NaN;
+                return sum + (Number.isFinite(amount) ? amount : 0);
+            }, 0);
+        table.querySelector('[data-test-realty-money-total]')?.remove();
+        const row = table.createTFoot().insertRow();
+        row.setAttribute('data-test-realty-money-total', '');
+        row.style.fontWeight = 'bold';
+        if (moneyIndex > 0) {
+            const label = row.insertCell();
+            label.className = 'greenbg';
+            label.colSpan = moneyIndex;
+            label.textContent = 'Итого';
+        }
+        const amount = row.insertCell();
+        amount.className = 'greenbg';
+        amount.align = 'right';
+        const formatted = total.toLocaleString('en-US');
+        amount.textContent = balances.some((balance) => /Гб/i.test(balance)) ? `${formatted} гб` : `$${formatted}`;
+        const remaining = header.cells.length - moneyIndex - 1;
+        if (remaining > 0) {
+            const spacer = row.insertCell();
+            spacer.className = 'greenbg';
+            spacer.colSpan = remaining;
+        }
+    }
+
     sortProperties() {
         const table = document.querySelector('table.withborders');
         if (!table) {
